@@ -6,26 +6,43 @@
     <title>Informa</title>
     <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/css/index.css">
-    <script src="/static/js/global.js"></script>
+    <script type="module" src="/static/js/global.js"></script>
     <script type="module" src="/static/js/font-awesome.js"></script>
     <script src="/static/js/index.js" defer></script>
 </head>
 <body>
-    <header>
-        <h1>*CCO Informa*</h1>
-        <figure>
-            <img src="/static/img/mob.png" alt="imagem contendo a log da empresa mob, contendo as letras M O B em italico e dois traços em cima e em baixo.">
-        </figure>
+    <header class="w100 row between">
+        <div class="row">
+            <figure>
+                <img src="../static/img/mob.png" class="wh100" alt="imagem contendo a log da empresa mob, contendo as letras M O B em italico e dois traços em cima e em baixo.">
+            </figure>
+            <h1>*CCO Informa*</h1>
+        </div>
+        <div class="row buttons">
+            <button id="user" class="row icons r toggle true">
+                <i class="fa-solid fa-user-xmark x"></i>
+                <i class="fa-solid fa-user-check v"></i>
+            </button>
+            <button id="config" class="row icons">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </div>
     </header>
     <main>
-        <section>
-            <h2>*CCO Informa*</h2>
-            <div id="overlay"></div>
-            <iframe src="" frameborder="0"></iframe>
+        <section class="r border-1px">
+            <h2 class="d-none">*CCO Informa*</h2>
+            <div id="overlay" class="a wh100"></div>
+            <div id="menu-config" class="border-1px">
+                <div class="row between">
+                    <h3>Configurações</h3>
+                    <button id="config-close" class="row icons"><i class="fa-solid fa-xmark x"></i></button>
+                </div>
+            </div>
+            <iframe src="/cco-informa" class="wh100" frameborder="0"></iframe>
         </section>
     </main>
-    <footer>
-        <address>Adryan Maikel</address>
+    <footer class="row">
+        <address>&copy; Adryan Maikel &hearts;</address>
     </footer>
 </body>
 </html>

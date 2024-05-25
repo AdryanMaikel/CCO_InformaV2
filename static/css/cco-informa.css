@@ -1,0 +1,8 @@
+@import "./global.css";
+:root{
+    /*columns*/--_: 30px;--A:40px
+}
+h1{font-size: 18px;}
+table{border-color: var(--white)}
+
+._{width: var(--_)}.A{width: var(--A)}.B{width: var(--B)}.C{width: var(--C)}.D{width: var(--D)}.E{width: var(--E)}.F{width: var(--F)}.G{width: var(--G)}.H{width: var(--H)}.I{width: var(--I)}.J{width: var(--J)}.K{width: var(--K)}
