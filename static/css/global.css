@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 :root{
     /*colors*/--blue-mob: #3b3b8a;--blue-dark: #01041e;--blue-dark-hover: #0a136b;--white: #e1e1fa;
-    /*cursors*/--cursor-default: url("/static/assets/normal.cur"), auto;--cursor-danger: url("/static/assets/unavailable.cur"), auto}
+    /*cursors*/--cursor-default: url("/static/assets/normal.cur"), auto;--cursor-danger: url("/static/assets/unavailable.cur"), auto;--cursor-horizontal: url("/static/assets/horizontal.cur"), auto}
 *{margin: 0;padding: 0;box-sizing: border-box;font-family: "Poppins", sans-serif;cursor: var(--cursor-default);}
 *:disabled{cursor: var(--cursor-danger);}
+*.horizontal:hover{cursor: var(--cursor-horizontal);}
 body{width: 100vw;height: 100vh;}
 body{background-color: var(--blue-dark);color: var(--white);overflow: hidden;}
 
-button{background-color: var(--blue-dark);color: var(--white);transition: scale .1s;border: none;}
+button{background-color: transparent;color: var(--white);transition: scale .1s;border: none;}
 button:hover{scale: 1.05;}
 button:active{scale: 0.95}
 
@@ -32,3 +33,7 @@ button.icons i.fa-xmark{font-size: 24px;}
 .between{justify-content: space-between;padding: 0 20px}
 .row.buttons{gap: 5px;}
 .r{position: relative;}.a{position: absolute;}
+
+::-webkit-scrollbar{width: 8px;display: block;height: 10px;}
+::-webkit-scrollbar-thumb{position: fixed;border-radius: 4px;background-color: var(--white)}
+::-webkit-scrollbar-track{background-color: var(--blue-dark)}

@@ -18,8 +18,7 @@ def index():
 
 @app.route("/cco-informa")
 def cco_informa():
-    return render_template("cco-informa.html",
-                           letters=LETTERS, cols=COLUMNS,
+    return render_template("cco-informa.html", letters=LETTERS, cols=COLUMNS,
                            rows=SHEETS["cco-informa"]["get"]())
 
 

@@ -7,6 +7,7 @@
     <script type="module" src="/static/js/global.js"></script>
     <link rel="stylesheet" href="/static/css/cco-informa.css">
     <script type="module" src="/static/js/font-awesome.js"></script>
+    <script type="module" src="/static/js/cco-informa.js"></script>
 
 </head>
 <body>
@@ -18,20 +19,23 @@
         </div>
     </header>
     <section>
-        <table border="1px">
+        <table class="h100" border="1px">
             <thead>
-                <tr>
+                <tr class="letters">
                     <td class="_"></td>{% for letter in letters %}
                     <td class="{{ letter }}">{{ letter }}</td>{% endfor %}
                 </tr>
-                <tr>
+                <tr class="columns">
                     <td class="_">1</td>{% for col in cols %}
-                    <td class="{{ letters[loop.index] }}">{{ col }}</td>{% endfor %}
+                    <td class="{{ letters[loop.index - 1] }}">{{ col }}</td>{% endfor %}
                 </tr>
             </thead>
-            <tbody>
-                <tr><td>2</td><td>Adryan</td><td>155</td></tr>
-                <tr><td>3</td><td>Maikel</td><td>165</td></tr>
+            <tbody>{% for row in rows %}
+                <tr id="row-{{ row[0] }}" lcass="{{ loop.cycle('even', 'odd') }}">{% for cell in row %}
+                    <td class="{{ '_' if loop.first else letters[loop.index - 2] }}">
+                        {% if loop.first %}{{ cell }}{% else %} <textarea id="cell-{{ letters[loop.index - 2] }}{{ row[0] }}" disabled autocomplete="off">{{ cell }}</textarea> {% endif %}
+                    </td>{% endfor %}
+                </tr>{% endfor %}
             </tbody>
         </table>
     </section>

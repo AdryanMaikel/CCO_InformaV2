@@ -1,8 +1,142 @@
 @import "./global.css";
 :root{
-    /*columns*/--_: 30px;--A:40px
+    /*colors*/
+    /*columns*/--height-letters: 24px;--height-cols: 50px;--height-body: 45px;
+    /*letters*/--fs-textarea: 12px;--fs-letters: 12px;--fs-columns: 15px;
+    /*sizes*/--height-thead: calc(var(--height-cols) + var(--height-letters))
 }
-h1{font-size: 18px;}
-table{border-color: var(--white)}
+textarea{
+    width: 100%;height: 100%;
+    resize: none;border: none;outline: none;background: none;
+    color: var(--white);
+    font-size: var(--fs-textarea);line-height: var(--fs-textarea);
+}
+section{height: calc(100% - 27px);}
 
-._{width: var(--_)}.A{width: var(--A)}.B{width: var(--B)}.C{width: var(--C)}.D{width: var(--D)}.E{width: var(--E)}.F{width: var(--F)}.G{width: var(--G)}.H{width: var(--H)}.I{width: var(--I)}.J{width: var(--J)}.K{width: var(--K)}
+body{padding: 4px;}
+h1{font-size: 18px;}
+
+table{
+    display: block;position: relative;overflow-y: hidden;overflow-x: scroll;
+    border-color: var(--white);background-color: var(--blue-dark);
+}
+thead{position: absolute;background-color: none;z-index: 20;}
+tbody{position: absolute;top: var(--height-thead);z-index: 10;overflow-y: scroll;height: calc(100% - var(--height-thead));}
+
+td{padding: 5px;overflow: hidden;}
+tbody tr td{height: var(--height-body);}
+
+tr, td{display: flex;}
+
+.letters td{
+    height: var(--height-letters);font-size: var(--fs-letters);line-height: var(--fs-letters);
+    justify-content: center;opacity: .8;}
+.columns td{
+    background-color: var(--blue-mob);
+    height: var(--height-cols);font-size: var(--fs-columns);line-height: var(--fs-columns);
+    justify-content: center;align-items: center;}
+
+._{width: var(--_);align-items: center;justify-content: flex-end !important;opacity: .8;font-size: var(--fs-textarea);}
+.A{width: var(--A)}
+.B{width: var(--B)}
+.C{width: var(--C)}
+.D{width: var(--D)}
+.E{width: var(--E)}
+.F{width: var(--F)}
+.G{width: var(--G)}
+.H{width: var(--H)}
+.I{width: var(--I)}
+.J{width: var(--J)}
+.K{width: var(--K)}
+
+.A textarea,
+.C textarea,
+.B textarea,
+.E textarea,
+.D textarea,
+.G textarea,
+.F textarea,
+.I textarea,
+.H textarea,
+.K textarea{padding-top: var(--fs-textarea);text-align: center;}
+
+/*
+
+table tr td{overflow: hidden;}
+
+thead tr.letters td{
+    font-size: 13px;
+    font-weight: 300;
+    opacity: .9;
+}
+
+thead tr.columns td{
+    font-size: 15px;
+    line-height: 15px;
+}
+
+table tr{
+    display: flex;
+    flex-direction: row;
+}
+
+
+td{display: flex;overflow: hidden;}
+thead td{height: var(--height-header);}
+tbody td{height: var(--height-body);}
+
+._{width: var(--_)}
+.A{width: var(--A)}
+.B{width: var(--B)}
+.C{width: var(--C)}
+.D{width: var(--D)}
+.E{width: var(--E)}
+.F{width: var(--F)}
+.G{width: var(--G)}
+.H{width: var(--H)}
+.I{width: var(--I)}
+.J{width: var(--J)}
+.K{width: var(--K)}
+
+/* thead ._,
+thead .A,
+thead .B,
+thead .C,
+thead .D,
+thead .E,
+thead .F,
+thead .G,
+thead .H,
+thead .I,
+thead .J,
+thead .K{height: var(--height-header);} */
+
+
+/* tbody ._,
+tbody .A,
+tbody .B,
+tbody .C,
+tbody .D,
+tbody .E,
+tbody .F,
+tbody .G,
+tbody .H,
+tbody .I,
+tbody .J,
+tbody .K{height: var(--height-body);} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
