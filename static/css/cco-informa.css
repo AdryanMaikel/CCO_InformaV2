@@ -32,7 +32,7 @@ tr, td{display: flex;}
     height: var(--height-letters);font-size: var(--fs-letters);line-height: var(--fs-letters);
     justify-content: center;opacity: .8;}
 .columns td{
-    background-color: var(--blue-mob);
+    background-color: var(--blue-mob);font-weight: bold;
     height: var(--height-cols);font-size: var(--fs-columns);line-height: var(--fs-columns);
     justify-content: center;align-items: center;}
 
