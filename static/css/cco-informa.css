@@ -1,42 +1,36 @@
 @import "./global.css";
 :root{
-    /*colors*/
-    /*columns*/--height-letters: 24px;--height-cols: 50px;--height-body: 45px;
+    /*colors*/--header-columns: #07096b;--body-odd: #0b0224;--body-even: #020220;
+    /*columns*/--height-letters: 24px;--height-cols: 60px;--height-body: 50px;
     /*letters*/--fs-textarea: 12px;--fs-letters: 12px;--fs-columns: 15px;
     /*sizes*/--height-thead: calc(var(--height-cols) + var(--height-letters))
 }
-textarea{
-    width: 100%;height: 100%;
-    resize: none;border: none;outline: none;background: none;
-    color: var(--white);
-    font-size: var(--fs-textarea);line-height: var(--fs-textarea);
+
+body{padding: 4px;}h1{font-size: 18px;left: 14px;}section{height: calc(100% - 27px)}
+#configurations-table{top: -400px;left: 8px;width: 450px;height: 400px; background: var(--white);z-index: 80;transition: top .5s cubic-bezier(0.15, 0.96, 0.84, 0.95)}
+#configurations-table.open{top: 0;}
+#toggle-div-config-table{top: 399px;background: var(--white);z-index: 80;
+                         border-bottom-left-radius: 12px;border-bottom-right-radius: 12px
+
 }
-section{height: calc(100% - 27px);}
+#configurations-table button{}
+#configurations-table button i{color: var(--blue-dark);}
+table{display: block;position: relative;overflow-y: hidden;overflow-x: auto;
+      border-color: var(--white);background-color: var(--blue-dark)}
+thead{position: absolute;background-color: none;z-index: 20}
+tbody{position: absolute;top: var(--height-thead);z-index: 10;overflow-y: scroll;
+      height: calc(100% - var(--height-thead))}
 
-body{padding: 4px;}
-h1{font-size: 18px;}
-
-table{
-    display: block;position: relative;overflow-y: hidden;overflow-x: scroll;
-    border-color: var(--white);background-color: var(--blue-dark);
-}
-thead{position: absolute;background-color: none;z-index: 20;}
-tbody{position: absolute;top: var(--height-thead);z-index: 10;overflow-y: scroll;height: calc(100% - var(--height-thead));}
-
-td{padding: 5px;overflow: hidden;}
-tbody tr td{height: var(--height-body);}
-
-tr, td{display: flex;}
-
-.letters td{
-    height: var(--height-letters);font-size: var(--fs-letters);line-height: var(--fs-letters);
-    justify-content: center;opacity: .8;}
-.columns td{
-    background-color: var(--blue-mob);font-weight: bold;
-    height: var(--height-cols);font-size: var(--fs-columns);line-height: var(--fs-columns);
-    justify-content: center;align-items: center;}
-
-._{width: var(--_);align-items: center;justify-content: flex-end !important;opacity: .8;font-size: var(--fs-textarea);}
+td{overflow: hidden}
+tbody tr td{height: var(--height-body)}
+tr, td{display: flex}
+.letters td{height: var(--height-letters);font-size: var(--fs-letters);line-height: var(--height-letters);
+            justify-content: center;opacity: .8}
+.columns td{height: var(--height-cols);line-height: var(--fs-columns);font-size: var(--fs-columns);
+            justify-content: center;align-items: center;font-weight: bold;
+            background-color: var(--header-columns)}
+.even td{background-color: var(--body-even)}
+._{padding-right: 3px;background: transparent!important;width: var(--_);align-items: center!important;justify-content: flex-end!important;opacity: .8!important;font-size: var(--fs-textarea)!important;}
 .A{width: var(--A)}
 .B{width: var(--B)}
 .C{width: var(--C)}
@@ -49,6 +43,13 @@ tr, td{display: flex;}
 .J{width: var(--J)}
 .K{width: var(--K)}
 
+textarea{width: 100%;height: 100%;
+    resize: none;border: none;outline: none;background: transparent;
+    color: var(--white);
+    font-size: var(--fs-textarea);
+}
+.odd td,.odd td textarea::-webkit-scrollbar-track{background-color: var(--body-odd)}
+
 .A textarea,
 .C textarea,
 .B textarea,
@@ -58,7 +59,7 @@ tr, td{display: flex;}
 .F textarea,
 .I textarea,
 .H textarea,
-.K textarea{padding-top: var(--fs-textarea);text-align: center;}
+.K textarea{line-height: calc(var(--height-body) - 2px);text-align: center;}
 
 /*
 
@@ -124,19 +125,3 @@ tbody .H,
 tbody .I,
 tbody .J,
 tbody .K{height: var(--height-body);} */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
