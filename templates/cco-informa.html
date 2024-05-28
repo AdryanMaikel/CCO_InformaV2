@@ -12,7 +12,12 @@
 </head>
 <body>
     <header class="w100 row between">
-        <h1 class="row">Histórico de eventos</h1>
+        <div id="configurations-table" class="a">
+            <button id="toggle-div-config-table" class="a row icons">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </div>
+        <h1 class="r row">Histórico de eventos</h1>
         <div id="update-sheet" class="row">
             <span>99</span>
             <button class="row icons"><i class="fa-solid fa-arrows-rotate"></i></button>
@@ -31,7 +36,7 @@
                 </tr>
             </thead>
             <tbody>{% for row in rows %}
-                <tr id="row-{{ row[0] }}" lcass="{{ loop.cycle('even', 'odd') }}">{% for cell in row %}
+                <tr id="row-{{ row[0] }}" class="{{ loop.cycle('even', 'odd') }}">{% for cell in row %}
                     <td class="{{ '_' if loop.first else letters[loop.index - 2] }}">
                         {% if loop.first %}{{ cell }}{% else %} <textarea id="cell-{{ letters[loop.index - 2] }}{{ row[0] }}" disabled autocomplete="off">{{ cell }}</textarea> {% endif %}
                     </td>{% endfor %}
