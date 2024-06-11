@@ -6,31 +6,47 @@
     /*sizes*/--height-thead: calc(var(--height-cols) + var(--height-letters))
 }
 
-body{padding: 4px;}h1{font-size: 18px;left: 14px;}section{height: calc(100% - 27px)}
-#configurations-table{top: -400px;left: 8px;width: 450px;height: 400px; background: var(--white);z-index: 80;transition: top .5s cubic-bezier(0.15, 0.96, 0.84, 0.95)}
-#configurations-table.open{top: 0;}
-#toggle-div-config-table{top: 399px;background: var(--white);z-index: 80;
-                         border-bottom-left-radius: 12px;border-bottom-right-radius: 12px
+.toggle.true .fa-solid.fa-gear.x{top: -30px;}
+.toggle.true i.fa-xmark.v{top: 0;}
 
+body{padding: 4px;}h1{font-size: 18px;left: 14px;}section{height: calc(100% - 27px)}
+#configurations-table{top: 0px;left: -450px;width: 450px;height: 400px; background: var(--white);z-index: 80;transition: left .5s cubic-bezier(0.15, 0.96, 0.84, 0.95)}
+#configurations-table.open{left: 0;}
+#div-config-table{top: 3px;left: 449px;background: var(--white);z-index: 80;
+    border-top-right-radius: 12px;border-bottom-right-radius: 12px;
 }
-#configurations-table button{}
+#configurations-table span, #configurations-table label {color: var(--blue-dark);}
+#configurations-table button{margin-left: 1px;}
 #configurations-table button i{color: var(--blue-dark);}
-table{display: block;position: relative;overflow-y: hidden;overflow-x: auto;
-      border-color: var(--white);background-color: var(--blue-dark)}
-thead{position: absolute;background-color: none;z-index: 20}
-tbody{position: absolute;top: var(--height-thead);z-index: 10;overflow-y: scroll;
-      height: calc(100% - var(--height-thead))}
+table{
+    display: block;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: auto;
+    border-color: var(--white);
+    background-color: var(--blue-dark)
+    }
+thead{position: absolute;background-color: transparent;z-index: 20}
+tbody{
+    position: absolute;
+    top: var(--height-thead);
+    z-index: 10;
+    /* overflow-y: scroll; */
+    height: calc(100% - var(--height-thead))
+    }
 
 td{overflow: hidden}
 tbody tr td{height: var(--height-body)}
-tr, td{display: flex}
+tr, td{display: flex;}
+td{pointer-events: none;}tr.active td{pointer-events: all;}tr.focus{border-color: var(--header-columns)}
 .letters td{height: var(--height-letters);font-size: var(--fs-letters);line-height: var(--height-letters);
-            justify-content: center;opacity: .8}
+    justify-content: center;opacity: .8}
 .columns td{height: var(--height-cols);line-height: var(--fs-columns);font-size: var(--fs-columns);
-            justify-content: center;align-items: center;font-weight: bold;
-            background-color: var(--header-columns)}
+    justify-content: center;align-items: center;font-weight: bold;
+    background-color: var(--header-columns)}
 .even td{background-color: var(--body-even)}
-._{padding-right: 3px;background: transparent!important;width: var(--_);align-items: center!important;justify-content: flex-end!important;opacity: .8!important;font-size: var(--fs-textarea)!important;}
+._{padding-right: 3px;background: transparent!important;width: var(--_);align-items: center!important;
+    justify-content: flex-end!important;opacity: .8!important;font-size: var(--fs-textarea)!important;}
 .A{width: var(--A)}
 .B{width: var(--B)}
 .C{width: var(--C)}
@@ -40,7 +56,7 @@ tr, td{display: flex}
 .G{width: var(--G)}
 .H{width: var(--H)}
 .I{width: var(--I)}
-.J{width: var(--J)}
+.J{width: var(--J)}.J textarea{padding: 4px}
 .K{width: var(--K)}
 
 textarea{width: 100%;height: 100%;
@@ -60,6 +76,9 @@ textarea{width: 100%;height: 100%;
 .I textarea,
 .H textarea,
 .K textarea{line-height: calc(var(--height-body) - 2px);text-align: center;}
+
+tr td{}
+
 
 /*
 

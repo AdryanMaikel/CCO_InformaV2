@@ -14,7 +14,7 @@ button:active{scale: 0.95}
 
 button.row.icons{justify-content: center;}
 button.icons{width: 24px;height: 24px;}
-button.icons i{font-size: 18px;}
+button.icons i{font-size: 18px;pointer-events: none;}
 
 button.toggle{overflow-y: hidden;}
 button.toggle i{position: absolute;transition: top .5s ease-in-out;}
