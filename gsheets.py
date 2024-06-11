@@ -11,7 +11,7 @@ WS_CCO_INFORMA = SS.worksheet("Histórico de eventos")
 
 
 def add_last_row(col: str) -> int:
-    last_row = len(WS_DADOS.col_values("ABCDE".index(col) + 1)) + 1
+    last_row = len(WS_DADOS.col_values("_ABCDE".index(col))) + 1
     if last_row > WS_DADOS.row_count:
         WS_DADOS.add_rows(1)
     return last_row

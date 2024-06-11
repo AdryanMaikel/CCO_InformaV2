@@ -12,10 +12,10 @@ window.addEventListener("resize", event=>adjust_width_table(event.target.innerWi
 // const open_config_sheet = document.querySelector("#div-config-table")
 // open_config_sheet.onclick = (event)=>{const element = event.target;element.classList.toggle("true");element.parentElement.classList.toggle("open")}
 
-var editing = {this: false, element: HTMLElement}
-var focus = {this: false, element: HTMLElement}
 
-const trs = document.querySelectorAll("tbody > tr")
+/* Editando as linhas */
+var editing = {this: false, element: HTMLElement, values: {}}
+var focus = {this: false, element: HTMLElement}
 
 function check_editing(target) {
     if(editing.this && editing.element.id != target.id)return;
@@ -25,13 +25,16 @@ function check_editing(target) {
 
 function active_editing(target) {
     if(editing.this)return;
-    editing = {this: true, element: target}
-    console.log("ativando linha "+target.id)
+    editing.this = true;editing.element = target;
     target.classList.add("active");
-    target.querySelectorAll("td textarea").forEach(textarea=>textarea.disabled = false)
+    target.querySelectorAll("td").forEach(td=>{
+        const textarea = td.querySelector("textarea");
+        if(!textarea){editing.values = {row: parseInt(td.textContent.trim())};return}
+        editing.values[td.className] = textarea.value;textarea.disabled = false;
+    })
 }
 
-trs.forEach(tr=>{
+document.querySelectorAll("tbody > tr").forEach(tr=>{
     tr.addEventListener("click", ({target})=>check_editing(target))
     tr.addEventListener("dblclick", ({target})=>active_editing(target))
 })
