@@ -30,8 +30,7 @@ thead{position: absolute;background-color: transparent;z-index: 20}
 tbody{
     position: absolute;
     top: var(--height-thead);
-    z-index: 10;
-    /* overflow-y: scroll; */
+    z-index: 20;
     height: calc(100% - var(--height-thead))
 }
 tr{position: relative;z-index: 19;transition: box-shadow .5s ease-out}

@@ -13,8 +13,10 @@ window.addEventListener("resize", event=>adjust_width_table(event.target.innerWi
 // open_config_sheet.onclick = (event)=>{const element = event.target;element.classList.toggle("true");element.parentElement.classList.toggle("open")}
 
 
+const url = window.location.href;
+
 /* Editando as linhas */
-var editing = {this: false, element: HTMLElement, values: {}}
+var editing = {this: false, element: HTMLElement, values: {}, action: ""}
 var focus = {this: false, element: HTMLElement}
 
 const buttons_actions = document.getElementById("actions-row")
@@ -30,7 +32,6 @@ function check_editing(target) {
             focus.element.classList.remove("focus")
         }
     }
-    if(focus.this && focus.element != target);
     focus.element = target;target.classList.add("focus");focus.this = true;buttons_actions.classList.add("focus");return;
 }
 
@@ -53,6 +54,7 @@ document.querySelectorAll("tbody > tr").forEach(tr=>{
 document.getElementById("del-row").addEventListener("click", _=>{
     if(!focus.this)return;
     active_editing(focus.element);
+    editing.action = "del";
     focus.element.classList.remove("active");
     focus.element.classList.add("delete");
 })
@@ -60,12 +62,20 @@ document.getElementById("del-row").addEventListener("click", _=>{
 document.getElementById("cancel-editing").addEventListener("click", _=>{
     if(!editing.this)return;
     editing.element.querySelectorAll("td").forEach(td=>{
-        const textarea = td.querySelector(`textarea`)
-        if(!textarea)return;
+        const textarea = td.querySelector(`textarea`);
+        if(!textarea){editing.values = {row: parseInt(td.textContent.trim())};return}
         textarea.value = editing.values[td.className]
     })
-    editing.element.classList.remove("delete", "active", "focus")
+    editing.element.classList.remove("delete", "active", "focus");
     buttons_actions.classList.remove("confirm");
-    editing = {this: false, element: HTMLElement, values: {}};
+    editing = {this: false, element: HTMLElement, values: {}, action: ""};
     focus = {this: false, element: HTMLElement};
+})
+
+document.getElementById("edit-row").addEventListener("click", _=>{
+    if(!focus.this)return;
+    focus.element.classList.add("active");
+    active_editing(focus.element);
+    editing.action = "edit";
+    window.location.href = `${url}#${focus.element.id}`;
 })
