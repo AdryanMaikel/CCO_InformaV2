@@ -17,16 +17,28 @@ window.addEventListener("resize", event=>adjust_width_table(event.target.innerWi
 var editing = {this: false, element: HTMLElement, values: {}}
 var focus = {this: false, element: HTMLElement}
 
+const buttons_actions = document.getElementById("actions-row")
+
 function check_editing(target) {
     if(editing.this && editing.element.id != target.id)return;
-    if(focus.this && focus.element == target)return active_editing(target);
-    focus.element = target;target.classList.add("focus");focus.this = true;return;
+    if(focus.this){
+        if(focus.element == target){
+            target.classList.add("active");
+            active_editing(target);
+            return
+        }else{
+            focus.element.classList.remove("focus")
+        }
+    }
+    if(focus.this && focus.element != target);
+    focus.element = target;target.classList.add("focus");focus.this = true;buttons_actions.classList.add("focus");return;
 }
 
 function active_editing(target) {
     if(editing.this)return;
+    buttons_actions.classList.remove("focus");
+    buttons_actions.classList.add("confirm");
     editing.this = true;editing.element = target;
-    target.classList.add("active");
     target.querySelectorAll("td").forEach(td=>{
         const textarea = td.querySelector("textarea");
         if(!textarea){editing.values = {row: parseInt(td.textContent.trim())};return}
@@ -36,5 +48,24 @@ function active_editing(target) {
 
 document.querySelectorAll("tbody > tr").forEach(tr=>{
     tr.addEventListener("click", ({target})=>check_editing(target))
-    tr.addEventListener("dblclick", ({target})=>active_editing(target))
+})
+
+document.getElementById("del-row").addEventListener("click", _=>{
+    if(!focus.this)return;
+    active_editing(focus.element);
+    focus.element.classList.remove("active");
+    focus.element.classList.add("delete");
+})
+
+document.getElementById("cancel-editing").addEventListener("click", _=>{
+    if(!editing.this)return;
+    editing.element.querySelectorAll("td").forEach(td=>{
+        const textarea = td.querySelector(`textarea`)
+        if(!textarea)return;
+        textarea.value = editing.values[td.className]
+    })
+    editing.element.classList.remove("delete", "active", "focus")
+    buttons_actions.classList.remove("confirm");
+    editing = {this: false, element: HTMLElement, values: {}};
+    focus = {this: false, element: HTMLElement};
 })
