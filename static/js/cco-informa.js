@@ -13,21 +13,19 @@ window.addEventListener("resize", event=>adjust_width_table(event.target.innerWi
 // open_config_sheet.onclick = (event)=>{const element = event.target;element.classList.toggle("true");element.parentElement.classList.toggle("open")}
 
 var editing = {this: false, element: HTMLElement}
-var focus = false
+var focus = {this: false, element: HTMLElement}
 
 const trs = document.querySelectorAll("tbody > tr")
 
 function check_editing(target) {
-    if(editing.this && editing.element.id == target.id){
-        return;
-    }
-    if(!focus){target.classList.add("focus");focus = true;return;}
-    active_editing(target);
+    if(editing.this && editing.element.id != target.id)return;
+    if(focus.this && focus.element == target)return active_editing(target);
+    focus.element = target;target.classList.add("focus");focus.this = true;return;
 }
 
 function active_editing(target) {
     if(editing.this)return;
-    editing.this=true;
+    editing = {this: true, element: target}
     console.log("ativando linha "+target.id)
     target.classList.add("active");
     target.querySelectorAll("td textarea").forEach(textarea=>textarea.disabled = false)

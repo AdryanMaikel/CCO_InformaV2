@@ -34,11 +34,13 @@ tbody{
     /* overflow-y: scroll; */
     height: calc(100% - var(--height-thead))
     }
-
+tr{position: relative;z-index: 19;transition: box-shadow .5s ease-out}
 td{overflow: hidden}
 tbody tr td{height: var(--height-body)}
 tr, td{display: flex;}
-td{pointer-events: none;}tr.active td{pointer-events: all;}tr.focus{border-color: var(--header-columns)}
+tr.active{border-color: var(--blue-mob);}tr.focus{box-shadow: 0 0 10px 1px var(--blue-mob);z-index: 20;}
+td{pointer-events: none;}tr.active td{pointer-events: all;}
+
 .letters td{height: var(--height-letters);font-size: var(--fs-letters);line-height: var(--height-letters);
     justify-content: center;opacity: .8}
 .columns td{height: var(--height-cols);line-height: var(--fs-columns);font-size: var(--fs-columns);
