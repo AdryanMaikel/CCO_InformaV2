@@ -37,3 +37,9 @@ button.icons i.fa-xmark{font-size: 24px;}
 ::-webkit-scrollbar{width: 8px;display: block;height: 10px;}
 ::-webkit-scrollbar-thumb{position: fixed;border-radius: 4px;background-color: var(--white)}
 ::-webkit-scrollbar-track{background-color: transparent}
+
+/*Cores icones*/
+.fa-pencil{color: peru}
+.fa-trash-can{color: slategrey}
+.fa-paper-plane{color: green}
+.fa-ban{color: red}
