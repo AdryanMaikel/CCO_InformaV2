@@ -9,3 +9,11 @@ section{width: calc(100% - 20px);height: calc(100%);left: 10px;}
 address{width: 100%;text-align: center;}
 #menu-config{width: 450px;height: 100vh;position: fixed;z-index: 99;top: 0;right: -450px;background: var(--blue-dark);transition: right .8s cubic-bezier(1, -1.08, 0, 2.19);}
 #menu-config.open{right: 0;}
+
+#login{width: 235px;height: 40px;background-color: var(--blue-mob);overflow: hidden;right: -250px;border-top-left-radius: 3px;border-bottom-left-radius: 3px;gap: 5px;z-index: 99;transition: right .5s ease-in-out}
+#login.open{right: 0}
+#login label{position: relative;}
+#login label input{width: 115px;position: relative;left: 5px}
+#login label input#password{width: 50px;padding-right: 7px}
+#login label span{position: absolute;top: -7px;left: 6px;font-size: 11px;opacity: .8}
+#login label input{border-bottom: 1px solid var(--white);top: 4px;font-size: 13px;height: 100%;padding-left: 5px;padding-right: 5px}
