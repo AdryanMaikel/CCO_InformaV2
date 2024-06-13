@@ -22,6 +22,10 @@ button.toggle.true i.x{top: 25px;}button.toggle i.v{top: -25px;}
 button.toggle.true i.v,button.toggle i.x{top: 2px;}
 
 button.icons i.fa-xmark{font-size: 24px;}
+
+input{border: none;outline: none;background: transparent;color: var(--white);}
+
+button.icons i.fa-check{font-size: 24px;}
 .x{color: red;}.v{color: green;}
 
 .d-none{display: none}
