@@ -16,6 +16,11 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/login")
+def login():
+    return render_template("")
+
+
 @app.route("/cco-informa")
 def cco_informa():
     return render_template("cco-informa.html", letters=LETTERS, cols=COLUMNS,
