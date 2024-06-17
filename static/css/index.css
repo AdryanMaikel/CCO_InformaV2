@@ -17,3 +17,5 @@ address{width: 100%;text-align: center;}
 #login label input#password{width: 50px;padding-right: 7px}
 #login label span{position: absolute;top: -7px;left: 6px;font-size: 11px;opacity: .8}
 #login label input{border-bottom: 1px solid var(--white);top: 4px;font-size: 13px;height: 100%;padding-left: 5px;padding-right: 5px}
+
+#login.error input{border-color: red}
