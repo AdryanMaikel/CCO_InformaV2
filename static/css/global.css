@@ -13,7 +13,7 @@ button:hover{scale: 1.05;}
 button:active{scale: 0.95}
 
 button.row.icons{justify-content: center;}
-button.icons{width: 24px;height: 24px;}
+button.icons{width: 24px;height: 24px;border: none;outline: none;}
 button.icons i{font-size: 18px;pointer-events: none;}
 
 button.toggle{overflow-y: hidden;}
