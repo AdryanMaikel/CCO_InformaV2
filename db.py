@@ -39,13 +39,16 @@ def set_number(name: str, cracha: int):
 
 
 def contains_operator(name: str, cracha: int) -> bool:
-    rows = execute("SELECT name FROM operators WHERE name = ? AND id = ?",
-                   params=(name, cracha), commit=False)
-    return True if rows else False
+    try:
+        ROWS = execute("SELECT name FROM operators WHERE name = ? AND id = ?",
+                       params=(name, cracha), commit=False)
+        return True if ROWS else False
+    except Exception as ERROR:
+        print(ERROR)
+        return False
 
 
 # insert_operator("Adryan")
-set_number("Adryan", 155)
-print(contains_operator("Adryan", 0))
+# set_number("Adryan", 155)
+# print(contains_operator("Adryan", "155"))
 # remove_operator("Adryan")
-# print(contains_operator("Adryan"))
