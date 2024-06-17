@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informa</title>
-    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
     <script type="module" src="/static/js/global.js"></script>
     <script type="module" src="/static/js/font-awesome.js"></script>
     <script src="/static/js/index.js" defer></script>
@@ -19,20 +19,20 @@
             <h1>*CCO Informa*</h1>
         </div>
         <div class="a row" id="login">
-            <label for="operador">
+            <label for="operator">
                 <span>Operador</span>
-                <input type="text" name="operador" id="operador" autocomplete="off">
+                <input type="text" name="operator" id="operator" autocomplete="off" disabled>
             </label>
             <label for="password">
                 <span>Senha</span>
-                <input type="password" name="password" id="password">
+                <input type="password" name="password" id="password" autocomplete="off" disabled>
             </label>
 
-            <button class="row icons" id="login-confirm">
+            <button class="row icons" id="submit-login" disabled>
                 <i class="fa-solid fa-check v"></i>
             </button>
 
-            <button class="row icons" id="login-cancel">
+            <button class="row icons" id="cancel-login" disabled>
                 <i class="fa-solid fa-ban"></i>
             </button>
         </div>
@@ -60,7 +60,7 @@
         </section>
     </main>
     <footer class="row">
-        <address>&copy; Adryan Maikel &hearts;</address>
+        <address>&copy; Adryan Maikel</address>
     </footer>
 </body>
 </html>
