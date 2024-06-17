@@ -4,23 +4,36 @@ function sum_columns() {
     Object.entries(width_columns).forEach(([column, width]) => {
         document.documentElement.style.setProperty(`--${column}`, `${width}px`);
         width_columns.sum += width;
-    })
+    });
 }
-sum_columns()
+sum_columns();
 
-const table = document.querySelector("table")
+const table = document.querySelector("table");
 function adjust_width_table(width) {
     table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum + 10}px`;
 }
 adjust_width_table(window.innerWidth);
 window.onresize = ({target}) => adjust_width_table(target.innerWidth);
 
-const url = window.location.href;
+var editing = {this: false, element: HTMLElement, values: {}, action: ""};
+var focus = {this: false, element: HTMLElement};
+
+var timer = 99;
+const timer_element = document.querySelector("#update-sheet span");
+const button_reload = document.querySelector("#update-sheet button");
+function reload_page() {
+    window.parent.postMessage("reload", "*");
+    button_reload.classList.add("load");
+}
+button_reload.onclick = reload_page;
+setInterval(() => {
+    if(timer <= 0) {if(!editing.this) reload_page(); return;}
+    timer -= 1;
+    timer_element.textContent = timer;
+}, 1000)
+
 
 /* Editando as linhas */
-var editing = {this: false, element: HTMLElement, values: {}, action: ""}
-var focus = {this: false, element: HTMLElement}
-
 const buttons_actions = document.getElementById("actions-row")
 
 function active_editing(target, action) {
