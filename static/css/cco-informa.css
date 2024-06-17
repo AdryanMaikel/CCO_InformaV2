@@ -94,6 +94,9 @@ tr td{}
 #actions-row.focus{top: -21px;}
 #actions-row.confirm{top: 5px;}
 
+#update-sheet button i{rotate: 0deg;transition: rotate .5s}
+#update-sheet button.load i{rotate: 360deg}
+
 /*
 
 table tr td{overflow: hidden;}
