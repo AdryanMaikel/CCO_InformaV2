@@ -1,33 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script type="module" src="/static/js/global.js"></script>
+    <title>CCO-INFORMA</title>
     <link rel="stylesheet" href="/static/css/cco-informa.css">
+    <script type="module" src="/static/js/global.js"></script>
     <script type="module" src="/static/js/font-awesome.js"></script>
     <script type="module" src="/static/js/cco-informa.js"></script>
 
 </head>
 <body>
     <header class="w100 row between">
-        <!-- <div id="configurations-table" class="a">
-            <div class="row">
-                <span>Cores</span>
-            </div>
-            <div class="row">
-                <label for="color-header">
-                    Header<input type="color" name="color-header" id="color-header" value="#ffffff">
-                </label>
-            </div>
-            <button id="div-config-table" class="a row icons toggle">
-                <i class="fa-solid fa-gear x"></i>
-                <i class="fa-solid fa-xmark v"></i>
-            </button>
-        </div> -->
         <h1 class="r row">Histórico de eventos</h1>
-
         <div id="actions-row" class="a col">
             <div class="r row">
                 <button class="row icons" id="confirm-editing"><i class="fa-solid fa-paper-plane"></i></button>
@@ -39,8 +24,6 @@
                 <button class="row icons" id="add-row"><i class="fa-solid fa-plus"></i></button>
             </div>
         </div>
-
-
         <div id="update-sheet" class="row">
             <span>99</span>
             <button class="row icons"><i class="fa-solid fa-arrows-rotate"></i></button>
@@ -68,10 +51,7 @@
         </table>
     </section>
     <footer>
-
+        <input class="d-none" type="text" name="operador" id="operador" value="{{ user }}">
     </footer>
-    <div id="header-sheet" >
-        
-    </div>
 </body>
 </html>
