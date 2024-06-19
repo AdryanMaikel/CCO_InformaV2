@@ -22,12 +22,12 @@ def login():
     operator, password = request.form["operator"], request.form["password"]
     if not contains_operator(operator, password):
         return "not-found"
-    return f"cco-informa?operator={operator}"
+    return f"cco-informa/{operator}"
 
 
-@app.route("/cco-informa")
-def cco_informa():
-    operator = request.args.get("operator")
+@app.route("/cco-informa/<operator>", methods=["GET"])
+def cco_informa(operator):
+    # operator = request.args.get("operator")
     return render_template("cco-informa.html", letters=LETTERS, cols=COLUMNS,
                            rows=SHEETS["cco-informa"]["get"](), user=operator)
 

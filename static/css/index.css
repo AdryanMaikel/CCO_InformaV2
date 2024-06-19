@@ -5,6 +5,7 @@ header figure{width: 107px;height: 40px;margin-left: 10px;}
 main{height: calc(100vh - 100px);}
 section{width: calc(100% - 20px);height: calc(100%);left: 10px;}
 #overlay{background: var(--blue-dark);z-index: 99;transition: width .5s;transform-origin: left;}
+iframe{position: relative;z-index: 90;}
 #overlay.hidden{width: 0;}
 address{width: 100%;text-align: center;}
 #menu-config{width: 450px;height: 100vh;position: fixed;z-index: 99;top: 0;right: -450px;background: var(--blue-dark);transition: right .8s cubic-bezier(1, -1.08, 0, 2.19);}

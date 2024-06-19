@@ -7,10 +7,12 @@ const iframe = document.querySelector("iframe");
 
 iframe.onload = () => overlay.classList.add("hidden");
 
-window.onmessage = ({data}) => {
-    if(data == "reload"){
-        overlay.classList.remove("hidden");
-        setTimeout(()=>iframe.contentWindow.location.reload(), 500);
+window.onmessage = ({ data }) => {
+    if (data === "reload") {
+      overlay.classList.remove("hidden");
+      setTimeout(() => {
+        iframe.contentWindow.location.reload();
+      }, 500);
     }
 };
 
@@ -18,12 +20,20 @@ const login = document.getElementById("login");
 
 const operator = login.querySelector("#operator");
 const password = login.querySelector("#password");
+const bnt_submit_login = login.querySelector("#submit-login");
+const btn_cancel_login = login.querySelector("#cancel-login");
+
+function toggle_disabled(bool = null) {
+    if(!bool) bool = !operator.disabled;
+    operator.disabled = bool;
+    password.disabled = bool;
+    bnt_submit_login.disabled = bool;
+    btn_cancel_login.disabled = bool;
+}
+
 
 function reset_login(event = {}, operator_value = "", password_value = "") {
-    operator.disabled = true;
-    password.disabled = true;
-    bnt_submit_login.disabled = true;
-    btn_cancel_login.disabled = true;
+    toggle_disabled(true)
     operator.value = operator_value;
     password.value = password_value;
     login.classList.remove("open");
@@ -33,7 +43,12 @@ function create_form(action = "error", method = "POST", inputs = []) {
     const form = document.createElement("form");
     form.setAttribute("action", action);
     form.setAttribute("method", method);
-    inputs.forEach(input=>form.appendChild(input.cloneNode(false)));
+    inputs.forEach(input=>{
+        const _input = document.createElement("input");
+        _input.name = input.name;
+        _input.value = input.value
+        form.appendChild(_input)
+    });
     return form;
 }
 const btn_user = document.getElementById("user");
@@ -42,6 +57,8 @@ async function check_login() {
     overlay.classList.remove("hidden");
     const form = create_form("/login", "POST", [operator, password]);
     const form_data = new FormData(form);
+    
+    iframe.setAttribute("src", "cco-informa/Adryan");
     try {
         const response = await fetch("/login", {method: "POST", body: form_data});
         const text = await response.text();
@@ -49,7 +66,7 @@ async function check_login() {
             login.classList.add("error");
             return;
         }
-        iframe.setAttribute("src", text);
+        iframe.src = text;
         login.classList.remove("open");
         btn_user.classList.add("true");
         const json_login = JSON.stringify({user: operator.value, password: password.value})
@@ -59,8 +76,6 @@ async function check_login() {
     }
 }
 
-const bnt_submit_login = login.querySelector("#submit-login");
-const btn_cancel_login = login.querySelector("#cancel-login");
 
 btn_user.onclick = () => {
     if(btn_user.classList.contains("true")){
@@ -72,10 +87,7 @@ btn_user.onclick = () => {
         window.location.reload();
         return;
     }
-    operator.disabled = false;
-    password.disabled = false;
-    bnt_submit_login.disabled = false;
-    btn_cancel_login.disabled = false;
+    toggle_disabled(false)
     login.classList.add("open");
     bnt_submit_login.onclick = check_login;
     btn_cancel_login.onclick = reset_login;
@@ -84,9 +96,10 @@ btn_user.onclick = () => {
 
 if(document.cookie.split(";").find(cookie=>cookie.trim().startsWith("login="))){
     const config = JSON.parse(decodeURIComponent(document.cookie.split(";").find(cookie=>cookie.trim().startsWith("login=")).split("=")[1]))
-    console.log("teste2")
     operator.value = config.user;
     password.value = config.password;
     if(config.password && config.user)
+        toggle_disabled(false)
         check_login()
+        toggle_disabled(true)
 }
