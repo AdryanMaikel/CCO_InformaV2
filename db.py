@@ -48,6 +48,38 @@ def contains_operator(name: str, cracha: int) -> bool:
         return False
 
 
+if __name__ == "__main__":
+    querys = {
+        "create": """\
+CREATE TABLE IF NOT EXISTS operators (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    cracha TEXT NOT NULL,
+    password TEXT NOT NULL
+);""",
+        "alter table": """\
+ALTER TABLE operators ADD COLUMN logged INTEGER DEFAULT 0""",
+        "drop": "DROP TABLE operators",
+        "select": lambda cols: f"SELECT {''.join(cols)} FROM operators",
+        "add": """INSERT INTO operators (name, cracha, password) VALUES \
+(?, ?, ?)""",
+        "delete": "DELETE FROM operators WHERE id = ?",
+        "update": lambda cols: f"UPDATE operators SET {cols} where id = ?"
+    }
+
+    # execute(querys["alter table"], params=())
+    # execute(querys["update"]("logged =  ?"), ((False, 1)))
+    # execute(querys["add"], params=("Adryan", "155", "PintoDuro"))
+    # execute(querys["delete"], params=(1,))
+
+    print(execute(querys["select"]("id, name, cracha, logged"), (), False))
+
+
+"""\
+CREATE OR REPLACE TABLE IF EXISTS operators (id, name, cracha, password)
+"""
+
+
 # insert_operator("Adryan")
 # set_number("Adryan", 155)
 # print(contains_operator("Adryan", "155"))
