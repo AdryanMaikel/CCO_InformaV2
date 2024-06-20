@@ -18,7 +18,7 @@ window.onresize = ({target}) => adjust_width_table(target.innerWidth);
 var editing = {this: false, element: HTMLElement, values: {}, action: ""};
 var focus = {this: false, element: HTMLElement};
 
-var timer = 10;
+var timer = 59;
 const timer_element = document.querySelector("#update-sheet span");
 const button_reload = document.querySelector("#update-sheet button");
 function reload_page() {
