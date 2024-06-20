@@ -2,7 +2,7 @@
 :root{
     /*colors*/--blue-mob: #3b3b8a;--blue-dark: #01041e;--blue-dark-hover: #0a136b;--white: #e1e1fa;
     /*cursors*/--cursor-default: url("/static/assets/normal.cur"), auto;--cursor-danger: url("/static/assets/unavailable.cur"), auto;--cursor-horizontal: url("/static/assets/horizontal.cur"), auto}
-*{margin: 0;padding: 0;box-sizing: border-box;font-family: "Poppins", sans-serif;cursor: var(--cursor-default);scroll-behavior: smooth;}
+*{margin: 0;padding: 0;box-sizing: border-box;font-family: "Poppins", sans-serif;scroll-behavior: smooth;}
 *:disabled{cursor: var(--cursor-danger);}
 *.horizontal:hover{cursor: var(--cursor-horizontal);}
 body{width: 100vw;height: 100vh;}
