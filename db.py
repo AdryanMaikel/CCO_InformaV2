@@ -57,27 +57,30 @@ def contains_operator(name: str, password: str) -> bool:
         return False
 
 
-def get_operators() -> dict[str, str | bool]:
+def get_operators() -> list[dict[str, str | bool]]:
     try:
         ROWS = execute(QUERY["get"], commit=False)
         return [{"id": row[0], "name": row[1], "cracha": row[2],
                  "logged": True if row[3] == 1 else False} for row in ROWS]
     except Exception as ERROR:
         print(ERROR)
-        return {"erro": ERROR}
+        return [{"erro": ERROR}]
 
 
 def update_status(name: str, online: bool):
+    print(online)
     _id = 0
-    operators = get_operators()
-    for operator in operators:
-        if operator["name"] == name:
-            _id = operator["id"]
-            break    
+    for operator in get_operators():
+        print(operator)
+        if operator.get("name", "") == name:
+            _id = operator.get("id", 0)
+            break
     if _id == 0:
-        raise("Nome não encontrado")
+        raise Exception("Nome não encontrado")
     try:
+        print(_id)
         execute(QUERY["update"]("logged =  ?"), params=(online, _id))
+        print(get_operators())
     except Exception as ERROR:
         print(ERROR)
 
@@ -108,7 +111,9 @@ ALTER TABLE operators ADD COLUMN logged INTEGER DEFAULT 0""",
     # execute(querys["update"]("logged =  ?"), ((False, 1)))
     # execute(querys["delete"], params=(1,))
     # print(execute(querys["select"]("id, name, cracha, logged"), (), False))
-    
+
     # print(contains_operator("Adryan", "PintoDuro"))
     # update_status("dryan", False)
+    # execute(querys.get("update")("password = ?"), ("155", 1))
     print(get_operators())
+    print(contains_operator("Adryan", "155"))

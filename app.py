@@ -32,10 +32,14 @@ def cco_informa(operator):
                            rows=SHEETS["cco-informa"]["get"](), user=operator)
 
 
-@app.route("/logout/<operator>", methods=["GET"])
+@app.route("/logout/<operator>", methods=["POST"])
 def logout(operator):
-    update_status(operator, False)
-    print(operator)
+    try:
+        update_status(operator, False)
+        return f"{operator}, deslogado com sucesso!"
+    except Exception as error:
+        print(error)
+        return "Falha ao deslogar."
 
 
 @app.errorhandler(404)

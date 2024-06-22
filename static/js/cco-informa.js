@@ -95,3 +95,11 @@ function reset_layout() {
 }
 
 document.getElementById("cancel-editing").onclick = reset_layout;
+
+const operator = document.getElementById("operador");
+var logged = true;
+window.onbeforeunload = () => {
+    if(!logged)return;
+    window.parent.postMessage("logout-"+operator.textContent.trim(), "*");
+    logged = false;
+}
