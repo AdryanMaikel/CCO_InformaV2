@@ -42,6 +42,9 @@
                 <i class="fa-solid fa-user-xmark x"></i>
                 <i class="fa-solid fa-user-check v"></i>
             </button>
+            <button id="messages" class="row icons r">
+                <i class="fa-regular fa-comment-dots"></i>
+            </button>
             <button id="config-open" class="row icons">
                 <i class="fa-solid fa-gear"></i>
             </button>
@@ -57,7 +60,16 @@
                     <button id="config-close" class="row icons"><i class="fa-solid fa-xmark x"></i></button>
                 </div>
             </div>
-            <iframe src="/erro" class="wh100" frameborder="0"></iframe>
+            <div id="chat" class="border-1px">
+                <div class="row between">
+                    <h3>Chat</h3>
+                    <button id="close-chat" class="row icons"><i class="fa-solid fa-xmark x"></i></button>
+                </div>
+                <div id="content-chat" class="row w100">
+                    <!-- <iframe src="/chat/Adryan/155" class="w100" frameborder="0"></iframe> -->
+                </div>
+            </div>
+            <iframe id="table" src="/erro" class="wh100" frameborder="0"></iframe>
         </section>
     </main>
     <footer class="row">
