@@ -3,7 +3,8 @@
 <head><style>*{cursor: url("/src/assets/normal.cur"), auto}</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>*CCO Informa*</title>
+    <title></title>
+    <script src="/src/js/login.js" defer></script>
 </head>
 <body>
     <header>
@@ -12,15 +13,15 @@
     <section>
         <h2></h2>
 
-        <form action="/login" method="post" autocomplete="off">
-            <div>
-                <span>Usuário:</span>
-                <input type="text" name="user" id="user">
-            </div>
-            <div>
+        <form id="login" action="/login" method="post">
+            <label for="operator">
+                <span>Operador:</span>
+                <input type="text" name="operator" id="operator">
+            </label>
+            <label for="password">
                 <span>Senha:</span>
-                <input type="password" name="password" id="password">
-            </div>
+                <input type="password" name="password" id="password" autocomplete="off">
+            </label>
             <div>
                 <button type="submit">ENTRAR</button>
                 <button type="reset">CANCELAR</button>
@@ -28,7 +29,7 @@
         </form>
     </section>
     <footer>
-        <address>&copy;Adryan</address>
+        <address>&copy;Adryan Maikel</address>
     </footer>
 
     <script>

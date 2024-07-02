@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, abort
-from db import users
+from db import operators
 
 app = Flask(__name__, static_folder="src", template_folder="pages")
+
+check_pass = operators["check_password"]
 
 
 @app.route("/")
@@ -13,9 +15,9 @@ def index():
 def login():
     if request.method == "GET":
         return abort(404)
-    user, _pass = request.form["user"], request.form["password"]
-    if user not in users["get"] or not user["check_password"](user, _pass):
-        return "Usuário ou senha inválidos."
+    operator, _pass = request.form["operator"], request.form["password"]
+    if operator not in operators["get"] or not check_pass(operator, _pass):
+        return "Operador ou senha inválidos."
     return "Logado"
 
 

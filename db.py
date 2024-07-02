@@ -24,22 +24,36 @@ def check_password(user: str, password: str):
                params=(user, password)):
         return True
     return False
- 
 
-users = {
-    "get": [row[0] for row in execute("SELECT name FROM operators")],
-    "insert": "",
-    "delete": "",
+
+def delete_operator(name: str, password: str):
+    _id = execute("SELECT id FROM operators WHERE name = ? AND password = ?",
+                  params=(name, password), commit=False)
+    if not _id:
+        return
+    execute("DELETE FROM operators WHERE id = ?", _id)
+
+
+operators = {
+    "get": [row[0] for row in execute("SELECT name FROM operators",
+                                      commit=False)],
+    "insert": lambda name, cracha, password: execute(
+        "INSERT INTO operators INTO (name, cracha, password) VALUES (?, ?, ?)",
+        params=(name, cracha, password)
+    ),
+    "delete": lambda name, password: delete_operator(name, password),
     "check_password": lambda user, _pass: check_password(user, _pass)
 }
 
 # Criando tabela de usuários
 
-execute("""\
-CREATE TABLE IF NOT EXISTS operators (
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    cracha TEXT NOT NULL,
-    password TEXT NOT NULL,
-    logged INTEGER DEFAULT 0
-);""")
+# execute("""\
+# CREATE TABLE IF NOT EXISTS operators (
+#     id INTEGER PRIMARY KEY,
+#     name TEXT NOT NULL,
+#     cracha TEXT NOT NULL,
+#     password TEXT NOT NULL,
+#     logged INTEGER DEFAULT 0
+# );""")
+
+print(execute("select * from operators", commit=False))
