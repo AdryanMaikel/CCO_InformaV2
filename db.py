@@ -56,4 +56,5 @@ operators = {
 #     logged INTEGER DEFAULT 0
 # );""")
 
+operators["delete"]("Adryan", 151)
 print(execute("select * from operators", commit=False))
