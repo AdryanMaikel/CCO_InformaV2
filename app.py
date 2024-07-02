@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, abort, make_response
-from db import operators
+from db import operators, chat
 
 app = Flask(__name__, static_folder="src", template_folder="pages")
 
@@ -26,10 +26,12 @@ def login():
     return reponse
 
 
-@app.route("/get-message/<operator>/<password>", methods=["GET"])
+@app.route("/chat/<operator>/<password>", methods=["GET"])
 def get_messages(operator, password):
     if not check_pass(operator, password):
         abort(404)
+    return render_template("messages.html", messages=chat["get"](),
+                           name=operator)
 
 
 if __name__ == "__main__":

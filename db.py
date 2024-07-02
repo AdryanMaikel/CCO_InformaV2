@@ -1,4 +1,5 @@
 import sqlite3 as db
+from datetime import datetime as dt
 
 
 def execute(query: str, params: tuple = (), commit: bool = True) -> list:
@@ -38,11 +39,23 @@ operators = {
     "get": [row[0] for row in execute("SELECT name FROM operators",
                                       commit=False)],
     "insert": lambda name, cracha, password: execute(
-        "INSERT INTO operators INTO (name, cracha, password) VALUES (?, ?, ?)",
+        "INSERT INTO operators (name, cracha, password) VALUES (?, ?, ?)",
         params=(name, cracha, password)
     ),
     "delete": lambda name, password: delete_operator(name, password),
     "check_password": lambda user, _pass: check_password(user, _pass)
+}
+
+messages = {
+    "get": lambda: execute(
+        "SELECT name, date, message FROM messages WHERE visibled = 1",
+        commit=False
+    ),
+    "insert": lambda name, message: execute(
+        "INSERT INTO messages (name, date, message) VALUES (?, ?, ?)",
+        params=(name, dt.now(), message)
+    ),
+    "delete": ""
 }
 
 # Criando tabela de usuários
@@ -56,5 +69,20 @@ operators = {
 #     logged INTEGER DEFAULT 0
 # );""")
 
-operators["delete"]("Adryan", 151)
-print(execute("select * from operators", commit=False))
+execute("""\
+CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    date TIMESTAMP NOT NULL,
+    message TEXT NOT NULL,
+    visibled INTEGER DEFAULT 1
+);""")
+
+
+
+if __name__ == "__main__":
+    # operators["insert"]("Adryan", "151", "151")
+    # print(execute("select * from operators", commit=False))
+    messages["insert"]("Adryan", "Oi")
+    print(messages["get"]())
+    pass
