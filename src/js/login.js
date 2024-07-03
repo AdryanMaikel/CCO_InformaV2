@@ -14,12 +14,8 @@ async function login() {
 }
 
 window.onload = async function(event) {
-    if(operator && operator.value != "" 
-    && password && password.value != "") {
-        console.log("preenchidos");
+    if(operator && operator.value != "" && password && password.value != "")
         login()
-    }
-
 }
 
 _form.onsubmit = async function(event) {

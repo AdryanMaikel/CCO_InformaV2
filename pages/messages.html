@@ -1,0 +1,8 @@
+{% for message in messages %}<div class="{{ 'my message' if name == message.name else 'message' }}">
+    <span class="id">{{ message.id }}</span>
+    <span class="date">{{ message.date }}</span>
+    <span class="hour">{{ message.hour }}</span>
+    <span class="name">{{ message.name }}</span>
+    <span class="text">{{ message.message }}</span>
+</div>
+{% endfor %}

@@ -3,9 +3,11 @@
 <head><style>*{cursor: url("/src/assets/normal.cur"), auto}</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informa&#x1F919;</title>
+    <meta name="autocomplete" content="off">
+    <title>Adryan&#x1F919;</title>
 
     <script src="/src/js/login.js" defer></script>
+    <script src="/src/js/chat.js" defer></script>
 </head>
 <body>
     <header>
@@ -17,14 +19,14 @@
         <div id="config"></div>
         <div id="content-chat"></div>
 
-        <form id="login" action="/login" method="post">
+        <form id="login" action="/login" method="post" autocomplete="off">
             <label for="operator">
                 <span>User:</span>
-                <input type="text" name="operator" id="operator" value="{{ operator }}"  autocomplete="off">
+                <input type="text" name="operator" id="operator" value="{{ operator }}">
             </label>
             <label for="password">
                 <span>Senha:</span>
-                <input type="password" name="password" id="password" value="{{ password }}" autocomplete="off">
+                <input type="password" name="password" id="password" value="{{ password }}">
             </label>
             <div>
                 <button type="submit">ENTRAR</button>

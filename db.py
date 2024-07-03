@@ -35,6 +35,16 @@ def delete_operator(name: str, password: str):
     execute("DELETE FROM operators WHERE id = ?", _id)
 
 
+def get_messages():
+    query = "SELECT id, name, date, message FROM messages WHERE visibled = 1"
+    return [{"id": row[0],
+             "name": row[1],
+             "date": "/".join(reversed(str(row[2]).split()[0].split("-"))),
+             "hour": str(row[2]).split()[1].split(".")[0],
+             "message": row[3]
+             } for row in execute(query, commit=False)],
+
+
 operators = {
     "get": [row[0] for row in execute("SELECT name FROM operators",
                                       commit=False)],
@@ -47,15 +57,14 @@ operators = {
 }
 
 messages = {
-    "get": lambda: execute(
-        "SELECT name, date, message FROM messages WHERE visibled = 1",
-        commit=False
-    ),
+    "get": lambda: get_messages()[0],
     "insert": lambda name, message: execute(
         "INSERT INTO messages (name, date, message) VALUES (?, ?, ?)",
         params=(name, dt.now(), message)
     ),
-    "delete": ""
+    "delete": lambda id: execute(
+        "UPDATE messages SET visibled = 0 WHERE id = ?", (id,)
+    )
 }
 
 # Criando tabela de usuários e mensagens
@@ -78,12 +87,16 @@ CREATE TABLE IF NOT EXISTS messages (
     visibled INTEGER DEFAULT 1
 );""")
 
-execute("DELETE FROM messages")
+# execute("DELETE FROM messages")
 
 
 if __name__ == "__main__":
+    # print(execute("SELECT * FROM messages"))
+    # print(execute("SELECT * FROM operators"))
     # operators["insert"]("Adryan", "151", "151")
     # print(execute("select * from operators", commit=False))
-    messages["insert"]("Adryan", "Oi")
+    # messages["insert"]("Adryan", "Olá!")
+    # messages["insert"]("Jackson", "Oi.")
+    # messages["delete"](1)
     print(messages["get"]())
     pass

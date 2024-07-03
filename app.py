@@ -8,9 +8,12 @@ check_pass = operators["check_password"]
 
 @app.route("/")
 def index():
-    operator, password = request.cookies.get("login", "/").split("/")
-    if not check_pass(operator, password):
-        print("Não está loggado")
+    operator, password = "", ""
+    cookie_login = request.cookies.get("login", None)
+    if cookie_login:
+        operator, password = cookie_login.split("/")
+        if not check_pass(operator, password):
+            print("Não está loggado")
     return render_template("index.html", operator=operator, password=password)
 
 
@@ -23,7 +26,7 @@ def login():
     if operator not in operators["get"] or not check_pass(operator, _pass):
         return "Operador ou senha inválidos."
 
-    response = f"operator:{operator}/routes:cco-informa,chat"
+    response = f"Logado {operator}!"
     if not request.cookies.get("login", None):
         cookie = make_response(response)
         cookie.set_cookie("login", f"{operator}/{_pass}")
