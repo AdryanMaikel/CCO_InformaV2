@@ -58,16 +58,16 @@ messages = {
     "delete": ""
 }
 
-# Criando tabela de usuários
+# Criando tabela de usuários e mensagens
 
-# execute("""\
-# CREATE TABLE IF NOT EXISTS operators (
-#     id INTEGER PRIMARY KEY,
-#     name TEXT NOT NULL,
-#     cracha TEXT NOT NULL,
-#     password TEXT NOT NULL,
-#     logged INTEGER DEFAULT 0
-# );""")
+execute("""\
+CREATE TABLE IF NOT EXISTS operators (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    cracha TEXT NOT NULL,
+    password TEXT NOT NULL,
+    logged INTEGER DEFAULT 0
+);""")
 
 execute("""\
 CREATE TABLE IF NOT EXISTS messages (
@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS messages (
     visibled INTEGER DEFAULT 1
 );""")
 
+execute("DELETE FROM messages")
 
 
 if __name__ == "__main__":
