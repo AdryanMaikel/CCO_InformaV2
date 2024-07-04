@@ -37,7 +37,7 @@ def login():
 @app.route("/chat/<operator>/<password>", methods=["GET"])
 def get_messages(operator, password):
     if not check_pass(operator, password):
-        abort(404)
+        render_template("messages.html", messages=[], name="Anônimo")
     return render_template("messages.html", messages=messages["get"](),
                            name=operator)
 
