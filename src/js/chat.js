@@ -4,6 +4,7 @@ async function load_chat() {
     const text = await response.text()
 
     console.log(text)
+    document.querySelector("#content-chat").innerHTML = text;
 }
 
 load_chat()

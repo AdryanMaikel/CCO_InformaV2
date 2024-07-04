@@ -95,8 +95,19 @@ if __name__ == "__main__":
     # print(execute("SELECT * FROM operators"))
     # operators["insert"]("Adryan", "151", "151")
     # print(execute("select * from operators", commit=False))
-    # messages["insert"]("Adryan", "Olá!")
-    # messages["insert"]("Jackson", "Oi.")
+    #     messages["insert"]("Adryan", "Olá!")
+    #     messages["insert"]("Nicole", "Oi.")
+    #     messages["insert"]("Adryan", """\
+    # def calcular_pagamento(qtd_horas, valor_hora):
+    #     horas = float(qtd_horas)
+    #     taxa = float(valor_hora)
+    #     if horas <= 40:
+    #         salario=horas*taxa
+    #     else:
+    #         h_excd = horas - 40
+    #         salario = 40*taxa+(h_excd*(1.5*taxa))
+    #     return salario
+    # """)
     # messages["delete"](1)
     print(messages["get"]())
     pass

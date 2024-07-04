@@ -1,0 +1,28 @@
+:root{
+    --c-white: #e2e2e2;
+    --c-white-dark: #bdbdbd;
+    --c-black: #0f1730;
+    --c-black-white: #252d64;
+}
+
+*{}
+
+body{
+    background: var(--c-white);
+    color: var(--c-black);
+}
+#content-chat{
+    width: 500px;
+    height: auto;
+    min-height: 100%;
+    background-color: var(--c-black-white);
+    position: absolute;
+    top: 0;
+    left: -500px;
+    transition: left .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 99;
+}
+#content-chat.open{
+    left: 0;
+}
+form#login{}
