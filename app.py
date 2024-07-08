@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, abort, make_response
 from db import operators, messages
 
+from collections import defaultdict
+
 app = Flask(__name__, static_folder="src", template_folder="pages")
 
 check_pass = operators["check_password"]
@@ -10,7 +12,7 @@ check_pass = operators["check_password"]
 def index():
     operator, password = "", ""
     cookie_login = request.cookies.get("login", None)
-    if cookie_login:
+    if cookie_login and cookie_login.__contains__("/"):
         operator, password = cookie_login.split("/")
         if not check_pass(operator, password):
             print("Não está loggado")
@@ -23,13 +25,15 @@ def login():
         return abort(404)
 
     operator, _pass = request.form["operator"], request.form["password"]
-    if operator not in operators["get"] or not check_pass(operator, _pass):
+    if operator not in operators["get"]() or not check_pass(operator, _pass):
         return "Operador ou senha inválidos."
 
     response = f"Logado {operator}!"
-    if not request.cookies.get("login", None):
+    cookie_login = request.cookies.get("login", None)
+    cookie_value = f"{operator}/{_pass}"
+    if not cookie_login or cookie_login != cookie_value:
         cookie = make_response(response)
-        cookie.set_cookie("login", f"{operator}/{_pass}")
+        cookie.set_cookie("login", cookie_value)
         return cookie
     return response
 
@@ -37,9 +41,33 @@ def login():
 @app.route("/chat/<operator>/<password>", methods=["GET"])
 def get_messages(operator, password):
     if not check_pass(operator, password):
-        render_template("messages.html", messages=[], name="Anônimo")
-    return render_template("messages.html", messages=messages["get"](),
+        render_template("messages.html", grouped_messages=[], name="Anônimo")
+    grouped_messages = defaultdict(list)
+    _messages = messages["get"]()
+    for message in _messages:
+        grouped_messages[message["date"]].append(message)
+    grouped_messages = [{'date': date, 'messages': msgs}
+                        for date, msgs in grouped_messages.items()]
+
+    return render_template("messages.html",
+                           grouped_messages=grouped_messages,
                            name=operator)
+
+
+@app.route("/post-message", methods=["GET", "POST"])
+def post_message():
+    operator = request.form.get("operator", None)
+    password = request.form.get("password", None)
+    message = request.form.get("message", None)
+    if (not operator or not password or not message
+            or not check_pass(operator, password)
+            or request.method == "GET"):
+        return abort(404)
+
+    print(request.form)
+    messages["insert"](operator, message)
+    return f"Mensagem de {operator} inserida com sucesso." +\
+        f"mensagem:\n{message}"
 
 
 if __name__ == "__main__":

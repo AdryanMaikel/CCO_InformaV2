@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="/src/css/style.css">
 
-    <script type="module" src="/static/js/font-awesome.js"></script>
+    <script type="module" src="/src/js/font-awesome.js"></script>
 
     <script src="/src/js/index/login.js" defer></script>
     <script src="/src/js/index/chat.js" defer></script>
@@ -16,12 +16,24 @@
 <body>
     <header>
         <h1></h1>
+
+        <button id="open-chat"><i class="fa-solid fa-comment"></i></button>
     </header>
     <section>
         <h2></h2>
 
         <div id="config"></div>
-        <div id="content-chat" class="open"></div>
+        <div id="chat">
+            <div class="row between reader">
+                <span>Chat</span>
+                <button id="close-chat"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="content-chat" class="scroll-y"></div>
+            <div class="row footer">
+                <textarea name="message" id="message"></textarea>
+                <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
 
         <form id="login" action="/login" method="post" autocomplete="off">
             <label for="operator">

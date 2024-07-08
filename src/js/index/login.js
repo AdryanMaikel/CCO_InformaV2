@@ -14,6 +14,7 @@ async function login() {
         return;
     }
     logged = true;
+    get_chat()
 }
 
 window.onload = async function(event) {

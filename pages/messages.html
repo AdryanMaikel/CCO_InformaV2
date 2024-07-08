@@ -1,8 +1,12 @@
-{% for message in messages %}<div class="{{ 'my message' if name == message.name else 'message' }}">
-    <span class="id">{{ message.id }}</span>
-    <span class="date">{{ message.date }}</span>
-    <span class="hour">{{ message.hour }}</span>
-    <span class="name">{{ message.name }}</span>
-    <span class="text">{{ message.message }}</span>
-</div>
+{% for group in grouped_messages %}
+    <div class="row center w100">
+        <span id="{{ group.date }}" class="date">{{ group.date }}</span>
+    </div>
+    {% for message in group.messages %}
+    <div class="message">
+        <span class="hour">{{ message.hour }}</span>
+        <span class="name">{{ message.name }}</span>
+        <pre class="text" style="white-space: pre-wrap;">{{ message.message }}</pre>
+    </div>
+    {% endfor %}
 {% endfor %}

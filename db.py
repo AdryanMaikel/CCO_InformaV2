@@ -28,11 +28,8 @@ def check_password(user: str, password: str):
 
 
 def delete_operator(name: str, password: str):
-    _id = execute("SELECT id FROM operators WHERE name = ? AND password = ?",
-                  params=(name, password), commit=False)
-    if not _id:
-        return
-    execute("DELETE FROM operators WHERE id = ?", _id)
+    execute("DELETE FROM operators WHERE name = ? AND password = ?",
+            (name, password))
 
 
 def get_messages():
@@ -46,11 +43,11 @@ def get_messages():
 
 
 operators = {
-    "get": [row[0] for row in execute("SELECT name FROM operators",
-                                      commit=False)],
-    "insert": lambda name, cracha, password: execute(
-        "INSERT INTO operators (name, cracha, password) VALUES (?, ?, ?)",
-        params=(name, cracha, password)
+    "get": lambda: [row[0] for row in execute("SELECT name FROM operators",
+                                              commit=False)],
+    "insert": lambda name, password, cracha = "": execute(
+        "INSERT INTO operators (name, password, cracha) VALUES (?, ?, ?)",
+        params=(name, password, cracha)
     ),
     "delete": lambda name, password: delete_operator(name, password),
     "check_password": lambda user, _pass: check_password(user, _pass)
@@ -87,8 +84,11 @@ CREATE TABLE IF NOT EXISTS messages (
     visibled INTEGER DEFAULT 1
 );""")
 
-# execute("DELETE FROM messages")
+# testes
+# operators["insert"]("Nicole", "nic", 1)
 
+print(operators["get"]())
+# execute("DELETE FROM messages")
 
 if __name__ == "__main__":
     # print(execute("SELECT * FROM messages"))
