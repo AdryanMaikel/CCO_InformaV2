@@ -7,16 +7,25 @@ async function get_chat() {
     if(logged == false)return;
     var url = `/chat/${operator.value}/${password.value}`;
     const response = await fetch(url, { method: "GET" });
+    if(response.status != 200)return;
     const text = await response.text();
-    
     if(old_messages == text)return;
     old_messages = text;
+    console.log("Atualizando conversas...");
     content_chat.innerHTML = text;
 }
 
-document.getElementById("open-chat").onclick = _ => chat.classList.add("open");
-document.getElementById("close-chat").onclick = _ => chat.classList.remove("open");
+let interval_chat = null;
 
+document.getElementById("open-chat").onclick = function(_) {
+    interval_chat = window.setInterval(get_chat, 1500);
+    chat.classList.add("open");
+};
+
+document.getElementById("close-chat").onclick = function(_) {
+    window.clearInterval(interval_chat);
+    chat.classList.remove("open");
+};
 
 const textarea = document.querySelector("textarea#message");
 
@@ -26,8 +35,9 @@ async function post_message() {
     _form.appendChild(operator.cloneNode(false));
     _form.appendChild(password.cloneNode(false));
 
-    const form = new FormData(_form);
-    const response = await fetch(`/post-message`, { method: "post", body: form});
+    const response = await fetch(`/post-message`, { method: "post", body: new FormData(_form)});
+    console.log(response.status)
+    if(response.status != 200)return;
     const text = await response.text()
     console.log(text)
 }

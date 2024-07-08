@@ -6,6 +6,7 @@ let logged = false;
 
 async function login() {
     const response = await fetch(_form.action, { method: _form.method, body: new FormData(_form) });
+    if(response.status != 200)return;
     const text = await response.text();
 
     console.log(text);
@@ -14,15 +15,18 @@ async function login() {
         return;
     }
     logged = true;
-    get_chat()
+    window.document.title = `${operator.value}🤙`;
+    get_chat();
 }
 
-window.onload = async function(event) {
-    if(operator && operator.value != "" && password && password.value != "")
-        login()
+async function unlogin() {
+    const response = await fetch("/unlogin", { method: "post", body: new FormData(_form) });
+    if(response.status != 200)return;
+    const text = await response.text();
+    console.log(text);
 }
 
 _form.onsubmit = async function(event) {
     event.preventDefault();
-    login()
+    login();
 }

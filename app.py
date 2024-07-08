@@ -14,8 +14,8 @@ def index():
     cookie_login = request.cookies.get("login", None)
     if cookie_login and cookie_login.__contains__("/"):
         operator, password = cookie_login.split("/")
-        if not check_pass(operator, password):
-            print("Não está loggado")
+        if check_pass(operator, password):
+            operators["update status"](operator, password, True)
     return render_template("index.html", operator=operator, password=password)
 
 
@@ -23,14 +23,16 @@ def index():
 def login():
     if request.method == "GET":
         return abort(404)
-
-    operator, _pass = request.form["operator"], request.form["password"]
-    if operator not in operators["get"]() or not check_pass(operator, _pass):
+    operator = request.form.get("operator", None)
+    password = request.form.get("password", None)
+    if (not operator or not password or operator not in operators["get"]()
+            or not check_pass(operator, password)):
         return "Operador ou senha inválidos."
 
     response = f"Logado {operator}!"
     cookie_login = request.cookies.get("login", None)
-    cookie_value = f"{operator}/{_pass}"
+    cookie_value = f"{operator}/{password}"
+    operators["update status"](operator, password, True)
     if not cookie_login or cookie_login != cookie_value:
         cookie = make_response(response)
         cookie.set_cookie("login", cookie_value)
@@ -38,19 +40,29 @@ def login():
     return response
 
 
+@app.route("/unlogin", methods=["GET", "POST"])
+def unlogin():
+    operator = request.form.get("operator", None)
+    password = request.form.get("password", None)
+    if (not operator or not password or not check_pass(operator, password)
+            or request.method == "GET"):
+        return abort(404)
+    operators["update status"](operator, password, False)
+    return f"{operator} deslogado."
+
+
 @app.route("/chat/<operator>/<password>", methods=["GET"])
 def get_messages(operator, password):
     if not check_pass(operator, password):
-        render_template("messages.html", grouped_messages=[], name="Anônimo")
+        return render_template("messages.html", grouped_messages=[],
+                               name="Anônimo")
     grouped_messages = defaultdict(list)
-    _messages = messages["get"]()
-    for message in _messages:
+    for message in messages["get"]():
         grouped_messages[message["date"]].append(message)
-    grouped_messages = [{'date': date, 'messages': msgs}
-                        for date, msgs in grouped_messages.items()]
+    grouped_messages = [{'date': date, 'messages': message}
+                        for date, message in grouped_messages.items()]
 
-    return render_template("messages.html",
-                           grouped_messages=grouped_messages,
+    return render_template("messages.html", grouped_messages=grouped_messages,
                            name=operator)
 
 
@@ -60,11 +72,8 @@ def post_message():
     password = request.form.get("password", None)
     message = request.form.get("message", None)
     if (not operator or not password or not message
-            or not check_pass(operator, password)
-            or request.method == "GET"):
+            or not check_pass(operator, password) or request.method == "GET"):
         return abort(404)
-
-    print(request.form)
     messages["insert"](operator, message)
     return f"Mensagem de {operator} inserida com sucesso." +\
         f"mensagem:\n{message}"

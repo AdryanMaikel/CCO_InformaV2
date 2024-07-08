@@ -20,47 +20,44 @@ def execute(query: str, params: tuple = (), commit: bool = True) -> list:
         return []
 
 
-def check_password(user: str, password: str):
-    if execute("SELECT name FROM operators WHERE name = ? AND password = ?",
-               params=(user, password)):
-        return True
-    return False
-
-
-def delete_operator(name: str, password: str):
-    execute("DELETE FROM operators WHERE name = ? AND password = ?",
-            (name, password))
-
-
-def get_messages():
-    query = "SELECT id, name, date, message FROM messages WHERE visibled = 1"
-    return [{"id": row[0],
-             "name": row[1],
-             "date": "/".join(reversed(str(row[2]).split()[0].split("-"))),
-             "hour": str(row[2]).split()[1].split(".")[0],
-             "message": row[3]
-             } for row in execute(query, commit=False)],
-
-
 operators = {
-    "get": lambda: [row[0] for row in execute("SELECT name FROM operators",
-                                              commit=False)],
+    "get": lambda: [name for _, name in execute(
+        "SELECT id, name FROM operators", commit=False
+    )],
     "insert": lambda name, password, cracha = "": execute(
         "INSERT INTO operators (name, password, cracha) VALUES (?, ?, ?)",
         params=(name, password, cracha)
+    ) if name not in list(operators["get"]()) else None,
+    "delete": lambda name, password: execute(
+        "DELETE FROM operators WHERE name = ? AND password = ?",
+        params=(name, password)
     ),
-    "delete": lambda name, password: delete_operator(name, password),
-    "check_password": lambda user, _pass: check_password(user, _pass)
+    "check_password": lambda name, password: True if execute(
+        "SELECT name FROM operators WHERE name = ? AND password = ?",
+        params=(name, password)
+    ) else False,
+    "update status": lambda name, password, status: execute(
+        "UPDATE operators SET logged =  ? WHERE name = ? AND password = ?",
+        params=(bool(status), name, password))
 }
 
 messages = {
-    "get": lambda: get_messages()[0],
+    "get": lambda: list([{
+        "id": row[0],
+        "name": row[1],
+        "date": "/".join(reversed(str(row[2]).split()[0].split("-"))),
+        "hour": str(row[2]).split()[1].split(".")[0],
+        "message": row[3]
+    }for row in execute(
+        "SELECT id, name, date, message FROM messages WHERE visibled = 1",
+        commit=False
+    )]),
     "insert": lambda name, message: execute(
         "INSERT INTO messages (name, date, message) VALUES (?, ?, ?)",
         params=(name, dt.now(), message)
     ),
     "delete": lambda id: execute(
-        "UPDATE messages SET visibled = 0 WHERE id = ?", (id,)
+        "UPDATE messages SET visibled = 0 WHERE id = ?", (id, )
     )
 }
 
@@ -69,7 +66,7 @@ messages = {
 execute("""\
 CREATE TABLE IF NOT EXISTS operators (
     id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     cracha TEXT NOT NULL,
     password TEXT NOT NULL,
     logged INTEGER DEFAULT 0
@@ -84,30 +81,17 @@ CREATE TABLE IF NOT EXISTS messages (
     visibled INTEGER DEFAULT 1
 );""")
 
-# testes
-# operators["insert"]("Nicole", "nic", 1)
-
-print(operators["get"]())
-# execute("DELETE FROM messages")
-
 if __name__ == "__main__":
-    # print(execute("SELECT * FROM messages"))
-    # print(execute("SELECT * FROM operators"))
-    # operators["insert"]("Adryan", "151", "151")
-    # print(execute("select * from operators", commit=False))
-    #     messages["insert"]("Adryan", "Olá!")
-    #     messages["insert"]("Nicole", "Oi.")
-    #     messages["insert"]("Adryan", """\
-    # def calcular_pagamento(qtd_horas, valor_hora):
-    #     horas = float(qtd_horas)
-    #     taxa = float(valor_hora)
-    #     if horas <= 40:
-    #         salario=horas*taxa
-    #     else:
-    #         h_excd = horas - 40
-    #         salario = 40*taxa+(h_excd*(1.5*taxa))
-    #     return salario
-    # """)
-    # messages["delete"](1)
-    print(messages["get"]())
+    query = "Select * from operators"
+    params = ()
+    commit = True
+    # execute("DELETE FROM OPERATORS WHERE NAME = ? AND PASSWORD = ?", ("Maikel", "101"))
+    # print(operators["insert"]("Maikel", "101"))
+    print(execute(query, params, commit))
+    # print(operators["delete"]("Maikel", "10"))
+    # print(operators["get"]())
+    # print(operators["check_password"]("Adryan", "150"))
+    # rows = execute(query="SELECT * FROM operators WHERE logged = true")
+    # print(rows)
+    # print(messages["get"]())
     pass
