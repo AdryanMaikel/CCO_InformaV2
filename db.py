@@ -15,7 +15,7 @@ def execute(query: str, params: tuple = (), commit: bool = True) -> list:
         if rows:
             return rows
         return []
-    except Exception as erro:
+    except db.Error as erro:
         print(erro)
         return []
 
