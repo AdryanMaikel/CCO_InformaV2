@@ -89,10 +89,10 @@ CREATE TABLE IF NOT EXISTS messages (
 
 if __name__ == "__main__":
     query = "Select * from operators"
-    # query = "update operators set tentatives = 5 where name = 'Adryan'"
     params = ()
     commit = True
-    # execute("DELETE FROM OPERATORS WHERE NAME = ? AND PASSWORD = ?", ("Maikel", "101"))
+    # execute("DELETE FROM OPERATORS WHERE NAME = ? AND PASSWORD = ?",
+    #         ("Maikel", "101"))
     # print(operators["insert"]("Maikel", "151"))
     # print(operators["check_password"]("Adryan", "101"))
     print(operators["get"]())
