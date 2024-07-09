@@ -17,9 +17,10 @@ async function get_chat() {
 
 let interval_chat = null;
 
-document.getElementById("open-chat").onclick = function(_) {
-    interval_chat = window.setInterval(get_chat, 1500);
+document.getElementById("open-chat").onclick = async function(_) {
+    await get_chat()
     chat.classList.add("open");
+    interval_chat = window.setInterval(get_chat, 1500);
 };
 
 document.getElementById("close-chat").onclick = function(_) {
