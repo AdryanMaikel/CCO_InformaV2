@@ -33,15 +33,12 @@ function close_chat() {
 }
 document.getElementById("close-chat").onclick = close_chat;
 
-
-
 const textarea = document.querySelector("textarea#message");
 async function post_message() {
     const _form = document.createElement("form");
     _form.appendChild(textarea.cloneNode(false));
     _form.appendChild(operator.cloneNode(false));
     _form.appendChild(password.cloneNode(false));
-
     const response = await fetch(`/post-message`, { method: "post", body: new FormData(_form)});
     console.log(response.status)
     if(response.status != 200)return;
