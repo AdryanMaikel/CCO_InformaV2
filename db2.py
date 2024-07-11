@@ -48,7 +48,6 @@ class Operators:
         execute(
             "UPDATE operators SET logged = ? WHERE name = ? AND password = ?",
             params=(online, name, password))
-  
 
 
 operators = Operators()

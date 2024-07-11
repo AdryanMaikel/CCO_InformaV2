@@ -94,8 +94,9 @@ if __name__ == "__main__":
     # execute("DELETE FROM OPERATORS WHERE NAME = ? AND PASSWORD = ?",
     #         ("Maikel", "101"))
     # print(operators["insert"]("Maikel", "151"))
+    # print(operators["insert"]("Adryan", "101"))
     # print(operators["check_password"]("Adryan", "101"))
-    print(operators["get"]())
+    # print(operators["get"]())
     print(execute(query, params, commit))
     # print(operators["delete"]("Maikel", "10"))
     # rows = execute(query="SELECT * FROM operators WHERE logged = true")
