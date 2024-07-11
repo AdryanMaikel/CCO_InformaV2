@@ -4,7 +4,6 @@ const span_count_requests_chat = document.querySelector("#count-requests-chat");
 
 let old_messages = "";
 let count_requests_chat = 101;
-
 async function get_chat() {
     if(logged == false)return;
     var url = `/chat/${operator.value}/${password.value}`;
@@ -19,30 +18,24 @@ async function get_chat() {
     count_requests_chat = 101;
     old_messages = text;
     console.log("Atualizando conversas...");
-    
 }
 
 let interval_chat = null;
-
 document.getElementById("open-chat").onclick = async function(_) {
     count_requests_chat = 101;
     await get_chat()
     chat.classList.add("open");
     interval_chat = window.setInterval(get_chat, 1500);
 };
-
-
 function close_chat() {
     window.clearInterval(interval_chat);
     chat.classList.remove("open");
 }
-
 document.getElementById("close-chat").onclick = close_chat;
 
 
 
 const textarea = document.querySelector("textarea#message");
-
 async function post_message() {
     const _form = document.createElement("form");
     _form.appendChild(textarea.cloneNode(false));
@@ -56,9 +49,4 @@ async function post_message() {
     console.log(text)
     get_chat()
 }
-
-document.querySelector("#send-message").onclick = () => post_message();
-
-// window.setInterval(()=>{
-//     get_chat()
-// }, 1000)
+document.getElementById("send-message").onclick = post_message;

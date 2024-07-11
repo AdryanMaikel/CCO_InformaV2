@@ -50,13 +50,13 @@ class Operators:
             params=(online, name, password))
 
 
-operators = Operators()
-print(operators.get())
-operators.delete("Maikel", "151")
-print(operators.get())
-operators.insert("Maikel", "151", "000")
-operators.insert("Maikel", "151", "000")
-print(operators.get())
+# operators = Operators()
+# print(operators.get())
+# operators.delete("Maikel", "151")
+# print(operators.get())
+# operators.insert("Maikel", "151", "000")
+# operators.insert("Maikel", "151", "000")
+# print(operators.get())
 
 # print(execute("SELECT id FROM operators Where id = 1", commit=False))
 # print(execute("SELECT * FROM operators", commit=False))
