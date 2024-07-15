@@ -1,11 +1,12 @@
 from google.oauth2.service_account import Credentials
 from gspread import authorize
 
-CLIENT = authorize(
+
+GSHEET = authorize(
     Credentials.from_service_account_file("credentials.json", scopes=[
         "https://www.googleapis.com/auth/spreadsheets"]))
 
-SS = CLIENT.open_by_key("101ykzDT_qWUN_CzQ4uVyR25hTe6KERvVVOkzSGtbDNk")
+SS = GSHEET.open_by_key("101ykzDT_qWUN_CzQ4uVyR25hTe6KERvVVOkzSGtbDNk")
 WS_DADOS = SS.worksheet("Dados")
 WS_CCO_INFORMA = SS.worksheet("Histórico de eventos")
 
@@ -112,11 +113,32 @@ INFORMATIONS["cco-informa"] = {
 }
 
 
+class SheetCCOInforma:
+    def __init__(self):
+        pass
+
+    def get(self, dates: list[str] = []):
+        values = WS_CCO_INFORMA.get_values("A2:K")
+        rows = [[i, *row]for i, row in enumerate(values, 2)]
+        if dates:
+            rows = [row for row in rows if row[1] in dates]
+        return rows
+
+    def cols(self):
+        return dict(zip("A B C D E F G H I J K".split(),
+                        WS_CCO_INFORMA.get_values("A1:K1")[0]))
+
+
 if __name__ == "__main__":
     # print(INFORMATIONS["problemas"]["get"]())
     # print(WS_DADOS.get_values("B2:B"))
     # data = INFORMATIONS["cco-informa"]["cols"]()
     # for i in range(len(INFORMATIONS["cco-informa"]["cols"]())):
     #     print(i)
-    print(INFORMATIONS["cco-informa"]["get"]())
+    # print(INFORMATIONS["cco-informa"]["get"]())
+
+    sheet = SheetCCOInforma()
+    # values = sheet.get(dates=["17/04/2024"])
+    # print(len(values))
+    print(sheet.cols())
     pass
