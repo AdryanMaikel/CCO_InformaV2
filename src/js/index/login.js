@@ -28,6 +28,7 @@ async function login() {
     window.document.title = `${operator.value} 🤙`;
     div_buttons_login.classList.add("active")
     get_chat();
+    get_table();
 }
 
 async function unlogin() {

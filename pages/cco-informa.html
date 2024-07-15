@@ -1,0 +1,19 @@
+<table>
+    <thead>
+        <tr class="row letters">
+            <td class="_">&nbsp;</td>{% for letter in letters %}
+            <td class="{{ letter }}">{{ letter }}</td>{% endfor %}
+        </tr>
+        <tr class="row columns">
+            <th class="_">1</th>{% for column in columns %}
+            <th class="{{ letters[loop.index - 1] }}"">{{ column }}</th>{% endfor %}
+        </tr>
+    </thead>
+    <tbody>{% for row in rows %}
+        <tr id="row-{{ row[0] }}" class="row {{ loop.cycle('even', 'odd') }}">{% for cell in row %}
+            <td class="{{ '_' if loop.first else letters[loop.index - 2] }}">
+                {% if loop.first %}{{ cell }}{% else %} <textarea id="cell-{{ letters[loop.index - 2] }}{{ row[0] }}" disabled autocomplete="off">{{ cell }}</textarea> {% endif %}
+            </td>{% endfor %}
+        </tr>{% endfor %}
+    </tbody>
+</table>
