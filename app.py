@@ -1,11 +1,16 @@
 from flask import Flask, render_template, request, abort, make_response
-from db import Operators, Messages
 
+from datetime import datetime as dt
+
+from operators import Operators
+from messages import Messages
+from gsheets import SheetCCOInforma
 
 app = Flask(__name__, static_folder="src", template_folder="pages")
 
 operators = Operators()
 messages = Messages()
+cco_informa = SheetCCOInforma()
 
 
 @app.route("/")
@@ -70,6 +75,18 @@ def post_message():
             or not operators.check_password(operator, password)):
         return abort(404)
     return messages.insert(operator, message)
+
+
+@app.route("/cco-informa/<operator>/<password>", methods=["GET"])
+def get_table(operator, password):
+    if not operators.check_password(operator, password):
+        abort(404)
+    columns = cco_informa.cols()
+    now = dt.now().strftime("%d/%m/%Y")
+    now
+    rows = cco_informa.get(dates=[])
+    return render_template("cco-informa.html", columns=columns.values(),
+                           letters=list(columns.keys()), rows=rows)
 
 
 if __name__ == "__main__":
