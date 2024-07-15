@@ -2,55 +2,37 @@
     --c-white: #e2e2e2;
     --c-white-dark: #bdbdbd;
     --c-black: #0f1730;
-    --c-black-white: #252d64;
+    --c-black-white: #3B3B8A;
+    --c-green: #1aac24;
+    --c-red: #ce0b0b;
 }
 
 *{margin: 0;padding: 0;box-sizing: border-box}
-body{background: var(--c-white);color: var(--c-black)}
-#chat{
-    width: 500px;
-    height: 100%;
-    background-color: var(--c-black);
-    color: var(--c-white);
-    position: absolute;
-    top: 0;
-    left: -500px;
-    transition: left .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    z-index: 99;
-}
-#chat.open{left: 0;}
-#chat .reader{height: 30px;}
-#chat .date{
-    padding: 4px 2px;
-    border-radius: 3px;
-    background-color: var(--c-black-white);
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-#chat .footer{
-    position: absolute;
-    bottom: 0;
-    height: 70px;
-}
-#chat .footer textarea{
-    height: 50px;
-    margin: 0 5px;
-    padding: 5px;
-    width: 450px;
-    resize: none;
-}
-#content-chat{height: calc(100% - 100px)}
+body{background: var(--c-white);color: var(--c-black);overflow: hidden;}
+header{height: 25px;}
+header i{font-size: 20px;}
+header .toggle{width: 25px;height: 25px;}
 
-
-
+button, input, textarea{background: transparent;border: none}
 textarea{border: none;outline: none;}
+
+i{font-size: 17px;scale: 1;}
+i.fa-comment{color: var(--c-black-white);}
+i.fa-ban,i.fa-xmark{color: var(--c-red);font-size: 18px;}
+i.fa-user-xmark, i.fa-user-check{scale: 1}
+i.fa-paper-plane{
+    color: var(--c-green);
+    &
+}
+
 .scroll,.scroll-y{overflow-y: scroll}
 .scroll,.scroll-x{overflow-x: scroll}
 .wh100,.w100{width: 100%}.wh100,.h100{height: 100%}
 .row{
     display: flex;
     flex-direction: row;
-    align-items:center
+    align-items:center;
+    &.gap5{gap: 5px}
 }
 .col{
     display: flex;
@@ -61,4 +43,108 @@ textarea{border: none;outline: none;}
     padding: 0 10px;
 }
 .row.center{justify-content: center}
-form#login{}
+.col.buttons,.row.buttons{gap: 5px;}
+
+/* Animações */
+.row.buttons.toggle, .col.buttons.toggle {
+    position: relative;
+    & .x, & .y{position: absolute;transition: top .5s cubic-bezier(0.445, 0.05, 0.55, 0.95);}
+    & .x{color: red}& .y{color: green}
+}
+.col.buttons.toggle {
+    & .x{top: 4px;}& .y{top: -30px;}
+}
+.col.buttons.toggle.active{
+    & .x{top: 30px}& .y{top: 4px}
+}
+.toggle .x{}
+.toggle,.overflow-hidden{overflow: hidden;}
+form#login{
+    position: absolute;
+    z-index: 99;
+    padding: 5px 10px;
+    border: 1px solid var(--c-black-white);
+    right: 5px;
+    top: -50px;
+    background: var(--c-white);
+    border-radius: 2px;
+    transition: top .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    &.open{top: 0;}
+    & label{
+        height: 21px;
+        padding: 0 5px;
+        & input{
+            width: 80px;height: 100%;
+            outline: none;
+        }
+        & i{
+            color: var(--c-black-white);
+        }
+        & input::selection{
+            background-color: var(--c-black-white);
+        }
+    }
+}
+
+
+#chat{
+    width: 500px;
+    height: 100%;
+    background-color: var(--c-black);
+    color: var(--c-white);
+    position: absolute;
+    top: 0;
+    left: -500px;
+    transition: left .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 99;
+
+    &.open{left: 0}
+
+    & .header{height: 40px}
+    & #content-chat{
+        scroll-behavior: smooth;
+        width: calc(100% - 10px);
+        height: calc(100% - 110px);
+        margin: 0 5px;
+        border-bottom: 1px solid var(--c-white);
+        border-top: 1px solid var(--c-white);
+
+        & .date{
+            padding: 4px 2px;
+            border-radius: 3px;
+            background-color: var(--c-black-white);
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        & .message{
+            padding: 5px 0;
+            & .hour{margin-left: 15px}
+        }
+        
+    }
+    & .footer{
+        position: absolute;
+        bottom: 0;
+        height: 60px;
+        width: calc(100% - 10px);
+        margin: 5px;
+        border: 1px solid var(--c-white);
+
+        & textarea {
+            height: 50px;
+            margin: 0 5px;
+            padding: 5px;
+            width: 450px;
+            resize: none;
+            color: var(--c-white)
+        }
+    }
+}
+
+
+::-webkit-scrollbar{width: 8px;display: block;height: 10px;}
+::-webkit-scrollbar-thumb{position: fixed;border-radius: 4px;background-color: var(--c-white)}
+::-webkit-scrollbar-track{background-color: transparent}
+
+
+

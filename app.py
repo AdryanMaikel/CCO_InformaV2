@@ -69,9 +69,7 @@ def post_message():
     if (not operator or not password or not message or request.method == "GET"
             or not operators.check_password(operator, password)):
         return abort(404)
-    messages.insert(operator, message)
-    return f"Mensagem de {operator} inserida com sucesso." +\
-        f"mensagem:\n{message}"
+    return messages.insert(operator, message)
 
 
 if __name__ == "__main__":

@@ -14,42 +14,46 @@
     <script src="/src/js/index/table.js" defer></script>
     <script src="/src/js/index/page.js" defer></script>
 </head>
-<body>
-    <header>
+<body class="wh100">
+    <header class="row between">
         <h1></h1>
-
-        <button id="open-chat"><i class="fa-solid fa-comment"></i></button>
+        <form id="login" action="/login" method="post" autocomplete="off" class="row">
+            <label for="operator" class="row gap5">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" name="operator" id="operator" value="{{ operator }}">
+            </label>
+            <label for="password" class="row gap5">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" name="password" id="password" value="{{ password }}">
+            </label>
+            <div class="row buttons">
+                <button type="submit" id="submit-login"><i class="fa-solid fa-paper-plane"></i></button>
+                <button type="reset" id="reset-login"><i class="fa-solid fa-ban"></i></button>
+            </div>
+        </form>
+        <div class="row buttons">
+            <button id="open-chat"><i class="fa-solid fa-comment"></i></button>
+            <div id="div-buttons-login" class="col buttons toggle">
+                <button id="button-login" class="x"><i class="fa-solid fa-user-xmark"></i></button>
+                <button id="button-unlogin" class="y"><i class="fa-solid fa-user-check"></i></button>
+            </div>
+        </div>
     </header>
     <section>
         <h2></h2>
 
         <div id="config"></div>
         <div id="chat">
-            <div class="row between reader">
+            <div class="row between header">
                 <span id="count-requests-chat">Chat fechando em 99</span>
                 <button id="close-chat"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="content-chat" class="scroll-y"></div>
-            <div class="row footer">
+            <div class="row footer w100">
                 <textarea name="message" id="message"></textarea>
                 <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
-
-        <form id="login" action="/login" method="post" autocomplete="off">
-            <label for="operator">
-                <span>User:</span>
-                <input type="text" name="operator" id="operator" value="{{ operator }}">
-            </label>
-            <label for="password">
-                <span>Senha:</span>
-                <input type="password" name="password" id="password" value="{{ password }}">
-            </label>
-            <div>
-                <button type="submit">ENTRAR</button>
-                <button type="reset">CANCELAR</button>
-            </div>
-        </form>
     </section>
     <footer>
         <address>&copy;Adryan Maikel</address>

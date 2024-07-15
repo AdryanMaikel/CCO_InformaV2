@@ -10,13 +10,15 @@ async function get_chat() {
     const response = await fetch(url, { method: "GET" });
     if(response.status != 200)return;
     const text = await response.text();
-    content_chat.innerHTML = text;
     count_requests_chat -= 1;
     span_count_requests_chat.textContent = `Chat fechando em ${count_requests_chat}`
     if(count_requests_chat <= 0)close_chat()
+    console.log(old_messages == text)
     if(old_messages == text)return;
     count_requests_chat = 101;
     old_messages = text;
+    content_chat.innerHTML = text;
+    content_chat.scrollTop = content_chat.scrollHeight;
     console.log("Atualizando conversas...");
 }
 
@@ -31,7 +33,7 @@ function close_chat() {
     window.clearInterval(interval_chat);
     chat.classList.remove("open");
 }
-document.getElementById("close-chat").onclick = close_chat;
+document.getElementById("close-chat").onclick = _=>{close_chat()};
 
 const textarea = document.querySelector("textarea#message");
 async function post_message() {

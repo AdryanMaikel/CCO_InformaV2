@@ -100,8 +100,11 @@ class Messages:
                 for date, message in grouped_messages.items()]
 
     def insert(self, name: str, message: str):
+        if message.count("\n") > 15:
+            return f"{message} enorme de {name}."
         execute("INSERT INTO messages (name, date, message) VALUES (?, ?, ?)",
                 params=(name, dt.now(), message))
+        return f"Sucesso, mensagem:\n\n{message}\nde {name} inserida."
 
 
 # Criando tabela de usuários e mensagens
@@ -124,8 +127,8 @@ CREATE TABLE IF NOT EXISTS messages (
     visibled INTEGER DEFAULT 1
 );""")
 
-# operators = Operators()
-# print(operators.get())
+operators = Operators()
+print(operators.get())
 # print(operators.check_password("Adryan", "0"))
 # operators.delete("Adryan", "151")
 # print(operators.get())
@@ -134,7 +137,7 @@ CREATE TABLE IF NOT EXISTS messages (
 # print(operators.get())
 
 # print(execute("SELECT id FROM operators Where id = 1", commit=False))
-# print(execute("SELECT * FROM operators", commit=False))
+print(execute("SELECT * FROM operators", commit=False))
 
 # messages = Messages()
 # print(messages.get())
