@@ -8,6 +8,10 @@
     --c-red: #ce0b0b;
 }
 
+::-webkit-scrollbar{width: 8px;display: block;height: 10px;}
+::-webkit-scrollbar-thumb{position: fixed;border-radius: 4px;background-color: var(--c-black)}
+::-webkit-scrollbar-track{background-color: transparent}
+
 *{margin: 0;padding: 0;box-sizing: border-box;font-family: "Poppins", sans-serif}
 body{width: 100vw;height: 100vh;background: var(--c-white);color: var(--c-black);overflow: hidden;}
 header{height: 25px;& i{font-size: 20px;}& .toggle{width: 25px;height: 25px;}}
@@ -19,10 +23,12 @@ i{font-size: 17px;scale: 0.95;transition: scale .5s ease-in-out;}
 i:hover{scale: 1;}
 i.fa-comment{color: var(--c-black-white);}
 i.fa-ban,i.fa-xmark{color: var(--c-red);font-size: 18px;}
+i.fa-copy{color: var(--c-white)}
+i.fa-trash-can{color: var(--c-red);}
 /* i.fa-user-xmark, i.fa-user-check{scale: 1} */
 i.fa-paper-plane{color: var(--c-green);}
 
-.scroll{.scroll-y{overflow-y: scroll}.scroll-x{overflow-x: scroll}}
+.scroll,.scroll-y{overflow-y: scroll}
 .scroll,.scroll-x{overflow-x: scroll}
 .wh100,.w100{width: 100%}.wh100,.h100{height: 100%}
 .row{
@@ -90,7 +96,9 @@ form#login{
 
     & .header{height: 40px}
     & #content-chat{
+        scrollbar-color: var(--c-white);
         scroll-behavior: smooth;
+        overflow-x: hidden;
         width: calc(100% - 10px);
         height: calc(100% - 110px);
         margin: 0 5px;
@@ -128,7 +136,7 @@ form#login{
         }
     }
 }
-
+#content-chat::-webkit-scrollbar-thumb{background-color: var(--c-white)}
 #table{
     height: 100%;
     & table {
@@ -199,7 +207,3 @@ form#login{
     }
 
 }
-
-::-webkit-scrollbar{width: 8px;display: block;height: 10px;}
-::-webkit-scrollbar-thumb{position: fixed;border-radius: 4px;background-color: var(--c-black)}
-::-webkit-scrollbar-track{background-color: transparent}
