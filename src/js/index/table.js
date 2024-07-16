@@ -31,7 +31,10 @@ function adjust_width_table(width) {
 
 window.onresize = ({target}) => adjust_width_table(target.innerWidth);
 
-old_table = ""
+let editing_row = {element: null, values: {}};
+let button_cancel_edit = null;
+
+let old_table = "";
 async function get_table() {
     if(!logged)return;
     var url = `/cco-informa/${operator.value}/${password.value}`;
@@ -41,9 +44,34 @@ async function get_table() {
     if(old_messages == text)return;
     old_messages = text;
     table.innerHTML = text;
-    table.scrollTop = table.scrollHeight;
+    button_cancel_edit = table.querySelector("#cancel-edit-row");
     console.log("Atualizando tabela...");
+
     adjust_width_table(window.innerWidth);
     const tbody = table.querySelector("tbody");
     tbody.scrollTop = tbody.scrollHeight;
+
+    const rows = tbody.querySelectorAll("tr");
+    rows.forEach(row=>{row.addEventListener("click", _=>{edit_row(row)})});
+}
+
+function edit_row(row) {
+    if(editing_row.element)return;
+    editing_row.element = row;
+    console.log(`editando ${row.id}`);
+    row.classList.add("editing");
+    row.querySelectorAll("td textarea").forEach(textarea=>{
+        editing_row.values[textarea.id.slice(5)] = textarea.value;
+    });
+    button_cancel_edit.addEventListener("click", cancel_edit_row)
+    console.log(editing_row.values)
+}
+
+function cancel_edit_row() {
+    if(!editing_row.element)return;
+    console.log("oi")
+    editing_row.element.classList.remove("editing");
+    editing_row = {element: null, values: {}};
+
+    // button_cancel_edit.removeEventListener("click", cancel_edit_row);
 }

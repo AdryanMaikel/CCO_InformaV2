@@ -19,14 +19,22 @@ section{height: calc(100% - 60px);padding: 5px;}
 
 button, input, textarea{background: transparent;border: none;outline: none;}
 
-i{font-size: 17px;scale: 0.95;transition: scale .5s ease-in-out;}
-i:hover{scale: 1;}
-i.fa-comment{color: var(--c-black-white);}
-i.fa-ban,i.fa-xmark{color: var(--c-red);font-size: 18px;}
-i.fa-copy{color: var(--c-white)}
-i.fa-trash-can{color: var(--c-red);}
-/* i.fa-user-xmark, i.fa-user-check{scale: 1} */
-i.fa-paper-plane{color: var(--c-green);}
+button{
+    background: transparent;border: none;outline: none;
+    transition: scale .2s ease-out;
+    &:hover{scale: 1.15;}
+    &:active{scale: 0.85;}
+    & i{
+        font-size: 17px;
+        pointer-events: none;
+        &.fa-ban,&.fa-xmark{color: var(--c-red)}
+        &.fa-xmark{font-size: 20px;}
+        &.fa-comment{color: var(--c-black-white)}
+        &.fa-copy{color: var(--c-white)}
+        &.fa-trash-can{color: var(--c-red)}
+        &.fa-paper-plane{color: var(--c-green)}
+    }
+}
 
 .scroll,.scroll-y{overflow-y: scroll}
 .scroll,.scroll-x{overflow-x: scroll}
@@ -49,7 +57,8 @@ i.fa-paper-plane{color: var(--c-green);}
     gap: 5px;
     &.toggle{
         position: relative;
-        & .x,& .y{position: absolute;transition: top .5s cubic-bezier(0.445, 0.05, 0.55, 0.95)}
+        padding: 2px;
+        & .x,& .y{position: absolute;transition: top .5s cubic-bezier(0.445, 0.05, 0.55, 0.95),scale .2s ease-out}
         & .x{color: var(--c-red)}& .y{color: var(--c-green)}
     }
 }
@@ -93,7 +102,6 @@ form#login{
     z-index: 99;
 
     &.open{left: 0}
-
     & .header{height: 40px}
     & #content-chat{
         scrollbar-color: var(--c-white);
@@ -140,7 +148,7 @@ form#login{
 #table{
     height: 100%;
     & table {
-        border: 1px solid var(--c-black-white);
+        /* border: 1px solid var(--c-black-white); */
         height: 100%;
         display: block;
         position: relative;
@@ -149,6 +157,9 @@ form#login{
         & thead, & tbody{
             position: absolute;
             & tr {
+                &.editing{
+                    & td{pointer-events: all}
+                }
                 & td,& th{
                     pointer-events: none;
                     /* border: 2px solid var(--c-white); */
@@ -176,25 +187,34 @@ form#login{
             }
         }
         & thead{
-            border: 1px solid var(--c-black);
+            /* border: 1px solid var(--c-black); */
             color: var(--c-white);
             z-index: 30;
-            & .letters, & .columns{background-color: var(--c-black-white)}
-            & tr.letters td{height: 20px;font-size: 11px;border-bottom: 1px solid var(--c-white)}
-            & tr.columns th{
-                height: 50px;font-size: 14px;background-color: var(--c-black-white);
-                &.E{line-height: 13px;}
+            & .letters, & .columns{
+                background-color: var(--c-black);
+                & .A, & .B, & .C, & .D, & .E, & .F, & .G, & .H, & .I, & .J, & .K{
+                    border-left: 1px solid var(--c-white);
+                }
             }
+            & tr.letters td{height: 20px;font-size: 11px;border-bottom: 1px solid var(--c-white)}
+            & tr.columns th{height: 50px;font-size: 14px;&.E{line-height: 13px;}}
+
         }
         
         & tbody{
             overflow-y: auto;
             scroll-behavior: smooth;
             top: 70px;
-            & tr{transition: 
-                border-top .5s cubic-bezier(0.785, 0.135, 0.15, 0.86) .3s,
-                border-bottom .5s cubic-bezier(0.785, 0.135, 0.15, 0.86) .3s}
-            & tr:hover{border-top: 1px solid var(--c-black);border-bottom: 1px solid var(--c-black)}
+            & tr{
+                transform-origin: left;
+                transition:
+                    border-top .5s cubic-bezier(0.785, 0.135, 0.15, 0.86) .3s,
+                    border-bottom .5s cubic-bezier(0.785, 0.135, 0.15, 0.86) .3s
+            }
+            & tr:hover{
+                border-top: 1px solid var(--c-black);
+                border-bottom: 1px solid var(--c-black)
+            }
             
             height: calc(100% - 70px);
             & td{z-index: 19;height: 45px}

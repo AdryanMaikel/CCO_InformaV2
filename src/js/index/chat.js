@@ -24,6 +24,7 @@ async function get_chat() {
 
 let interval_chat = null;
 document.getElementById("open-chat").onclick = async function(_) {
+    if(chat.classList.contains("open"))return;
     count_requests_chat = 101;
     await get_chat()
     chat.classList.add("open");
