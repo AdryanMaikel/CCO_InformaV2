@@ -43,6 +43,7 @@ async function get_table() {
     table.innerHTML = text;
     table.scrollTop = table.scrollHeight;
     console.log("Atualizando tabela...");
-
     adjust_width_table(window.innerWidth);
+    const tbody = table.querySelector("tbody");
+    tbody.scrollTop = tbody.scrollHeight;
 }
