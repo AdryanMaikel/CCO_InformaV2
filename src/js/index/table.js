@@ -1,13 +1,12 @@
 const table = document.getElementById("table");
 
-const width_columns_default = {_: 35,A: 90,B: 80,C: 55,D: 55,E: 92,F: 55,G: 70,H: 325,I: 250,J: 400,K: 80, sum: 0};
-function create_cookie_width_columns(){
-    const width_columns = JSON.stringify(width_columns_default);
-    document.cookie=`columns=${width_columns}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-    return JSON.parse(decodeURIComponent(width_columns));
-}
 function update_cookie_width_columns(new_width_columns){
     document.cookie=`columns=${JSON.stringify(new_width_columns)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+};
+function create_cookie_width_columns(){
+    const widths = {_: 35,A: 90,B: 80,C: 55,D: 55,E: 92,F: 55,G: 70,H: 325,I: 250,J: 400,K: 80, sum: 0};
+    update_cookie_width_columns(widths);
+    return widths;
 };
 
 const width_columns = document.cookie.split(";").find(cookie=>cookie.trim().startsWith("columns="))
@@ -23,16 +22,17 @@ function sum_columns() {
 sum_columns()
 
 function adjust_width_table(width) {
-    console.log(width_columns.sum)
-    const _table = table.querySelector("table")
-    if(!table)return;
+    const _table = table.querySelector("table");
+    if(!_table)return;
     _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum + 10}px`;
 }
 
 window.onresize = ({target}) => adjust_width_table(target.innerWidth);
 
 let editing_row = {element: null, values: {}};
+let div_actions_table = null;
 let button_cancel_edit = null;
+let button_submit_edit = null;
 
 let old_table = "";
 async function get_table() {
@@ -44,34 +44,47 @@ async function get_table() {
     if(old_messages == text)return;
     old_messages = text;
     table.innerHTML = text;
-    button_cancel_edit = table.querySelector("#cancel-edit-row");
+    div_actions_table = table.querySelector("#actions-table");
+    button_cancel_edit = div_actions_table.querySelector("#cancel-edit");
+    button_submit_edit = div_actions_table.querySelector("#submit-edit");
     console.log("Atualizando tabela...");
 
     adjust_width_table(window.innerWidth);
     const tbody = table.querySelector("tbody");
     tbody.scrollTop = tbody.scrollHeight;
 
-    const rows = tbody.querySelectorAll("tr");
-    rows.forEach(row=>{row.addEventListener("click", _=>{edit_row(row)})});
+    const trs = tbody.querySelectorAll("tr");
+    trs.forEach(tr=>{tr.addEventListener("click", edit_row)});
 }
 
-function edit_row(row) {
+function edit_row(event) {
     if(editing_row.element)return;
-    editing_row.element = row;
+    const row = event.target;
     console.log(`editando ${row.id}`);
-    row.classList.add("editing");
-    row.querySelectorAll("td textarea").forEach(textarea=>{
+    editing_row.element = row;
+    row.querySelectorAll("textarea").forEach(textarea=>{
         editing_row.values[textarea.id.slice(5)] = textarea.value;
     });
-    button_cancel_edit.addEventListener("click", cancel_edit_row)
-    console.log(editing_row.values)
+    row.classList.add("editing");
+
+    div_actions_table.classList.add("open");
+    button_cancel_edit.addEventListener("click", cancel_edit_row);
+    button_submit_edit.addEventListener("click", submit_edit_row);
+    
+    console.log(editing_row.values);
+}
+
+function submit_edit_row() {
+    if(!editing_row.element)return;
 }
 
 function cancel_edit_row() {
     if(!editing_row.element)return;
-    console.log("oi")
+    editing_row.element.querySelectorAll("textarea").forEach(textarea=>{
+        const value = editing_row.values[textarea.id.slice(5)];
+        if(textarea.value != value)textarea.value = value;
+    });
     editing_row.element.classList.remove("editing");
     editing_row = {element: null, values: {}};
-
-    // button_cancel_edit.removeEventListener("click", cancel_edit_row);
+    div_actions_table.classList.remove("open");
 }

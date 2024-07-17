@@ -17,14 +17,14 @@ body{width: 100vw;height: 100vh;background: var(--c-white);color: var(--c-black)
 header{height: 25px;& i{font-size: 20px;}& .toggle{width: 25px;height: 25px;}}
 section{height: calc(100% - 60px);padding: 5px;}
 
-button, input, textarea{background: transparent;border: none;outline: none;}
+input, textarea{background: transparent;border: none;outline: none;}
 
 button{
     background: transparent;border: none;outline: none;
-    transition: scale .2s ease-out;
-    &:hover{scale: 1.15;}
-    &:active{scale: 0.85;}
+    &:hover i{scale: 1.15;}
+    &:active i{scale: 0.85;}
     & i{
+        transition: scale .2s ease-out;
         font-size: 17px;
         pointer-events: none;
         &.fa-ban,&.fa-xmark{color: var(--c-red)}
@@ -61,8 +61,11 @@ button{
         & .x,& .y{position: absolute;transition: top .5s cubic-bezier(0.445, 0.05, 0.55, 0.95),scale .2s ease-out}
         & .x{color: var(--c-red)}& .y{color: var(--c-green)}
     }
+    &.surge button{scale: 0;transition: scale .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+    &.surge.open button{scale: 1}
 }
 .toggle,.overflow-hidden{overflow: hidden}
+
 form#login{
     position: absolute;
     z-index: 99;
@@ -145,6 +148,7 @@ form#login{
     }
 }
 #content-chat::-webkit-scrollbar-thumb{background-color: var(--c-white)}
+
 #table{
     height: 100%;
     & table {
@@ -157,9 +161,6 @@ form#login{
         & thead, & tbody{
             position: absolute;
             & tr {
-                &.editing{
-                    & td{pointer-events: all}
-                }
                 & td,& th{
                     pointer-events: none;
                     /* border: 2px solid var(--c-white); */
@@ -205,25 +206,31 @@ form#login{
             overflow-y: auto;
             scroll-behavior: smooth;
             top: 70px;
-            & tr{
-                transform-origin: left;
-                transition:
-                    border-top .5s cubic-bezier(0.785, 0.135, 0.15, 0.86) .3s,
-                    border-bottom .5s cubic-bezier(0.785, 0.135, 0.15, 0.86) .3s
-            }
-            & tr:hover{
-                border-top: 1px solid var(--c-black);
-                border-bottom: 1px solid var(--c-black)
-            }
-            
             height: calc(100% - 70px);
-            & td{z-index: 19;height: 45px}
-            & textarea{
-                width: 100%;height: 100%;
-                resize: none;
-                font-size: 12px;
+            & tr{
+                border: 1px solid transparent;
+                transition: border .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                &:hover{
+                    border-top: 1px solid var(--c-black);
+                    border-bottom: 1px solid var(--c-black)
+                }
+                &.editing{
+                    border-top: 1px solid var(--c-black-white);
+                    border-bottom: 1px solid var(--c-black-white);
+                    & td{
+                        pointer-events: all;
+                    }
+                }
+                & td{
+                    z-index: 19;
+                    height: 45px;
+                    & textarea{
+                        width: 100%;height: 100%;
+                        resize: none;
+                        font-size: 12px;
+                    }
+                }
             }
         }
     }
-
 }

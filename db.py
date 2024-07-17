@@ -17,7 +17,7 @@ def execute(query: str, params: tuple = (), commit: bool = True) -> list:
                 connection.commit()
                 return []
             rows = cursor.fetchall()
-            return [row if len(row) > 1 else row[0] for row in rows]
+            return [row[0] if len(row).__eq__(1) else row for row in rows]
     except sql.Error as erro:
         print(f"Erro ao executar a query:\n{query}\n\n"
               f"com os paramâtros:\n{params}\n\nerro: {erro}")
