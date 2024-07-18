@@ -15,11 +15,11 @@ class Operators:
     def __init__(self):
         execute(create_table_operators)
 
-    def get(self) -> list:
-        return execute(
-            "SELECT name FROM operators WHERE tentatives > 0",
+    def get(self) -> dict[str, bool]:
+        return {operator: bool(online) for operator, online in dict(execute(
+            "SELECT name, logged FROM operators WHERE tentatives > 0",
             commit=False
-        )
+        )).items()}
 
     def insert(self, name: str, password: str, cracha: str = "") -> str:
         if name in self.get():
@@ -63,5 +63,5 @@ AND tentatives > 0""", params=(name,))
 
 if __name__ == "__main__":
     operators = Operators()
-    operators.insert("Adryan", "100")
+    # operators.insert("Janilse", "1004840601")
     print(operators.get())
