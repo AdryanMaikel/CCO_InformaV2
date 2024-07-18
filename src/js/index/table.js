@@ -3,31 +3,40 @@ const table = document.getElementById("table");
 function update_cookie_width_columns(new_width_columns){
     document.cookie=`columns=${JSON.stringify(new_width_columns)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
 };
-function create_cookie_width_columns(){
+
+function sum_columns(columns_widths) {
+    Object.entries(columns_widths).forEach(([column, width]) => {
+        document.documentElement.style.setProperty(`--${column}`, `${width}px`);
+        columns_widths.sum += width;
+    });
+    document.documentElement.style.setProperty(`--sum`, `${columns_widths.sum}px`);
+}
+
+function create_cookie_width_columns() {
     const widths = {_: 35,A: 90,B: 80,C: 55,D: 55,E: 92,F: 55,G: 70,H: 325,I: 250,J: 400,K: 80, sum: 0};
     update_cookie_width_columns(widths);
+    sum_columns(widths);
     return widths;
-};
-
-const width_columns = document.cookie.split(";").find(cookie=>cookie.trim().startsWith("columns="))
-?JSON.parse(decodeURIComponent(document.cookie.split(";").find(cookie=>cookie.trim().startsWith("columns=")).split("=")[1]))
-:create_cookie_width_columns();
-
-function sum_columns() {
-    Object.entries(width_columns).forEach(([column, width]) => {
-        document.documentElement.style.setProperty(`--${column}`, `${width}px`);
-        width_columns.sum += width;
-    });
 }
-sum_columns()
+
+function load_cookie_width_columns() {
+    const _cookie = JSON.parse(decodeURIComponent(document.cookie.split(";").find(
+        cookie=>cookie.trim().startsWith("columns=")).split("=")[1]));
+    sum_columns(_cookie);
+    return _cookie;
+}
+
+const width_columns = document.cookie.split(";").find(cookie=>
+    cookie.trim().startsWith("columns="))?load_cookie_width_columns():create_cookie_width_columns();
+
+
+
 
 function adjust_width_table(width) {
     const _table = table.querySelector("table");
     if(!_table)return;
     _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum + 10}px`;
 }
-
-window.onresize = ({target}) => adjust_width_table(target.innerWidth);
 
 let editing_row = {element: null, values: {}};
 let div_actions_table = null;

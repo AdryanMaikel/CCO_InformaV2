@@ -1,4 +1,4 @@
-<div class="row header between">
+<div class="row header">
     <h4>Histórico de Eventos</h4>
     <div id="actions-table" class="row buttons surge">
         <button id="submit-edit"><i class="fa-solid fa-paper-plane"></i></button>
@@ -8,8 +8,8 @@
 <table>
     <thead>
         <tr class="row letters">
-            <td class="_">&nbsp;</td>{% for letter in letters %}
-            <td class="{{ letter }}">{{ letter }}</td>{% endfor %}
+            <td class="_"><span class="letter">&nbsp;</span><button class="resize"><i class="fa-solid fa-arrows-left-right"></i></button></td>{% for letter in letters %}
+            <td class="{{ letter }}"><span class="letter">{{ letter }}</span><button class="resize"><i class="fa-solid fa-arrows-left-right"></i></button></td>{% endfor %}
         </tr>
         <tr class="row columns">
             <th class="_">1</th>{% for column in columns %}
@@ -19,7 +19,7 @@
     <tbody>{% for row in rows %}
         <tr id="row-{{ row[0] }}" class="row {{ loop.cycle('even', 'odd') }}">{% for cell in row %}
             <td class="{{ '_' if loop.first else letters[loop.index - 2] }}">
-                {% if loop.first %}{{ cell }}{% else %}<textarea id="cell-{{ letters[loop.index - 2] }}{{ row[0] }}" autocomplete="off">{{ cell }}</textarea>{% endif %}
+                {% if loop.first %}{{ cell }}{% else %}<textarea id="cell-{{ letters[loop.index - 2] }}{{ row[0] }}" spellcheck="false" autocomplete="off">{{ cell }}</textarea>{% endif %}
             </td>{% endfor %}
         </tr>{% endfor %}
     </tbody>

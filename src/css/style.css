@@ -151,6 +151,13 @@ form#login{
 
 #table{
     height: 100%;
+    & .header{
+        margin-left: 5px;
+        & #actions-table{
+            position: relative;
+            left: 5px;
+        }
+    }
     & table {
         /* border: 1px solid var(--c-black-white); */
         height: 100%;
@@ -158,6 +165,7 @@ form#login{
         position: relative;
         overflow-x: auto;
         overflow-y: hidden;
+        border: 1px solid var(--c-black);
         & thead, & tbody{
             position: absolute;
             & tr {
@@ -182,6 +190,10 @@ form#login{
                             text-align: center;
                             padding-top: calc(13px);
                             text-wrap: nowrap;
+                            transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01);
+                            &:focus{
+                                box-shadow: 0 0 1px 1px var(--c-black-white);
+                            }
                         }
                     }
                 }
@@ -192,12 +204,25 @@ form#login{
             color: var(--c-white);
             z-index: 30;
             & .letters, & .columns{
+                position: relative;
                 background-color: var(--c-black);
                 & .A, & .B, & .C, & .D, & .E, & .F, & .G, & .H, & .I, & .J, & .K{
                     border-left: 1px solid var(--c-white);
                 }
             }
-            & tr.letters td{height: 20px;font-size: 11px;border-bottom: 1px solid var(--c-white)}
+            & tr.letters{
+                & td{
+                    position: relative;
+                    height: 20px;font-size: 11px;border-bottom: 1px solid var(--c-white);
+                    & .resize{
+                        position: absolute;
+                        right: -9px;
+                        z-index: 80;
+                        pointer-events: all;
+                        & i{color: var(--c-white)}
+                    }
+                }
+            }
             & tr.columns th{height: 50px;font-size: 14px;&.E{line-height: 13px;}}
 
         }
@@ -209,14 +234,13 @@ form#login{
             height: calc(100% - 70px);
             & tr{
                 border: 1px solid transparent;
-                transition: border .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                transition: border .5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                            box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01);
                 &:hover{
-                    border-top: 1px solid var(--c-black);
-                    border-bottom: 1px solid var(--c-black)
+                    box-shadow: 0 0 1px 1px var(--c-black);
                 }
                 &.editing{
-                    border-top: 1px solid var(--c-black-white);
-                    border-bottom: 1px solid var(--c-black-white);
+                    box-shadow: 0 0 1px 1px var(--c-black-white)!important;
                     & td{
                         pointer-events: all;
                     }
