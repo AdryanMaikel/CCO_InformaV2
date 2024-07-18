@@ -185,41 +185,46 @@ form#login{
                     &.I{width: var(--I)}
                     &.J{width: var(--J);& textarea{padding: 4px}}
                     &.K{width: var(--K)}
-                    &.A, &.C, &.B, &.E, &.D, &.G, &.F, &.I, &.H, &.K {
-                        textarea{
-                            text-align: center;
-                            padding-top: calc(13px);
-                            text-wrap: nowrap;
+                    &.A, &.B, &.C, &.D, &.E, &.F, &.G, &.H, &.I, &.J, &.K{
+                        & textarea{
                             transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01);
                             &:focus{
                                 box-shadow: 0 0 1px 1px var(--c-black-white);
                             }
                         }
                     }
+                    &.A, &.C, &.B, &.E, &.D, &.G, &.F, &.I, &.H, &.K {
+                        textarea{
+                            text-align: center;
+                            padding-top: calc(13px);
+                            text-wrap: nowrap;
+                        }
+                    }
                 }
             }
         }
         & thead{
-            /* border: 1px solid var(--c-black); */
-            color: var(--c-white);
+            border-bottom: 1px solid var(--c-black);
+            border-right: 1px solid var(--c-black);
+            color: var(--c-black);
             z-index: 30;
             & .letters, & .columns{
                 position: relative;
-                background-color: var(--c-black);
+                background-color: var(--c-white-dark);
                 & .A, & .B, & .C, & .D, & .E, & .F, & .G, & .H, & .I, & .J, & .K{
-                    border-left: 1px solid var(--c-white);
+                    border-left: 1px solid var(--c-black);
                 }
             }
             & tr.letters{
                 & td{
                     position: relative;
-                    height: 20px;font-size: 11px;border-bottom: 1px solid var(--c-white);
+                    height: 20px;font-size: 11px;border-bottom: 1px solid var(--c-black);
                     & .resize{
                         position: absolute;
                         right: -9px;
                         z-index: 80;
                         pointer-events: all;
-                        & i{color: var(--c-white)}
+                        & i{color: var(--c-black-white)}
                     }
                 }
             }

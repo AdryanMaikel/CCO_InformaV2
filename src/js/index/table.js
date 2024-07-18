@@ -32,7 +32,9 @@ const width_columns = document.cookie.split(";").find(cookie=>cookie.trim().star
 function adjust_width_table(width) {
     const _table = table.querySelector("table");
     if(!_table)return;
-    _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum + 10}px`;
+    width_columns.sum = 0;
+    sum_columns(width_columns);
+    _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum - 50}px`;
 }
 
 let editing_row = {element: null, values: {}};
