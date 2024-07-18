@@ -4,13 +4,13 @@ from datetime import datetime as dt
 
 from operators import Operators
 from messages import Messages
-from gsheets import SheetCCOInforma
+from gsheets import Sheet
 
 app = Flask(__name__, static_folder="src", template_folder="pages")
 
 operators = Operators()
 messages = Messages()
-cco_informa = SheetCCOInforma()
+cco_informa = Sheet()
 
 
 @app.route("/")
@@ -80,13 +80,15 @@ def post_message():
 @app.route("/cco-informa/<operator>/<password>", methods=["GET"])
 def get_table(operator, password):
     if not operators.check_password(operator, password):
-        abort(404)
-    columns = cco_informa.cols()
+        return abort(404)
     now = dt.now().strftime("%d/%m/%Y")
     now
-    rows = cco_informa.get(dates=[])
-    return render_template("cco-informa.html", columns=columns.values(),
-                           letters=list(columns.keys()), rows=rows)
+    rows = cco_informa.get_rows(dates=[])
+    if not rows:
+        return abort(404)
+    return render_template("cco-informa.html", users=operators.get(),
+                           columns=cco_informa.columns,
+                           letters=cco_informa.letters, rows=rows)
 
 
 if __name__ == "__main__":
