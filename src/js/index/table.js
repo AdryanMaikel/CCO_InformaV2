@@ -44,7 +44,7 @@ let button_submit_edit = null;
 
 let old_table = "";
 async function get_table() {
-    if(!logged)return;
+    if(!logged||editing_row.element)return;
     var url = `/cco-informa/${operator.value}/${password.value}`;
     const response = await fetch(url, { method: "GET" });
     if(response.status != 200)return;
@@ -59,12 +59,15 @@ async function get_table() {
     console.log("Atualizando tabela...");
     adjust_width_table(window.innerWidth);
 
-    const thead = table.querySelector("thead");
-    thead.querySelectorAll("button.resize").forEach(btn=>{btn.addEventListener("mousedown", resizing_column)});
+    table.querySelectorAll("button.resize").forEach(button=>{
+        button.addEventListener("mousedown", resizing_column);
+    });
 
     const tbody = table.querySelector("tbody");
     tbody.scrollTop = tbody.scrollHeight;
-    tbody.querySelectorAll("tr").forEach(tr=>{tr.addEventListener("click", edit_row)});
+    tbody.querySelectorAll("tr").forEach(tr=>{
+        tr.addEventListener("click", edit_row);
+    });
 }
 
 function edit_row(event) {
@@ -99,14 +102,13 @@ function cancel_edit_row() {
     div_actions_table.classList.remove("open");
 }
 
-/* Botões */
-var startX = 0;
-var clicked = false;
-var column_focus = "";
+/* Redimencionar colunas */
+let startX = 0;
+let clicked = false;
+let column_focus = "";
 
 function resizing_column(event) {
     column_focus = event.target.parentElement.className;
-    console.log(column_focus)
     startX = event.clientX;
     clicked = true;
     window.addEventListener("mousemove", resize);
@@ -114,7 +116,7 @@ function resizing_column(event) {
     window.addEventListener("mouseup", confirm_resize);
 }
 
-var width = 0;
+let width = 0;
 
 function resize(event) {
     const diff_x = event.clientX - startX;
@@ -124,11 +126,9 @@ function resize(event) {
 
 function confirm_resize(){
     width_columns[column_focus] = width;
-    width_columns.sum = 0;
-    sum_columns(width_columns);
     update_cookie_width_columns(width_columns);
     removeEvents();
-    adjust_width_table(window.innerWidth)
+    adjust_width_table(window.innerWidth);
 }
 
 function removeEvents() {
