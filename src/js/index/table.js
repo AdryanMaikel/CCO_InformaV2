@@ -26,11 +26,8 @@ function load_cookie_width_columns() {
     return _cookie;
 }
 
-const width_columns = document.cookie.split(";").find(cookie=>
-    cookie.trim().startsWith("columns="))?load_cookie_width_columns():create_cookie_width_columns();
-
-
-
+const width_columns = document.cookie.split(";").find(cookie=>cookie.trim().startsWith("columns="))
+?load_cookie_width_columns():create_cookie_width_columns();
 
 function adjust_width_table(width) {
     const _table = table.querySelector("table");
@@ -56,14 +53,16 @@ async function get_table() {
     div_actions_table = table.querySelector("#actions-table");
     button_cancel_edit = div_actions_table.querySelector("#cancel-edit");
     button_submit_edit = div_actions_table.querySelector("#submit-edit");
+    
     console.log("Atualizando tabela...");
-
     adjust_width_table(window.innerWidth);
+
+    const thead = table.querySelector("thead");
+    thead.querySelectorAll("button.resize").forEach(btn=>{btn.addEventListener("mousedown", resizing_column)});
+
     const tbody = table.querySelector("tbody");
     tbody.scrollTop = tbody.scrollHeight;
-
-    const trs = tbody.querySelectorAll("tr");
-    trs.forEach(tr=>{tr.addEventListener("click", edit_row)});
+    tbody.querySelectorAll("tr").forEach(tr=>{tr.addEventListener("click", edit_row)});
 }
 
 function edit_row(event) {
@@ -97,3 +96,45 @@ function cancel_edit_row() {
     editing_row = {element: null, values: {}};
     div_actions_table.classList.remove("open");
 }
+
+/* Botões */
+var startX = 0;
+var clicked = false;
+var column_focus = "";
+
+function resizing_column(event) {
+    column_focus = event.target.parentElement.className;
+    console.log(column_focus)
+    startX = event.clientX;
+    clicked = true;
+    window.addEventListener("mousemove", resize);
+    window.addEventListener("mouseleave", removeEvents)
+    window.addEventListener("mouseup", confirm_resize);
+}
+
+var width = 0;
+
+function resize(event) {
+    const diff_x = event.clientX - startX;
+    width = width_columns[column_focus] + diff_x;
+    document.documentElement.style.setProperty(`--${column_focus}`, `${width}px`);
+}
+
+function confirm_resize(){
+    width_columns[column_focus] = width;
+    width_columns.sum = 0;
+    sum_columns(width_columns);
+    update_cookie_width_columns(width_columns);
+    removeEvents();
+    adjust_width_table(window.innerWidth)
+}
+
+function removeEvents() {
+    if (clicked) {
+        window.removeEventListener("mousemove", resize);
+        window.removeEventListener("mouseleave", removeEvents)
+        window.removeEventListener("mouseup", removeEvents);
+    }
+    clicked = false;
+}
+
