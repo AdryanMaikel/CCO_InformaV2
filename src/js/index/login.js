@@ -1,4 +1,4 @@
-const div_buttons_login = document.getElementById("div-buttons-login");
+const div_buttons_login = document.getElementById("buttons-login");
 const form_login = document.getElementById("login");
 
 document.getElementById("button-login").addEventListener("click", function(event){

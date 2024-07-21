@@ -1,7 +1,7 @@
 from google.oauth2.service_account import Credentials
 from gspread import authorize
 
-from datetime import datetime as dt
+# from datetime import datetime as dt
 
 
 gsheets = authorize(Credentials.from_service_account_file(
@@ -63,10 +63,8 @@ class Sheet:
 
     def update_row(self, row: int, values:  dict[str, str]) -> bool:
         try:
-            self.ww.batch_update([{
-                "range": f"{column}{row}",
-                "values": [[value]]
-            }for column, value in values.items()])
+            self.ww.batch_update([{"range": column, "values": [[value]]}
+                                  for column, value in values.items()])
             return True
         except Exception as error:
             print(f"Erro ao atualizar a linha {row} com os valores {values}\n"
@@ -77,7 +75,9 @@ if __name__ == "__main__":
     sheet = Sheet()
     # sheet.add_row(2)
     # sheet.update_row(2, {"A": dt.now().strftime("%d/%m/%Y")})
-    print(sheet.last_row)
+    # print(sheet.last_row)
+    rows = sheet.get_rows()
+    print(rows[83])
     # print(sheet.letters)
     # sheet.delete_row(2)
 

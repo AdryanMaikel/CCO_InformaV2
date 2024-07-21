@@ -86,9 +86,34 @@ def get_table(operator, password):
     rows = cco_informa.get_rows(dates=[])
     if not rows:
         return abort(404)
-    return render_template("cco-informa.html", users=operators.get(),
+    last_row = len(rows) + 2
+    rows.append([last_row, now, "", "", "", "", "", "", "", "", "", operator])
+    return render_template("cco-informa.html",
+                           users=operators.get(),
                            columns=cco_informa.columns,
-                           letters=cco_informa.letters, rows=rows)
+                           letters=cco_informa.letters,
+                           last_row=last_row,
+                           rows=rows)
+
+
+@app.route("/<method>/<operator>/<password>", methods=["GET", "POST"])
+def delete_row(method: str, operator: str, password: str):
+    if not operators.check_password(operator, password):
+        return abort(404)
+    if request.method == "GET":
+        return abort(300)
+    data = request.get_json()
+    row = data.pop("row")
+    if not row or not str(row).isnumeric():
+        return abort(400)
+    match method:
+        case "remove":
+            cco_informa.delete_row(row)
+        case "insert":
+            cco_informa.add_row(row, data)
+        case "editing":
+            cco_informa.update_row(row, data)
+    return "Sucesso!"
 
 
 if __name__ == "__main__":

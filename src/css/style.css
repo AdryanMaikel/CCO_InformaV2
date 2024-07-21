@@ -6,6 +6,10 @@
     --c-black-white: #3B3B8A;
     --c-green: #1aac24;
     --c-red: #ce0b0b;
+    --c-gray: gray;
+
+    --c-disabled: #6f5a5a;
+    --c-disabled-dark: #ff00f0;
 }
 
 ::-webkit-scrollbar{width: 8px;display: block;height: 10px;}
@@ -14,13 +18,19 @@
 
 *{margin: 0;padding: 0;box-sizing: border-box;font-family: "Poppins", sans-serif}
 body{width: 100vw;height: 100vh;background: var(--c-white);color: var(--c-black);overflow: hidden;}
-header{height: 25px;& i{font-size: 20px;}& .toggle{width: 25px;height: 25px;}}
+header{height: 25px;& button#open-chat i,& button#open-configurations i{font-size: 20px;}& .toggle{width: 25px;height: 25px;}}
 section{height: calc(100% - 60px);padding: 5px;}
 
 input, textarea{background: transparent;border: none;outline: none;}
-
+input{
+    &.w0{
+        transition: width .5s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+}
 button{
     background: transparent;border: none;outline: none;
+    transition: opacity .5s cubic-bezier(0.19, 1, 0.22, 1);
+    &:disabled{pointer-events: none;opacity: .7;}
     &:hover i{scale: 1.15;}
     &:active i{scale: 0.85;}
     & i{
@@ -31,13 +41,15 @@ button{
         &.fa-xmark{font-size: 20px;}
         &.fa-comment{color: var(--c-black-white)}
         &.fa-copy{color: var(--c-white)}
-        &.fa-trash-can{color: var(--c-red)}
+        &.fa-trash-can{color: var(--c-gray)}
         &.fa-paper-plane{color: var(--c-green)}
     }
 }
 
 .scroll,.scroll-y{overflow-y: scroll}
 .scroll,.scroll-x{overflow-x: scroll}
+.w0{width: 0;overflow: hidden;&.open{width: auto}}
+.h0{height: 0;overflow: hidden;&.open{height: auto}}
 .wh100,.w100{width: 100%}.wh100,.h100{height: 100%}
 .row{
     display: flex;
@@ -76,12 +88,14 @@ form#login{
     background: var(--c-white);
     border-radius: 2px;
     transition: top .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    &.open{top: 0;}
+    &.open{top: 2px;}
+    
+    & button{& i{font-size: 20px}}
     & label{
         height: 21px;
         padding: 0 5px;
         & input{
-            width: 80px;height: 100%;
+            width: 80px;height: 100%;padding-top: 3px;
             outline: none;
         }
         & i{
@@ -148,7 +162,7 @@ form#login{
     }
 }
 #content-chat::-webkit-scrollbar-thumb{background-color: var(--c-white)}
-
+.delete td textarea::-webkit-scrollbar-thumb{background-color: var(--c-red)}
 #table{
     height: 100%;
     & .header{
@@ -158,6 +172,7 @@ form#login{
             left: 5px;
         }
     }
+    & #add-row{padding-left: 5px;padding-left: 5px}
     & table {
         /* border: 1px solid var(--c-black-white); */
         height: 100%;
@@ -187,9 +202,10 @@ form#login{
                     &.K{width: var(--K)}
                     &.A, &.B, &.C, &.D, &.E, &.F, &.G, &.H, &.I, &.J, &.K{
                         & textarea{
-                            transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01);
+                            transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01), border-radius .5s ease-out;
                             &:focus{
-                                box-shadow: 0 0 1px 1px var(--c-black-white);
+                                box-shadow: 0 0 15px -3px var(--c-black-white);
+                                border-radius: 7px;
                             }
                         }
                     }
@@ -228,7 +244,10 @@ form#login{
                     }
                 }
             }
-            & tr.columns th{height: 50px;font-size: 14px;&.E{line-height: 13px;}}
+            & tr.columns th{
+                overflow: hidden;height: 50px;font-size: 14px;color: var(--c-black-white);
+                &.E{line-height: 13px;}
+            }
 
         }
         
@@ -238,16 +257,31 @@ form#login{
             top: 70px;
             height: calc(100% - 70px);
             & tr{
+                position: relative;
+                z-index: 10;
                 border: 1px solid transparent;
                 transition: border .5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                            box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01);
+                box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01),
+                height .5s cubic-bezier(0.165, 0.84, 0.44, 1);
                 &:hover{
-                    box-shadow: 0 0 1px 1px var(--c-black);
+                    box-shadow: 0 0 15px -7px var(--c-black-white);
                 }
                 &.editing{
-                    box-shadow: 0 0 1px 1px var(--c-black-white)!important;
+                    background-color: var(--c-white);
+                    z-index: 12;
+                    box-shadow: 0 0 3px 1px var(--c-black-white);
                     & td{
                         pointer-events: all;
+                        & textarea{
+                            opacity: 1;
+                        }
+                    }
+                }
+                &.delete{
+                    box-shadow: 0 0 1px 1px var(--c-red);
+                    & td, & td textarea{
+                        color: var(--c-red);
+                        pointer-events: none;
                     }
                 }
                 & td{
@@ -255,8 +289,12 @@ form#login{
                     height: 45px;
                     & textarea{
                         width: 100%;height: 100%;
+                        overflow-x: hidden;
                         resize: none;
                         font-size: 12px;
+                        opacity: .7;
+                        transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01),
+                                    opacity .5s cubic-bezier(0.19, 1, 0.22, 1);
                     }
                 }
             }

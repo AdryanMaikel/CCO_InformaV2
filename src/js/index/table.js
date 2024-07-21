@@ -9,6 +9,7 @@ function sum_columns(columns_widths) {
         document.documentElement.style.setProperty(`--${column}`, `${width}px`);
         columns_widths.sum += width;
     });
+    console.log(columns_widths.sum)
     document.documentElement.style.setProperty(`--sum`, `${columns_widths.sum}px`);
 }
 
@@ -37,10 +38,16 @@ function adjust_width_table(width) {
     _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum - 50}px`;
 }
 
-let editing_row = {element: null, values: {}};
+let editing_row = {element: null, values: {}, method: null};
+
 let div_actions_table = null;
 let button_cancel_edit = null;
 let button_submit_edit = null;
+let button_delete_row = null;
+let button_add_row = null;
+let input_number_row = null;
+let last_row = null;
+
 
 let old_table = "";
 async function get_table() {
@@ -50,11 +57,16 @@ async function get_table() {
     if(response.status != 200)return;
     const text = await response.text();
     if(old_messages == text)return;
+
     old_messages = text;
     table.innerHTML = text;
     div_actions_table = table.querySelector("#actions-table");
     button_cancel_edit = div_actions_table.querySelector("#cancel-edit");
     button_submit_edit = div_actions_table.querySelector("#submit-edit");
+    button_delete_row = div_actions_table.querySelector("#delete-row");
+    button_add_row = table.querySelector("#button-add-row");
+    input_number_row = table.querySelector("#number-row");
+    button_add_row.addEventListener("click", add_row);
     
     console.log("Atualizando tabela...");
     adjust_width_table(window.innerWidth);
@@ -65,7 +77,9 @@ async function get_table() {
 
     const tbody = table.querySelector("tbody");
     tbody.scrollTop = tbody.scrollHeight;
-    tbody.querySelectorAll("tr").forEach(tr=>{
+    const rows = tbody.querySelectorAll("tr");
+    rows.forEach(tr=>{
+        if(tr.classList.contains("last-row")){last_row = tr;return};
         tr.addEventListener("click", edit_row);
     });
 }
@@ -79,27 +93,96 @@ function edit_row(event) {
         editing_row.values[textarea.id.slice(5)] = textarea.value;
     });
     row.classList.add("editing");
-
+    editing_row.method = "editing";
     div_actions_table.classList.add("open");
+    button_submit_edit.disabled = false;
     button_cancel_edit.addEventListener("click", cancel_edit_row);
     button_submit_edit.addEventListener("click", submit_edit_row);
-    
+    button_delete_row.addEventListener("click", remove_row);
+
     console.log(editing_row.values);
 }
 
-function submit_edit_row() {
+async function submit_edit_row() {
     if(!editing_row.element)return;
+    let url = `/${editing_row.method}/${operator.value}/${password.value}`;
+    let json = {};
+    json["row"] = parseInt(editing_row.element.id.slice(4));
+    if(editing_row.method == "editing"){
+        editing_row.element.querySelectorAll("textarea").forEach(textarea=>{
+            const _id = textarea.id.slice(5);
+            if(textarea.value != editing_row.values[_id])json[_id] = textarea.value
+        });
+    }
+    if(editing_row.method == "insert"){
+        console.log(editing_row.values)
+        json = {
+            ...json,
+            ...editing_row.values
+        };
+    }
+    // const _form = new FormData(create_form())
+    const response = await fetch(url, {method: "post", headers: {
+        "Content-Type": "application/json"}, body: JSON.stringify(json)})
+    const text = await response.text()
+    if(text == "Sucesso!"){
+        cancel_edit_row()
+        get_table();
+    }
+}
+
+function create_form() {
+
 }
 
 function cancel_edit_row() {
+    console.log("cancelando")
     if(!editing_row.element)return;
+    
+    button_submit_edit.disabled = true;
+    button_add_row.disabled = false;
+    button_delete_row.disabled = false;
+
     editing_row.element.querySelectorAll("textarea").forEach(textarea=>{
         const value = editing_row.values[textarea.id.slice(5)];
         if(textarea.value != value)textarea.value = value;
     });
-    editing_row.element.classList.remove("editing");
-    editing_row = {element: null, values: {}};
+    editing_row.element.classList.remove("editing", "delete");
+    editing_row = {element: null, values: {}, method: null};
+
     div_actions_table.classList.remove("open");
+    last_row.classList.remove("open");
+    input_number_row.classList.remove("open");
+    button_add_row.parentElement.classList.remove("open");
+}
+
+async function remove_row() {
+    if(!editing_row.element)return;
+    editing_row.element.classList.add("delete");
+    editing_row.method = "remove"
+    if(button_submit_edit)button_submit_edit.disabled = false;
+}
+
+async function add_row() {
+    if(!button_add_row||!input_number_row)return;
+    button_add_row.disabled = true;
+    button_delete_row.disabled = true;
+    button_submit_edit.disabled = false;
+    editing_row.element = last_row;
+    editing_row.element.classList.add("editing");
+    last_row.querySelectorAll("textarea").forEach(textarea=>{
+        editing_row.values[textarea.id.slice(5, 6)] = textarea.value;
+    })
+    editing_row.method = "insert";
+    last_row.classList.add("open");
+    button_add_row.parentElement.classList.add("open");
+    input_number_row.classList.add("open");
+    div_actions_table.classList.add("open");
+    const tbody = table.querySelector("tbody");
+    tbody.scrollTop = tbody.scrollHeight;
+    button_cancel_edit.addEventListener("click", cancel_edit_row);
+    last_row.querySelector(".B textarea").focus()
+    button_submit_edit.addEventListener("click", submit_edit_row);
 }
 
 /* Redimencionar colunas */
