@@ -1,60 +1,119 @@
-"""
+from flask import Flask, render_template, request, abort, make_response
 
-"""
-from flask import Flask, render_template, request, abort
+from datetime import datetime as dt
 
-from gsheets import INFORMATIONS as SHEETS
-from db import contains_operator, update_status, messages
+from operators import Operators
+from messages import Messages
+from gsheets import Sheet
 
-LETTERS = SHEETS["cco-informa"]["letters"]()
-COLUMNS = SHEETS["cco-informa"]["cols"]()
+app = Flask(__name__, static_folder="src", template_folder="pages")
 
-app = Flask(__name__)
+operators = Operators()
+messages = Messages()
+cco_informa = Sheet()
 
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    operator, password = "", ""
+    cookie_login = request.cookies.get("login", None)
+    if cookie_login and cookie_login.__contains__("/"):
+        operator, password = cookie_login.split("/")
+        if operators.check_password(operator, password):
+            operators.toggle_online(operator, password, online=True)
+    return render_template("index.html", operator=operator, password=password)
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    name, password = request.form["operator"], request.form["password"]
-    if not contains_operator(name, password):
-        abort(404)
-    return f"cco-informa/{name}/{password}"
+    if request.method == "GET":
+        return abort(404)
+    operator = request.form.get("operator", None)
+    password = request.form.get("password", None)
+    if (not operator or not password or operator not in operators.get()
+            or not operators.check_password(operator, password)):
+        return "Operador ou senha inválidos."
+
+    response = f"Logado {operator}!"
+    cookie_login = request.cookies.get("login", None)
+    cookie_value = f"{operator}/{password}"
+    operators.toggle_online(operator, password, online=True)
+    if not cookie_login or cookie_login != cookie_value:
+        cookie = make_response(response)
+        cookie.set_cookie("login", cookie_value)
+        return cookie
+    return response
 
 
-@app.route("/cco-informa/<name>/<password>", methods=["GET"])
-def cco_informa(name, password):
-    if not contains_operator(name, password):
-        abort(404)
-    update_status(name, True)
-    return render_template("cco-informa.html", letters=LETTERS, cols=COLUMNS,
-                           rows=SHEETS["cco-informa"]["get"](), user=name)
+@app.route("/unlogin", methods=["GET", "POST"])
+def unlogin():
+    operator = request.form.get("operator", None)
+    password = request.form.get("password", None)
+    if (not operator or not password or request.method == "GET"
+            or not operators.check_password(operator, password)):
+        return abort(404)
+    operators.toggle_online(operator, password, online=False)
+    return f"{operator} deslogado."
 
 
-@app.route("/logout/<operator>", methods=["POST"])
-def logout(operator):
-    try:
-        update_status(operator, False)
-        return f"{operator}, deslogado com sucesso!"
-    except Exception as error:
-        print(error)
-        return "Falha ao deslogar."
+@app.route("/chat/<operator>/<password>", methods=["GET"])
+def get_messages(operator, password):
+    if not operators.check_password(operator, password):
+        return render_template("messages.html", grouped_messages=[], name="")
+
+    grouped_messages = messages.get()
+    return render_template("messages.html", grouped_messages=grouped_messages,
+                           name=operator)
 
 
-@app.route("/chat/<name>/<password>", methods=["GET"])
-def get_messages(name, password):
-    if not contains_operator(name, password):
-        abort(404)
-    return render_template("chat.html", messages=messages["get"](), name=name)
+@app.route("/post-message", methods=["GET", "POST"])
+def post_message():
+    operator = request.form.get("operator", None)
+    password = request.form.get("password", None)
+    message = request.form.get("message", None)
+    if (not operator or not password or not message or request.method == "GET"
+            or not operators.check_password(operator, password)):
+        return abort(404)
+    return messages.insert(operator, message)
 
 
-@app.errorhandler(404)
-def page_not_found(error):
-    error = "404. Insira seu operador e senha."
-    return render_template("not-found.html", error=error)
+@app.route("/cco-informa/<operator>/<password>", methods=["GET"])
+def get_table(operator, password):
+    if not operators.check_password(operator, password):
+        return abort(404)
+    now = dt.now().strftime("%d/%m/%Y")
+    now
+    rows = cco_informa.get_rows(dates=[])
+    if not rows:
+        return abort(404)
+    last_row = len(rows) + 2
+    rows.append([last_row, now, "", "", "", "", "", "", "", "", "", operator])
+    return render_template("cco-informa.html",
+                           users=operators.get(),
+                           columns=cco_informa.columns,
+                           letters=cco_informa.letters,
+                           last_row=last_row,
+                           rows=rows)
+
+
+@app.route("/<method>/<operator>/<password>", methods=["GET", "POST"])
+def delete_row(method: str, operator: str, password: str):
+    if not operators.check_password(operator, password):
+        return abort(404)
+    if request.method == "GET":
+        return abort(300)
+    data = request.get_json()
+    row = data.pop("row")
+    if not row or not str(row).isnumeric():
+        return abort(400)
+    match method:
+        case "remove":
+            cco_informa.delete_row(row)
+        case "insert":
+            cco_informa.add_row(row, data)
+        case "editing":
+            cco_informa.update_row(row, data)
+    return "Sucesso!"
 
 
 if __name__ == "__main__":
