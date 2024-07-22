@@ -15,8 +15,8 @@ function sum_columns(columns_widths) {
 
 function create_cookie_width_columns() {
     const widths = {_: 35,A: 90,B: 80,C: 55,D: 55,E: 92,F: 55,G: 70,H: 325,I: 250,J: 400,K: 80, sum: 0};
-    update_cookie_width_columns(widths);
     sum_columns(widths);
+    update_cookie_width_columns(widths);
     return widths;
 }
 
@@ -35,7 +35,7 @@ function adjust_width_table(width) {
     if(!_table)return;
     width_columns.sum = 0;
     sum_columns(width_columns);
-    _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum - 50}px`;
+    _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum + 12}px`;
 }
 
 let editing_row = {element: null, values: {}, method: null};
