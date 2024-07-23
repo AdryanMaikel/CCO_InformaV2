@@ -63,5 +63,4 @@ AND tentatives > 0""", params=(name,))
 
 if __name__ == "__main__":
     operators = Operators()
-    # operators.insert("Janilse", "1004840601")
     print(operators.get())

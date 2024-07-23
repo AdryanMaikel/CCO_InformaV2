@@ -10,7 +10,7 @@ app = Flask(__name__, static_folder="src", template_folder="pages")
 
 operators = Operators()
 messages = Messages()
-cco_informa = Sheet()
+cco_informa = Sheet("Histórico de eventos")
 
 
 @app.route("/")
@@ -38,11 +38,11 @@ def login():
     cookie_login = request.cookies.get("login", None)
     cookie_value = f"{operator}/{password}"
     operators.toggle_online(operator, password, online=True)
-    if not cookie_login or cookie_login != cookie_value:
-        cookie = make_response(response)
-        cookie.set_cookie("login", cookie_value)
-        return cookie
-    return response
+    if cookie_login and cookie_login == cookie_value:
+        return response
+    cookie = make_response(response)
+    cookie.set_cookie("login", cookie_value)
+    return cookie
 
 
 @app.route("/unlogin", methods=["GET", "POST"])

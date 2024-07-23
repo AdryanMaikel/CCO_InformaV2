@@ -25,9 +25,4 @@ def execute(query: str, params: tuple = (), commit: bool = True) -> list:
 
 
 if __name__ == "__main__":
-    rows = execute(
-        query="select * from operators", commit=False
-    )
-    for row in rows:
-        print(row)
-    print(execute("SELECT * FROM operators Where id = 1", commit=False))
+    print(execute("SELECT * FROM operators", commit=False))

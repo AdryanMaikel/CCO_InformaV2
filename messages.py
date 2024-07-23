@@ -19,12 +19,12 @@ class Messages:
 
     def get(self) -> list[dict[str, str | list[dict[str, str | int]]]]:
         messages = list([{
-            "id": row[0],
-            "name": row[1],
-            "date": "/".join(reversed(str(row[2]).split()[0].split("-"))),
-            "hour": str(row[2]).split()[1].split(".")[0],
-            "message": row[3]
-        }for row in execute(
+            "id": _id,
+            "name": name,
+            "date": "/".join(reversed(str(date).split()[0].split("-"))),
+            "hour": str(date).split()[1].split(".")[0],
+            "message": message
+        }for _id, name, date, message in execute(
             "SELECT id, name, date, message FROM messages WHERE visibled = 1",
             commit=False
         )])
@@ -40,6 +40,30 @@ class Messages:
         execute("INSERT INTO messages (name, date, message) VALUES (?, ?, ?)",
                 params=(name, dt.now() - td(hours=3), message))
         return f"Sucesso, mensagem:\n\n{message}\nde {name} inserida."
+
+    def hidden(self, _id: int) -> bool:
+        if _id not in execute("SELECT id FROM messages", commit=False):
+            print(f"Mensagem com id: {_id}, não inclusa.")
+            return False
+        execute("UPDATE messages SET visibled = 0 WHERE id = ?", (_id,))
+        print(f"Mensagem com id: {_id}, oculta.")
+        return True
+
+    def show(self, _id: int) -> bool:
+        if _id not in execute("SELECT id FROM messages", commit=False):
+            print(f"Mensagem com id: {_id}, não inclusa.")
+            return False
+        execute("UPDATE messages SET visibled = 1 WHERE id = ?", (_id,))
+        print(f"Mensagem com id: {_id}, habilitada.")
+        return True
+
+    def remove(self, _id: int) -> bool:
+        if _id not in execute("SELECT id FROM messages", commit=False):
+            print(f"Mensagem com id: {_id}, não inclusa.")
+            return False
+        execute("DELETE FROM messages WHERE id = ?", (_id,))
+        print(f"Mensagem com id: {_id}, removida.")
+        return True
 
 
 if __name__ == "__main__":
