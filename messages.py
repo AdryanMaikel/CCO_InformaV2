@@ -1,7 +1,7 @@
 from db import execute
 
 from collections import defaultdict
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta as td
 
 create_table_messages = """\
 CREATE TABLE IF NOT EXISTS messages (
@@ -38,7 +38,7 @@ class Messages:
         if message.count("\n") > 15:
             return f"{message} enorme de {name}."
         execute("INSERT INTO messages (name, date, message) VALUES (?, ?, ?)",
-                params=(name, dt.now(), message))
+                params=(name, dt.now() - td(hours=3), message))
         return f"Sucesso, mensagem:\n\n{message}\nde {name} inserida."
 
 
