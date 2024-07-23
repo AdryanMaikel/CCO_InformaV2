@@ -41,6 +41,7 @@ class Sheet:
         return rows
 
     def add_row(self, row: int, values: dict[str, str] = {}) -> bool:
+        print(values)
         values_to_insert = [values.get(letter, "")for letter in self.letters]
         range_from, range_to = f"A{row+1}:K{row+1}", f"A{row}:K{row}"
         try:

@@ -15,8 +15,8 @@ function sum_columns(columns_widths) {
 
 function create_cookie_width_columns() {
     const widths = {_: 35,A: 90,B: 80,C: 55,D: 55,E: 92,F: 55,G: 70,H: 325,I: 250,J: 400,K: 80, sum: 0};
-    update_cookie_width_columns(widths);
     sum_columns(widths);
+    update_cookie_width_columns(widths);
     return widths;
 }
 
@@ -35,7 +35,7 @@ function adjust_width_table(width) {
     if(!_table)return;
     width_columns.sum = 0;
     sum_columns(width_columns);
-    _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum - 50}px`;
+    _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum + 12}px`;
 }
 
 let editing_row = {element: null, values: {}, method: null};
@@ -115,15 +115,18 @@ async function submit_edit_row() {
         });
     }
     if(editing_row.method == "insert"){
-        console.log(editing_row.values)
-        json = {
-            ...json,
-            ...editing_row.values
-        };
+        editing_row.element.querySelectorAll("textarea").forEach(textarea=>{
+            json[textarea.id.slice(5, 6)] = textarea.value;
+        });
+        console.log(`Inserindo valores: ${JSON.stringify(json)}`)
     }
-    // const _form = new FormData(create_form())
-    const response = await fetch(url, {method: "post", headers: {
-        "Content-Type": "application/json"}, body: JSON.stringify(json)})
+    const response = await fetch(url, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(json)
+    });
     const text = await response.text()
     if(text == "Sucesso!"){
         cancel_edit_row()
@@ -164,14 +167,14 @@ async function remove_row() {
 }
 
 async function add_row() {
-    if(!button_add_row||!input_number_row)return;
+    if(!button_add_row||!input_number_row||editing_row.element)return;
     button_add_row.disabled = true;
     button_delete_row.disabled = true;
     button_submit_edit.disabled = false;
     editing_row.element = last_row;
     editing_row.element.classList.add("editing");
     last_row.querySelectorAll("textarea").forEach(textarea=>{
-        editing_row.values[textarea.id.slice(5, 6)] = textarea.value;
+        editing_row.values[textarea.id.slice(5)] = textarea.value;
     })
     editing_row.method = "insert";
     last_row.classList.add("open");
