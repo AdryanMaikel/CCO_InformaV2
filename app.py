@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, abort, make_response
 
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta as td
 
 from operators import Operators
 from messages import Messages
@@ -81,12 +81,11 @@ def post_message():
 def get_table(operator, password):
     if not operators.check_password(operator, password):
         return abort(404)
-    now = dt.now().strftime("%d/%m/%Y")
-    now
     rows = cco_informa.get_rows(dates=[])
     if not rows:
         return abort(404)
     last_row = len(rows) + 2
+    now = (dt.now() - td(hours=3)).strftime("%d/%m/%Y")
     rows.append([last_row, now, "", "", "", "", "", "", "", "", "", operator])
     return render_template("cco-informa.html",
                            users=operators.get(),
@@ -97,7 +96,7 @@ def get_table(operator, password):
 
 
 @app.route("/<method>/<operator>/<password>", methods=["GET", "POST"])
-def delete_row(method: str, operator: str, password: str):
+def actions(method: str, operator: str, password: str):
     if not operators.check_password(operator, password):
         return abort(404)
     if request.method == "GET":
