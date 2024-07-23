@@ -115,15 +115,18 @@ async function submit_edit_row() {
         });
     }
     if(editing_row.method == "insert"){
-        console.log(editing_row.values)
-        json = {
-            ...json,
-            ...editing_row.values
-        };
+        editing_row.element.querySelectorAll("textarea").forEach(textarea=>{
+            json[textarea.id.slice(5, 6)] = textarea.value;
+        });
+        console.log(`Inserindo valores: ${JSON.stringify(json)}`)
     }
-    // const _form = new FormData(create_form())
-    const response = await fetch(url, {method: "post", headers: {
-        "Content-Type": "application/json"}, body: JSON.stringify(json)})
+    const response = await fetch(url, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(json)
+    });
     const text = await response.text()
     if(text == "Sucesso!"){
         cancel_edit_row()
@@ -164,14 +167,14 @@ async function remove_row() {
 }
 
 async function add_row() {
-    if(!button_add_row||!input_number_row)return;
+    if(!button_add_row||!input_number_row||editing_row.element)return;
     button_add_row.disabled = true;
     button_delete_row.disabled = true;
     button_submit_edit.disabled = false;
     editing_row.element = last_row;
     editing_row.element.classList.add("editing");
     last_row.querySelectorAll("textarea").forEach(textarea=>{
-        editing_row.values[textarea.id.slice(5, 6)] = textarea.value;
+        editing_row.values[textarea.id.slice(5)] = textarea.value;
     })
     editing_row.method = "insert";
     last_row.classList.add("open");

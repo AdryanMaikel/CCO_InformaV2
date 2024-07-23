@@ -18,7 +18,7 @@
 
 *{margin: 0;padding: 0;box-sizing: border-box;font-family: "Poppins", sans-serif}
 body{width: 100vw;height: 100vh;background: var(--c-white);color: var(--c-black);overflow: hidden;}
-header{height: 25px;& button#open-chat i,& button#open-configurations i{font-size: 20px;}& .toggle{width: 25px;height: 25px;}}
+header{height: 30px;& button#open-chat i,& button#open-configurations i{font-size: 20px;}& .toggle{width: 25px;height: 25px;}}
 section{height: calc(100% - 60px);padding: 5px;}
 
 input, textarea{background: transparent;border: none;outline: none;}
@@ -27,6 +27,7 @@ input{
         transition: width .5s cubic-bezier(0.86, 0, 0.07, 1);
     }
 }
+#open-chat i{color: var(--c-black-white);}
 button{
     background: transparent;border: none;outline: none;
     transition: opacity .5s cubic-bezier(0.19, 1, 0.22, 1);
@@ -175,7 +176,7 @@ form#login{
     & #add-row{padding-left: 5px;padding-left: 5px}
     & table {
         /* border: 1px solid var(--c-black-white); */
-        height: 100%;
+        height: calc(100% - 25px);
         display: block;
         position: relative;
         overflow-x: auto;
