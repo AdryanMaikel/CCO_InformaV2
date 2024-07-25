@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 :root{
+    --c-ice: #fff;
     --c-white: #e2e2e2;
     --c-white-dark: #bdbdbd;
     --c-black: #0f1730;
@@ -18,8 +19,67 @@
 
 *{margin: 0;padding: 0;box-sizing: border-box;font-family: "Poppins", sans-serif}
 body{width: 100vw;height: 100vh;background: var(--c-white);color: var(--c-black);overflow: hidden;}
-header{height: 30px;& button#open-chat i,& button#open-configurations i{font-size: 20px;}& .toggle{width: 25px;height: 25px;}}
-section{height: calc(100% - 60px);padding: 5px;}
+header{
+    position: relative;
+    z-index: 99;
+    width: 66px;
+    padding: 5px;
+    gap: 20px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    background-color: var(--c-ice);
+    & #logo-mob{width: 92%;height: auto}
+    & h1{display: none}
+    & button{
+        position: relative; width: 25px;height: 25px;
+        &#toggle-login{
+            width: 30px;
+            height: 30px;
+            padding: 2px;
+            margin-left: 12px;
+        }
+    }
+
+    form#login{
+        position: absolute;
+        z-index: 98;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        background: var(--c-ice);
+        width: 0;
+        height: 34px;
+        left: 64px;
+        top: 182px;
+        transition: width .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        &.open{width:  290px}
+        
+        & button{& i{font-size: 20px}}
+        & label{
+            height: 21px;
+            padding: 0 5px;
+            & input{
+                width: 80px;height: 100%;padding-top: 3px;
+                outline: none;
+            }
+            & i{
+                color: var(--c-black-white);
+            }
+            & input::selection{
+                background-color: var(--c-black-white);
+            }
+        }
+    }
+    
+}
+section{
+    width: calc(100% - 66px);
+    height: 100%;
+    position: absolute;
+    z-index: 80;
+    top: 0;
+    left: 66px;
+    padding: 5px;
+}
 
 input, textarea{background: transparent;border: none;outline: none;}
 input{
@@ -28,6 +88,7 @@ input{
     }
 }
 #open-chat i{color: var(--c-black-white);}
+i.fa-user, i.fa-lock{font-size: 20px;}
 button{
     background: transparent;border: none;outline: none;
     transition: opacity .5s cubic-bezier(0.19, 1, 0.22, 1);
@@ -36,19 +97,30 @@ button{
     &:active i{scale: 0.85;}
     & i{
         transition: scale .2s ease-out;
-        font-size: 17px;
+        font-size: 20px;
         pointer-events: none;
         &.fa-ban,&.fa-xmark{color: var(--c-red)}
-        &.fa-xmark{font-size: 20px;}
+        &.fa-user-xmark,&.fa-user-check{font-size: 17px;}
         &.fa-comment{color: var(--c-black-white)}
         &.fa-copy{color: var(--c-white)}
         &.fa-trash-can{color: var(--c-gray)}
         &.fa-paper-plane{color: var(--c-green)}
+        &.fa-whatsapp{color: var(--c-green);}
     }
 }
 
 .scroll,.scroll-y{overflow-y: scroll}
 .scroll,.scroll-x{overflow-x: scroll}
+.overflow{
+    &.hidden{overflow: hidden}
+    &.x-hidden{overflow-x: hidden}
+    &.y-hidden{overflow-y: hidden}
+    &.x-scroll{overflow-x: scroll}
+    &.y-scroll{overflow-y: scroll}
+    &.x-visible{overflow-x: visible}
+    &.y-visible{overflow-y: visible}
+
+}
 .w0{width: 0;overflow: hidden;&.open{width: auto}}
 .h0{height: 0;overflow: hidden;&.open{height: auto}}
 .wh100,.w100{width: 100%}.wh100,.h100{height: 100%}
@@ -64,48 +136,18 @@ button{
     display: flex;
     flex-direction: column;
     &.buttons.toggle{& .x{top: 4px}& .y{top: -30px}}
-    &.buttons.toggle.active{& .x{top: 30px}& .y{top: 4px}}
+    &.buttons.toggle.active{& .x{top: 38px}& .y{top: 4px}}
+    &.center{align-items: center;}
 }
 .col.buttons,.row.buttons{
     gap: 5px;
     &.toggle{
         position: relative;
-        padding: 2px;
         & .x,& .y{position: absolute;transition: top .5s cubic-bezier(0.445, 0.05, 0.55, 0.95),scale .2s ease-out}
         & .x{color: var(--c-red)}& .y{color: var(--c-green)}
     }
     &.surge button{scale: 0;transition: scale .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
     &.surge.open button{scale: 1}
-}
-.toggle,.overflow-hidden{overflow: hidden}
-
-form#login{
-    position: absolute;
-    z-index: 99;
-    padding: 5px 10px;
-    border: 1px solid var(--c-black-white);
-    right: 5px;
-    top: -50px;
-    background: var(--c-white);
-    border-radius: 2px;
-    transition: top .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    &.open{top: 2px;}
-    
-    & button{& i{font-size: 20px}}
-    & label{
-        height: 21px;
-        padding: 0 5px;
-        & input{
-            width: 80px;height: 100%;padding-top: 3px;
-            outline: none;
-        }
-        & i{
-            color: var(--c-black-white);
-        }
-        & input::selection{
-            background-color: var(--c-black-white);
-        }
-    }
 }
 
 #chat{
@@ -115,7 +157,7 @@ form#login{
     color: var(--c-white);
     position: absolute;
     top: 0;
-    left: -500px;
+    left: -510px;
     transition: left .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 99;
 

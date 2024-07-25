@@ -25,7 +25,7 @@ def index():
 
 
 @app.route("/login", methods=["GET", "POST"])
-def login():
+def toggle_login():
     if request.method == "GET":
         return abort(404)
     operator = request.form.get("operator", None)
@@ -46,7 +46,7 @@ def login():
 
 
 @app.route("/unlogin", methods=["GET", "POST"])
-def unlogin():
+def untoggle_login():
     operator = request.form.get("operator", None)
     password = request.form.get("password", None)
     if (not operator or not password or request.method == "GET"

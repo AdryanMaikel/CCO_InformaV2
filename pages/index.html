@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/src/assets/img/favicon.ico" type="image/x-icon">
-    <title>Informa</title>
+    <title>CCO Informa</title>
 
     <link rel="stylesheet" href="/src/css/style.css">
 
@@ -16,30 +16,36 @@
     <script src="/src/js/index/page.js" defer></script>
 </head>
 <body>
-    <header class="row between">
-        <h1></h1>
-        <form id="login" action="/login" method="post" autocomplete="off" class="row">
-            <label for="operator" class="row gap5">
-                <i class="fa-solid fa-user"></i>
-                <input type="text" name="operator" id="operator" value="{{ operator }}">
-            </label>
-            <label for="password" class="row gap5">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" name="password" id="password" value="{{ password }}">
-            </label>
-            <div class="row buttons">
-                <button type="submit" id="submit-login"><i class="fa-solid fa-paper-plane"></i></button>
-                <button type="reset" id="reset-login"><i class="fa-solid fa-ban"></i></button>
-            </div>
-        </form>
+    <header class="col center h100">
+        <h1>*CCO Informa*</h1>
+        <figure class="" id="logo-mob">
+            <img class="wh100" src="/src/assets/img/mob.png" alt="Logo da mob, é a palavra mob escrita em azul com o fundo transparente">
+        </figure>
+        <form id="login" class="row overflow x-hidden" action="/login" method="post" autocomplete="off" class="row">
+        <label for="operator" class="row gap5">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" name="operator" id="operator" value="{{ operator }}">
+        </label>
+        <label for="password" class="row gap5">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" name="password" id="password" value="{{ password }}">
+        </label>
         <div class="row buttons">
-            <button id="open-configurations"><i class="fa-solid fa-gear"></i></button>
-            <button id="open-chat"><i class="fa-solid fa-walkie-talkie"></i></button>
-            <div id="buttons-login" class="col buttons toggle">
-                <button id="button-login" class="x"><i class="fa-solid fa-user-xmark"></i></button>
-                <button id="button-unlogin" class="y"><i class="fa-solid fa-user-check"></i></button>
-            </div>
+            <button type="submit" id="submit-login"><i class="fa-solid fa-paper-plane"></i></button>
+            <button type="reset" id="reset-login"><i class="fa-solid fa-ban"></i></button>
         </div>
+        </form>
+        <button id="open-configurations"><i class="fa-solid fa-gear"></i></button>
+        <button id="open-cco-wpp"><i class="fa-brands fa-whatsapp"></i></button>
+        <button id="open-chat"><i class="fa-solid fa-walkie-talkie"></i></button>
+        <button id="toggle-login" class="col buttons toggle overflow hidden">
+            <i class="fa-solid fa-user-xmark x"></i>
+            <i class="fa-solid fa-user-check y"></i>
+        </button>
+        <!-- <div id="buttons-login" class="col buttons toggle">
+            <button id="toggle-login" class="x"><i class="fa-solid fa-user-xmark"></i></button>
+            <button id="button-unlogin" class="y"><i class="fa-solid fa-user-check"></i></button>
+        </div> -->
     </header>
     <section class="hidden">
         <h2></h2>
