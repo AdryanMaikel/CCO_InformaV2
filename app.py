@@ -46,7 +46,7 @@ def toggle_login():
 
 
 @app.route("/unlogin", methods=["GET", "POST"])
-def untoggle_login():
+def unlogin():
     operator = request.form.get("operator", None)
     password = request.form.get("password", None)
     if (not operator or not password or request.method == "GET"

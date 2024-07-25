@@ -24,11 +24,11 @@
         <form id="login" class="row overflow x-hidden" action="/login" method="post" autocomplete="off" class="row">
         <label for="operator" class="row gap5">
             <i class="fa-solid fa-user"></i>
-            <input type="text" name="operator" id="operator" value="{{ operator }}">
+            <input type="text" name="operator" id="operator" value="{{ operator }}" autocomplete="off">
         </label>
         <label for="password" class="row gap5">
             <i class="fa-solid fa-lock"></i>
-            <input type="password" name="password" id="password" value="{{ password }}">
+            <input type="password" name="password" id="password" value="{{ password }}" autocomplete="off">
         </label>
         <div class="row buttons">
             <button type="submit" id="submit-login"><i class="fa-solid fa-paper-plane"></i></button>
@@ -38,20 +38,13 @@
         <button id="open-configurations"><i class="fa-solid fa-gear"></i></button>
         <button id="open-cco-wpp"><i class="fa-brands fa-whatsapp"></i></button>
         <button id="open-chat"><i class="fa-solid fa-walkie-talkie"></i></button>
-        <button id="toggle-login" class="col buttons toggle overflow hidden">
-            <i class="fa-solid fa-user-xmark x"></i>
-            <i class="fa-solid fa-user-check y"></i>
-        </button>
-        <!-- <div id="buttons-login" class="col buttons toggle">
-            <button id="toggle-login" class="x"><i class="fa-solid fa-user-xmark"></i></button>
-            <button id="button-unlogin" class="y"><i class="fa-solid fa-user-check"></i></button>
-        </div> -->
+        <button id="toggle-login" class="col buttons toggle overflow hidden"><i class="fa-solid fa-user-xmark x"></i><i class="fa-solid fa-user-check y"></i></button>
     </header>
-    <section class="hidden">
-        <h2></h2>
+    <section class="overflow hidden">
+        <h2 style="display: none">*CCO Informa*</h2>
 
-        <div id="config"></div>
-        <div id="chat">
+        <div id="config" class="container"></div>
+        <div id="chat" class="container">
             <div class="row between header">
                 <span id="count-requests-chat">Chat fechando em 99</span>
                 <button id="close-chat"><i class="fa-solid fa-xmark"></i></button>

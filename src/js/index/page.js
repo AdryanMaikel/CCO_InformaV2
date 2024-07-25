@@ -1,10 +1,10 @@
 window.onload = async function(_) {
     if(operator && operator.value != "" && password && password.value != "")
-        toggle_login();
+        login();
 }
 
 window.onbeforeunload = function(_) {
-    if(logged)untoggle_login();
+    if(logged)unlogin();
 }
 
 window.onresize = function({target}){

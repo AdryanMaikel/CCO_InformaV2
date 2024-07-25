@@ -10,7 +10,7 @@
     --c-gray: gray;
 
     --c-disabled: #6f5a5a;
-    --c-disabled-dark: #ff00f0;
+    --c-disabled-dark: #200a45;
 }
 
 ::-webkit-scrollbar{width: 8px;display: block;height: 10px;}
@@ -22,13 +22,14 @@ body{width: 100vw;height: 100vh;background: var(--c-white);color: var(--c-black)
 header{
     position: relative;
     z-index: 99;
-    width: 66px;
+    width: 40px;
     padding: 5px;
     gap: 20px;
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     background-color: var(--c-ice);
-    & #logo-mob{width: 92%;height: auto}
+    /* box-shadow: 0 0 5px 5px var(--c-white-dark), inset 0 0 2px 1px var(--c-white-dark); */
+    & #logo-mob{width: 32px;height: 17px;margin: 10px 0}
     & h1{display: none}
     & button{
         position: relative; width: 25px;height: 25px;
@@ -42,16 +43,18 @@ header{
 
     form#login{
         position: absolute;
-        z-index: 98;
+        z-index: 88;
         border-top-right-radius: 8px;
         border-bottom-right-radius: 8px;
         background: var(--c-ice);
         width: 0;
         height: 34px;
-        left: 64px;
-        top: 182px;
-        transition: width .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        &.open{width:  290px}
+        left: 38px;
+        top: 192px;
+        transition: width .5s cubic-bezier(0.63, 0.47, 0.64, 1.07);
+        &.open{
+            width:  290px;
+        }
         
         & button{& i{font-size: 20px}}
         & label{
@@ -67,18 +70,221 @@ header{
             & input::selection{
                 background-color: var(--c-black-white);
             }
+            & input:-webkit-autofill {
+                -webkit-box-shadow: 0 0 0px 1000px var(--c-ice) inset;
+                border: none;
+              }
         }
     }
     
 }
 section{
-    width: calc(100% - 66px);
-    height: 100%;
     position: absolute;
-    z-index: 80;
     top: 0;
-    left: 66px;
+    left: 38px;
+    width: calc(100% - 38px);
+    height: 100%;
+    z-index: 80;
     padding: 5px;
+
+    .container{
+        position: absolute;
+        left: -510px;
+        width: 500px;
+        top: 10px;
+        height: calc(100% - 20px);
+        background-color: var(--c-ice);
+        color: var(--c-black);
+        border-color: 1px solid var(--c-black-white);
+        transition: left .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 99;
+        &.open{left: 2px}
+    }
+
+    & #chat{
+        & .header{height: 40px}
+        & #content-chat{
+            scrollbar-color: var(--c-black-white);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            width: calc(100% - 10px);
+            height: calc(100% - 110px);
+            margin: 0 5px;
+            border-bottom: 1px solid var(--c-black-white);
+            border-top: 1px solid var(--c-black-white);
+    
+            & .date{
+                padding: 4px 2px;
+                border-radius: 3px;
+                background-color: var(--c-white-dark);
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+
+            & .message{
+                padding: 5px 0;
+                & .hour{margin-left: 15px}
+            }
+            
+        }
+        & .footer{
+            position: absolute;
+            bottom: 0;
+            height: 60px;
+            width: calc(100% - 10px);
+            margin: 5px;
+            border: 1px solid var(--c-black-white);
+    
+            & textarea {
+                height: 50px;
+                margin: 0 5px;
+                padding: 5px;
+                width: 450px;
+                resize: none;
+                color: var(--c-black)
+            }
+        }
+    }
+
+    & #table{
+        height: 100%;
+        & .header{
+            margin-left: 5px;
+            & #actions-table{
+                position: relative;
+                left: 5px;
+            }
+        }
+        & #add-row{padding-left: 5px;padding-left: 5px}
+        & table {
+            /* border: 1px solid var(--c-black-white); */
+            height: calc(100% - 25px);
+            display: block;
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+            border: 1px solid var(--c-black);
+            & thead, & tbody{
+                position: absolute;
+                & tr {
+                    & td,& th{
+                        pointer-events: none;
+                        /* border: 2px solid var(--c-white); */
+                        display: flex;align-items: center;justify-content: center;
+                        &._{width: var(--_);font-size: 11px}
+                        &.A{width: var(--A)}
+                        &.B{width: var(--B)}
+                        &.C{width: var(--C)}
+                        &.D{width: var(--D)}
+                        &.E{width: var(--E)}
+                        &.F{width: var(--F)}
+                        &.G{width: var(--G)}
+                        &.H{width: var(--H)}
+                        &.I{width: var(--I)}
+                        &.J{width: var(--J);& textarea{padding: 4px}}
+                        &.K{width: var(--K)}
+                        &.A, &.B, &.C, &.D, &.E, &.F, &.G, &.H, &.I, &.J, &.K{
+                            & textarea{
+                                transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01), border-radius .5s ease-out;
+                                &:focus{
+                                    box-shadow: 0 0 15px -3px var(--c-black-white);
+                                    border-radius: 7px;
+                                }
+                            }
+                        }
+                        &.A, &.C, &.B, &.E, &.D, &.G, &.F, &.I, &.H, &.K {
+                            textarea{
+                                text-align: center;
+                                padding-top: calc(13px);
+                                text-wrap: nowrap;
+                            }
+                        }
+                    }
+                }
+            }
+            & thead{
+                border-bottom: 1px solid var(--c-black);
+                border-right: 1px solid var(--c-black);
+                color: var(--c-black);
+                z-index: 30;
+                & .letters, & .columns{
+                    position: relative;
+                    background-color: var(--c-white-dark);
+                    & .A, & .B, & .C, & .D, & .E, & .F, & .G, & .H, & .I, & .J, & .K{
+                        border-left: 1px solid var(--c-black);
+                    }
+                }
+                & tr.letters{
+                    & td{
+                        position: relative;
+                        height: 20px;font-size: 11px;border-bottom: 1px solid var(--c-black);
+                        & .resize{
+                            position: absolute;
+                            right: -9px;
+                            z-index: 80;
+                            pointer-events: all;
+                            & i{color: var(--c-black-white)}
+                        }
+                    }
+                }
+                & tr.columns th{
+                    overflow: hidden;height: 50px;font-size: 14px;color: var(--c-black-white);
+                    &.E{line-height: 13px;}
+                }
+    
+            }
+            
+            & tbody{
+                overflow-y: auto;
+                scroll-behavior: smooth;
+                top: 70px;
+                height: calc(100% - 70px);
+                & tr{
+                    position: relative;
+                    z-index: 10;
+                    border: 1px solid transparent;
+                    transition: border .5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                    box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01),
+                    height .5s cubic-bezier(0.165, 0.84, 0.44, 1);
+                    &:hover{
+                        box-shadow: 0 0 15px -7px var(--c-black-white);
+                    }
+                    &.editing{
+                        background-color: var(--c-white);
+                        z-index: 12;
+                        box-shadow: 0 0 3px 1px var(--c-black-white);
+                        & td{
+                            pointer-events: all;
+                            & textarea{
+                                opacity: 1;
+                            }
+                        }
+                    }
+                    &.delete{
+                        box-shadow: 0 0 1px 1px var(--c-red);
+                        & td, & td textarea{
+                            color: var(--c-red);
+                            pointer-events: none;
+                        }
+                    }
+                    & td{
+                        z-index: 19;
+                        height: 45px;
+                        & textarea{
+                            width: 100%;height: 100%;
+                            overflow-x: hidden;
+                            resize: none;
+                            font-size: 12px;
+                            opacity: .7;
+                            transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01),
+                                        opacity .5s cubic-bezier(0.19, 1, 0.22, 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 }
 
 input, textarea{background: transparent;border: none;outline: none;}
@@ -87,7 +293,6 @@ input{
         transition: width .5s cubic-bezier(0.86, 0, 0.07, 1);
     }
 }
-#open-chat i{color: var(--c-black-white);}
 i.fa-user, i.fa-lock{font-size: 20px;}
 button{
     background: transparent;border: none;outline: none;
@@ -102,7 +307,7 @@ button{
         &.fa-ban,&.fa-xmark{color: var(--c-red)}
         &.fa-user-xmark,&.fa-user-check{font-size: 17px;}
         &.fa-comment{color: var(--c-black-white)}
-        &.fa-copy{color: var(--c-white)}
+        &.fa-gear,&.fa-copy,&.fa-walkie-talkie{color: var(--c-gray)}
         &.fa-trash-can{color: var(--c-gray)}
         &.fa-paper-plane{color: var(--c-green)}
         &.fa-whatsapp{color: var(--c-green);}
@@ -150,197 +355,6 @@ button{
     &.surge.open button{scale: 1}
 }
 
-#chat{
-    width: 500px;
-    height: 100%;
-    background-color: var(--c-black);
-    color: var(--c-white);
-    position: absolute;
-    top: 0;
-    left: -510px;
-    transition: left .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    z-index: 99;
 
-    &.open{left: 0}
-    & .header{height: 40px}
-    & #content-chat{
-        scrollbar-color: var(--c-white);
-        scroll-behavior: smooth;
-        overflow-x: hidden;
-        width: calc(100% - 10px);
-        height: calc(100% - 110px);
-        margin: 0 5px;
-        border-bottom: 1px solid var(--c-white);
-        border-top: 1px solid var(--c-white);
-
-        & .date{
-            padding: 4px 2px;
-            border-radius: 3px;
-            background-color: var(--c-black-white);
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
-        & .message{
-            padding: 5px 0;
-            & .hour{margin-left: 15px}
-        }
-        
-    }
-    & .footer{
-        position: absolute;
-        bottom: 0;
-        height: 60px;
-        width: calc(100% - 10px);
-        margin: 5px;
-        border: 1px solid var(--c-white);
-
-        & textarea {
-            height: 50px;
-            margin: 0 5px;
-            padding: 5px;
-            width: 450px;
-            resize: none;
-            color: var(--c-white)
-        }
-    }
-}
 #content-chat::-webkit-scrollbar-thumb{background-color: var(--c-white)}
 .delete td textarea::-webkit-scrollbar-thumb{background-color: var(--c-red)}
-#table{
-    height: 100%;
-    & .header{
-        margin-left: 5px;
-        & #actions-table{
-            position: relative;
-            left: 5px;
-        }
-    }
-    & #add-row{padding-left: 5px;padding-left: 5px}
-    & table {
-        /* border: 1px solid var(--c-black-white); */
-        height: calc(100% - 25px);
-        display: block;
-        position: relative;
-        overflow-x: auto;
-        overflow-y: hidden;
-        border: 1px solid var(--c-black);
-        & thead, & tbody{
-            position: absolute;
-            & tr {
-                & td,& th{
-                    pointer-events: none;
-                    /* border: 2px solid var(--c-white); */
-                    display: flex;align-items: center;justify-content: center;
-                    &._{width: var(--_);font-size: 11px}
-                    &.A{width: var(--A)}
-                    &.B{width: var(--B)}
-                    &.C{width: var(--C)}
-                    &.D{width: var(--D)}
-                    &.E{width: var(--E)}
-                    &.F{width: var(--F)}
-                    &.G{width: var(--G)}
-                    &.H{width: var(--H)}
-                    &.I{width: var(--I)}
-                    &.J{width: var(--J);& textarea{padding: 4px}}
-                    &.K{width: var(--K)}
-                    &.A, &.B, &.C, &.D, &.E, &.F, &.G, &.H, &.I, &.J, &.K{
-                        & textarea{
-                            transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01), border-radius .5s ease-out;
-                            &:focus{
-                                box-shadow: 0 0 15px -3px var(--c-black-white);
-                                border-radius: 7px;
-                            }
-                        }
-                    }
-                    &.A, &.C, &.B, &.E, &.D, &.G, &.F, &.I, &.H, &.K {
-                        textarea{
-                            text-align: center;
-                            padding-top: calc(13px);
-                            text-wrap: nowrap;
-                        }
-                    }
-                }
-            }
-        }
-        & thead{
-            border-bottom: 1px solid var(--c-black);
-            border-right: 1px solid var(--c-black);
-            color: var(--c-black);
-            z-index: 30;
-            & .letters, & .columns{
-                position: relative;
-                background-color: var(--c-white-dark);
-                & .A, & .B, & .C, & .D, & .E, & .F, & .G, & .H, & .I, & .J, & .K{
-                    border-left: 1px solid var(--c-black);
-                }
-            }
-            & tr.letters{
-                & td{
-                    position: relative;
-                    height: 20px;font-size: 11px;border-bottom: 1px solid var(--c-black);
-                    & .resize{
-                        position: absolute;
-                        right: -9px;
-                        z-index: 80;
-                        pointer-events: all;
-                        & i{color: var(--c-black-white)}
-                    }
-                }
-            }
-            & tr.columns th{
-                overflow: hidden;height: 50px;font-size: 14px;color: var(--c-black-white);
-                &.E{line-height: 13px;}
-            }
-
-        }
-        
-        & tbody{
-            overflow-y: auto;
-            scroll-behavior: smooth;
-            top: 70px;
-            height: calc(100% - 70px);
-            & tr{
-                position: relative;
-                z-index: 10;
-                border: 1px solid transparent;
-                transition: border .5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01),
-                height .5s cubic-bezier(0.165, 0.84, 0.44, 1);
-                &:hover{
-                    box-shadow: 0 0 15px -7px var(--c-black-white);
-                }
-                &.editing{
-                    background-color: var(--c-white);
-                    z-index: 12;
-                    box-shadow: 0 0 3px 1px var(--c-black-white);
-                    & td{
-                        pointer-events: all;
-                        & textarea{
-                            opacity: 1;
-                        }
-                    }
-                }
-                &.delete{
-                    box-shadow: 0 0 1px 1px var(--c-red);
-                    & td, & td textarea{
-                        color: var(--c-red);
-                        pointer-events: none;
-                    }
-                }
-                & td{
-                    z-index: 19;
-                    height: 45px;
-                    & textarea{
-                        width: 100%;height: 100%;
-                        overflow-x: hidden;
-                        resize: none;
-                        font-size: 12px;
-                        opacity: .7;
-                        transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01),
-                                    opacity .5s cubic-bezier(0.19, 1, 0.22, 1);
-                    }
-                }
-            }
-        }
-    }
-}
