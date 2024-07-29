@@ -112,6 +112,8 @@ def actions(method: str, operator: str, password: str):
             cco_informa.add_row(row, data)
         case "editing":
             cco_informa.update_row(row, data)
+        case "message-delete":
+            messages.remove(row)
     return "Sucesso!"
 
 

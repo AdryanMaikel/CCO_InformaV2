@@ -30,18 +30,36 @@ async function get_chat() {
     });
 
     content_chat.querySelectorAll("button.delete").forEach(button => {
-
+        button.addEventListener("click", async function(){
+            let json = {};
+            json["row"] = parseInt(button.id.replace("delete-", ""));
+            const response = await fetch(
+                `/message-delete/${operator.value}/${password.value}`,
+                {
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(json)
+                }
+            );
+            if(response.status != 200){
+                return;
+            }
+            const text = await response.text()
+            console.log(text);
+            get_chat();
+        });
     });
     console.log("Atualizando conversas...");
 }
 
 let interval_chat = null;
+const section = document.querySelector("section");
 document.getElementById("open-chat").onclick = async function(_) {
-    if(chat.classList.contains("open")
-    || form_login.classList.contains("open")
-    // || cco_wpp.classList.contains("open")
-    // || config.classList.contains("open")
-    )return;
+    if(section.querySelector(".container.open")
+    || form_login.classList.contains("open"))
+        return;
     count_requests_chat = 101;
     await get_chat()
     chat.classList.add("open");

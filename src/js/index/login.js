@@ -2,11 +2,8 @@ const button_login = document.getElementById("toggle-login");
 const form_login = document.getElementById("login");
 
 button_login.addEventListener("click", _=>{
-    if(chat.classList.contains("open")
-    // || cco_wpp.classList.contains("open")
-    // || config.classList.contains("open")
-    ){return;}
-    form_login.classList.add("open")
+    if(section.querySelector(".container.open"))return;
+    form_login.classList.add("open");
 });
 
 form_login.addEventListener("reset", _=>{

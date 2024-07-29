@@ -14,9 +14,11 @@
     <script src="/src/js/index/chat.js" defer></script>
     <script src="/src/js/index/table.js" defer></script>
     <script src="/src/js/index/page.js" defer></script>
+    <script src="/src/js/index/wpp.js" defer></script>
+    <script src="/src/js/index/config.js" defer></script>
 </head>
 <body>
-    <header class="col center h100">
+    <header class="col center">
         <h1>*CCO Informa*</h1>
         <figure class="" id="logo-mob">
             <img class="wh100" src="/src/assets/img/mob.png" alt="Logo da mob, é a palavra mob escrita em azul com o fundo transparente">
@@ -35,7 +37,7 @@
             <button type="reset" id="reset-login"><i class="fa-solid fa-ban"></i></button>
         </div>
         </form>
-        <button id="open-configurations"><i class="fa-solid fa-gear"></i></button>
+        <button id="open-config"><i class="fa-solid fa-gear"></i></button>
         <button id="open-cco-wpp"><i class="fa-brands fa-whatsapp"></i></button>
         <button id="open-chat"><i class="fa-solid fa-walkie-talkie"></i></button>
         <button id="toggle-login" class="col buttons toggle overflow hidden"><i class="fa-solid fa-user-xmark x"></i><i class="fa-solid fa-user-check y"></i></button>
@@ -43,7 +45,19 @@
     <section class="overflow hidden">
         <h2 style="display: none">*CCO Informa*</h2>
 
-        <div id="config" class="container"></div>
+        <div id="config" class="container">
+            <div class="row between header">
+                <span>Configurações</span>
+                <button id="close-config"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+        </div>
+        <div id="wpp" class="container">
+            <div class="row between header">
+                <span>*CCO Informa*</span>
+                <button id="close-wpp"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
         <div id="chat" class="container">
             <div class="row between header">
                 <span id="count-requests-chat">Chat fechando em 99</span>
@@ -64,7 +78,5 @@
         <address>&copy;Adryan Maikel</address>
     </footer>
 
-    <script>
-    </script>
 </body>
 </html>

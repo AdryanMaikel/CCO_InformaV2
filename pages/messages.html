@@ -11,13 +11,11 @@
             </div>
             <div class="row buttons">
                 <button id="copy-{{ message.id }}" class="copy"><i class="fa-solid fa-copy"></i></button>
-                {% if message.name == name %}<button id="delete-{{ message.id }}"><i class="fa-solid fa-trash-can"></i></button>{% endif %}
+                {% if message.name == name %}<button id="delete-{{ message.id }}" class="delete"><i class="fa-solid fa-trash-can"></i></button>{% endif %}
             </div>
 
         </div>
-        <pre class="text" style="white-space: pre-wrap;">
-            {{ message.message }}
-        </pre>
+        <pre class="text">{{ message.message }}</pre>
     </div>
     {% endfor %}
 {% endfor %}

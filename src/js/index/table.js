@@ -94,6 +94,7 @@ function edit_row(event) {
     });
     row.classList.add("editing");
     editing_row.method = "editing";
+    button_add_row.disabled = true;
     div_actions_table.classList.add("open");
     button_submit_edit.disabled = false;
     button_cancel_edit.addEventListener("click", cancel_edit_row);
