@@ -147,10 +147,12 @@ function cancel_edit_row() {
     button_add_row.disabled = false;
     button_delete_row.disabled = false;
 
-    editing_row.element.querySelectorAll("textarea").forEach(textarea=>{
-        const value = editing_row.values[textarea.id.slice(5)];
-        if(textarea.value != value)textarea.value = value;
-    });
+    if(editing_row.method != "editing")
+        editing_row.element.querySelectorAll("textarea").forEach(textarea=>{
+            const value = editing_row.values[textarea.id.slice(5)];
+            if(textarea.value != value)textarea.value = value;
+        });
+    
     editing_row.element.classList.remove("editing", "delete");
     editing_row = {element: null, values: {}, method: null};
 
