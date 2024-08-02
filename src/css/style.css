@@ -328,9 +328,9 @@ button{
         &.fa-user-xmark,&.fa-user-check{font-size: 17px}
         &.fa-comment{color: var(--c-black-white)}
         &.fa-gear,&.fa-copy,&.fa-walkie-talkie{color: var(--c-purple-dark)}
-        &.fa-trash-can{color: var(--c-gray)}
+        &.fa-trash-can{color: var(--c-red)}
         &.fa-paper-plane{color: var(--c-green)}
-        &.fa-whatsapp{color: var(--c-green);}
+        &.fa-whatsapp{color: var(--c-green)}
     }
 }
 

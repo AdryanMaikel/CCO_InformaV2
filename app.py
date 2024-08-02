@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, abort, make_response
 
-from datetime import datetime as dt, timedelta as td
+from datetime import datetime as dt, timedelta as td, timezone
 
 from operators import Operators
 from messages import Messages
@@ -25,7 +25,7 @@ def index():
 
 
 @app.route("/login", methods=["GET", "POST"])
-def toggle_login():
+def login():
     if request.method == "GET":
         return abort(404)
     operator = request.form.get("operator", None)
@@ -41,7 +41,8 @@ def toggle_login():
     if cookie_login and cookie_login == cookie_value:
         return response
     cookie = make_response(response)
-    cookie.set_cookie("login", cookie_value)
+    date_expires = dt.now(timezone.utc) + td(days=10000)
+    cookie.set_cookie("login", cookie_value, expires=date_expires)
     return cookie
 
 
@@ -113,7 +114,7 @@ def actions(method: str, operator: str, password: str):
         case "editing":
             cco_informa.update_row(row, data)
         case "message-delete":
-            messages.remove(row)
+            messages.hidden(row)
     return "Sucesso!"
 
 
