@@ -15,7 +15,7 @@ cco_informa = Sheet("Histórico de eventos")
 
 @app.route("/")
 def index():
-    operator, password = "", ""
+    operator = password = ""
     cookie_login = request.cookies.get("login", None)
     if cookie_login and cookie_login.__contains__("/"):
         operator, password = cookie_login.split("/")
@@ -24,20 +24,18 @@ def index():
     return render_template("index.html", operator=operator, password=password)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["POST"])
 def login():
-    if request.method == "GET":
-        return abort(404)
     operator = request.form.get("operator", None)
     password = request.form.get("password", None)
     if (not operator or not password or operator not in operators.get()
             or not operators.check_password(operator, password)):
         return "Operador ou senha inválidos."
 
-    response = f"Logado {operator}!"
+    operators.toggle_online(operator, password, online=True)
     cookie_login = request.cookies.get("login", None)
     cookie_value = f"{operator}/{password}"
-    operators.toggle_online(operator, password, online=True)
+    response = f"Logado {operator}!"
     if cookie_login and cookie_login == cookie_value:
         return response
     cookie = make_response(response)
@@ -46,13 +44,13 @@ def login():
     return cookie
 
 
-@app.route("/unlogin", methods=["GET", "POST"])
+@app.route("/unlogin", methods=["POST"])
 def unlogin():
     operator = request.form.get("operator", None)
     password = request.form.get("password", None)
-    if (not operator or not password or request.method == "GET"
+    if (not operator or not password or operator not in operators.get()
             or not operators.check_password(operator, password)):
-        return abort(404)
+        return "Operador ou senha inválidos."
     operators.toggle_online(operator, password, online=False)
     return f"{operator} deslogado."
 
@@ -62,16 +60,17 @@ def get_messages(operator, password):
     if not operators.check_password(operator, password):
         return render_template("messages.html", grouped_messages=[], name="")
 
-    grouped_messages = messages.get()
-    return render_template("messages.html", grouped_messages=grouped_messages,
+    return render_template("messages.html",
+                           grouped_messages=messages.get(),
                            name=operator)
 
 
-@app.route("/post-message", methods=["GET", "POST"])
+@app.route("/post-message", methods=["POST"])
 def post_message():
-    operator = request.form.get("operator", None)
-    password = request.form.get("password", None)
-    message = request.form.get("message", None)
+    data = dict(request.get_json())
+    operator = data.pop("operator", None)
+    password = data.pop("password", None)
+    message = data.pop("message", None)
     if (not operator or not password or not message or request.method == "GET"
             or not operators.check_password(operator, password)):
         return abort(404)
@@ -96,14 +95,12 @@ def get_table(operator, password):
                            rows=rows)
 
 
-@app.route("/<method>/<operator>/<password>", methods=["GET", "POST"])
+@app.route("/<method>/<operator>/<password>", methods=["POST"])
 def actions(method: str, operator: str, password: str):
     if not operators.check_password(operator, password):
         return abort(404)
-    if request.method == "GET":
-        return abort(300)
-    data = request.get_json()
-    row = data.pop("row")
+    data = dict(request.get_json())
+    row = data.pop("row", None)
     if not row or not str(row).isnumeric():
         return abort(400)
     match method:

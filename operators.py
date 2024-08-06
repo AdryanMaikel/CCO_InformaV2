@@ -62,5 +62,6 @@ AND tentatives > 0""", params=(name,))
 
 
 if __name__ == "__main__":
-    operators = Operators()
-    print(operators.get())
+    op = Operators()
+    # op.insert(name="Adryan", password="123")
+    print(op.get())
