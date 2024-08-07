@@ -32,9 +32,9 @@ async function get_chat() {
         button => button.onclick = async function() {
             const json = { row: parseInt(button.getAttribute("row")) };
             const response = await fetch(
-                `/message-delete/${operator.value}/${password.value}`,
+                `/chat/${operator.value}/${password.value}`,
                 {
-                    method: "post",
+                    method: "delete",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(json)
                 }
@@ -66,17 +66,12 @@ document.getElementById("close-chat").onclick = close_chat;
 
 const textarea = document.querySelector("textarea#message");
 async function post_message() {
-    const json = {
-        message: textarea.value,
-        operator: operator.value,
-        password: password.value
-    }
     const response = await fetch(
-        `/post-message`,
+        `/chat/${operator.value}/${password.value}`,
         {
             method: "post",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(json)
+            body: JSON.stringify({ message: textarea.value })
         }
     );
     console.log(response.status)

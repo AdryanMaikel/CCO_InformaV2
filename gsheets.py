@@ -49,7 +49,7 @@ class Sheet:
             print(f"Erro ao excluir linha {row}. Erro: {error}")
             return False
 
-    def update_row(self, row: int, values:  dict[str, str]) -> bool:
+    def update_row(self, row: int, values: dict[str, str]) -> bool:
         try:
             self.ws.batch_update([{"range": cell, "values": [[value]]}
                                   for cell, value in values.items()])
@@ -60,7 +60,8 @@ class Sheet:
             return False
 
 
+gsheet = Sheet("Histórico de eventos")
+
 if __name__ == "__main__":
-    sheet = Sheet("Histórico de eventos")
-    rows = sheet.get_rows(dates=["22/07/2024"])
+    rows = gsheet.get_rows(dates=["22/07/2024"])
     print(rows)

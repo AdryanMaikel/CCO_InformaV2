@@ -22,9 +22,9 @@
         </tr>
     </thead>
     <tbody>{% for row in rows %}
-        <tr id="row-{{ row[0] }}" class="row {{ loop.cycle('even', 'odd') }}{{ ' h0 last-row' if row[0] == last_row else '' }}">{% for cell in row %}
+        <tr row="{{ row[0] }}" class="row {{ loop.cycle('even', 'odd') }}{{ ' h0 last-row' if row[0] == last_row else '' }}">{% for cell in row %}
             <td class="{{ '_' if loop.first else letters[loop.index - 2] }}">
-                {% if loop.first %}{{ cell }}{% else %}<textarea id="cell-{{ letters[loop.index - 2] }}{{ row[0] }}" spellcheck="false" autocomplete="off">{{ cell }}</textarea>{% endif %}
+                {% if loop.first %}{{ cell }}{% else %}<textarea cell="{{ letters[loop.index - 2] }}{{ row[0] }}" spellcheck="false" autocomplete="off">{{ cell }}</textarea>{% endif %}
             </td>{% endfor %}
         </tr>{% endfor %}
     </tbody>

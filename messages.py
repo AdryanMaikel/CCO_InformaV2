@@ -35,7 +35,7 @@ class Messages:
                 for date, message in grouped_messages.items()]
 
     def insert(self, name: str, message: str):
-        if message.count("\n") > 15:
+        if message.count("\n") > 20:
             return f"{message} enorme de {name}."
         execute("INSERT INTO messages (name, date, message) VALUES (?, ?, ?)",
                 params=(name, dt.now() - td(hours=3), message))
@@ -65,6 +65,8 @@ class Messages:
         print(f"Mensagem com id: {_id}, removida.")
         return True
 
+
+messages = Messages()
 
 if __name__ == "__main__":
     messages = Messages()

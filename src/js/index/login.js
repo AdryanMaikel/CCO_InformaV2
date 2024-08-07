@@ -1,19 +1,19 @@
 const button_login = document.getElementById("toggle-login");
 const form_login = document.getElementById("login");
 
-button_login.addEventListener("click", function(_) {
-    if(section.querySelector(".container.open"))return;
-    form_login.classList.add("open");
-});
+let logged = false;
 
-form_login.addEventListener("reset", function(_) {
+button_login.onclick = async function(_) {
+    if(section.querySelector(".container.open")||logged)return;
+    form_login.classList.add("open");
+}
+
+form_login.onreset = function(_) {
     form_login.classList.remove("open");
-});
+}
 
 const operator = form_login.querySelector("#operator");
 const password = form_login.querySelector("#password");
-
-let logged = false;
 
 async function login() {
     if(logged){
@@ -23,17 +23,15 @@ async function login() {
     const response = await fetch(
         "/login", { method: "post", body: new FormData(form_login) }
     );
-    if(response.status != 200)return;
-    const text = await response.text();
-    if(text == "Operador ou senha inválidos."){
+    console.log(`Logando... ${await response.text()}`);
+    if(response.status != 200){
         form_login.classList.add("error");
-        form_login.classList.remove("open");
         return;
     }
-    form_login.classList.remove("open");
-    logged = true;
+    form_login.classList.remove("open", "error");
     window.document.title = `${operator.value} 🤙`;
     button_login.classList.add("active")
+    logged = true;
     get_chat();
     get_table();
 }
@@ -46,12 +44,17 @@ async function unlogin() {
 
 form_login.onsubmit = async function(event) {
     event.preventDefault();
+    if(logged)form_login.reset()
     login();
 }
+
 window.onload = async function(_) {
     if(operator && operator.value != "" && password && password.value != "")
         login();
 }
-window.onbeforeunload = async function(_) {
-    if(logged) await unlogin();
+
+window.onbeforeunload = async function(event) {
+    event.preventDefault();
+    if(logged)await unlogin();
+    event.returnValue = "";
 }

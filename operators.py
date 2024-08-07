@@ -49,17 +49,19 @@ class Operators:
     def check_password(self, name: str, password: str):
         if not name.isalnum() or not password.isalnum():
             return False
-        contains_operator = execute(
+        password_is_valid = execute(
             "SELECT name FROM operators WHERE name = ? AND password = ?",
             params=(name, password), commit=False
         )
-        if contains_operator:
+        if password_is_valid:
             return True
         execute("""\
 UPDATE operators SET tentatives = tentatives - 1 WHERE name = ? \
 AND tentatives > 0""", params=(name,))
         return False
 
+
+operators = Operators()
 
 if __name__ == "__main__":
     op = Operators()

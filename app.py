@@ -1,16 +1,12 @@
-from flask import Flask, render_template, request, abort, make_response
+from flask import Flask, render_template, request, make_response
 
 from datetime import datetime as dt, timedelta as td, timezone
 
-from operators import Operators
-from messages import Messages
-from gsheets import Sheet
+from operators import operators
+from messages import messages
+from gsheets import gsheet
 
 app = Flask(__name__, static_folder="src", template_folder="pages")
-
-operators = Operators()
-messages = Messages()
-cco_informa = Sheet("Histórico de eventos")
 
 
 @app.route("/")
@@ -30,7 +26,7 @@ def login():
     password = request.form.get("password", None)
     if (not operator or not password or operator not in operators.get()
             or not operators.check_password(operator, password)):
-        return "Operador ou senha inválidos."
+        return "Operador ou senha inválidos.", 400
 
     operators.toggle_online(operator, password, online=True)
     cookie_login = request.cookies.get("login", None)
@@ -50,68 +46,80 @@ def unlogin():
     password = request.form.get("password", None)
     if (not operator or not password or operator not in operators.get()
             or not operators.check_password(operator, password)):
-        return "Operador ou senha inválidos."
+        return "Operador ou senha inválidos.", 400
     operators.toggle_online(operator, password, online=False)
     return f"{operator} deslogado."
 
 
-@app.route("/chat/<operator>/<password>", methods=["GET"])
-def get_messages(operator, password):
-    if not operators.check_password(operator, password):
-        return render_template("messages.html", grouped_messages=[], name="")
+@app.route("/chat/<operator>/<password>", methods=["GET", "POST", "DELETE"])
+def chat(operator, password):
+    if operator not in operators.get():
+        return "Operador não encontrado.", 400
 
-    return render_template("messages.html",
-                           grouped_messages=messages.get(),
-                           name=operator)
+    logged = operators.check_password(operator, password)
 
+    if request.method.__eq__("GET"):
+        groups = messages.get() if logged else []
+        return render_template("messages.html", groups=groups, name=operator)
 
-@app.route("/post-message", methods=["POST"])
-def post_message():
+    if not logged:
+        return "Operador ou senha inválidos.", 400
+
     data = dict(request.get_json())
-    operator = data.pop("operator", None)
-    password = data.pop("password", None)
-    message = data.pop("message", None)
-    if (not operator or not password or not message or request.method == "GET"
-            or not operators.check_password(operator, password)):
-        return abort(404)
-    return messages.insert(operator, message)
+    if not data:
+        return "JSON invalido.", 400
+
+    if request.method.__eq__("POST"):
+        message = data.pop("message", None)
+        if not message:
+            return "Mensagem invalida.", 400
+        return messages.insert(operator, message)
+
+    if request.method.__eq__("DELETE"):
+        row = data.pop("row", None)
+        if not row or not str(row).isnumeric():
+            return "ID Invalido.", 400
+        messages.hidden(row)
+        return "Sucesso!"
 
 
-@app.route("/cco-informa/<operator>/<password>", methods=["GET"])
-def get_table(operator, password):
-    if not operators.check_password(operator, password):
-        return abort(404)
-    rows = cco_informa.get_rows(dates=[])
-    if not rows:
-        return abort(404)
-    last_row = len(rows) + 2
-    now = (dt.now() - td(hours=3)).strftime("%d/%m/%Y")
-    rows.append([last_row, now, "", "", "", "", "", "", "", "", "", operator])
-    return render_template("cco-informa.html",
-                           users=operators.get(),
-                           columns=cco_informa.columns,
-                           letters=cco_informa.letters,
-                           last_row=last_row,
-                           rows=rows)
+@app.route("/table/<operator>/<password>",
+           methods=["GET", "POST", "PUT", "DELETE"])
+def table(operator, password):
+    if operator not in operators.get():
+        return "Operador não encontrado.", 400
 
+    logged = operators.check_password(operator, password)
+    if not logged:
+        return "Operador ou senha inválidos.", 400
 
-@app.route("/<method>/<operator>/<password>", methods=["POST"])
-def actions(method: str, operator: str, password: str):
-    if not operators.check_password(operator, password):
-        return abort(404)
+    if request.method.__eq__("GET"):
+        rows = gsheet.get_rows(dates=[])
+        last_row = len(rows) + 2
+        now = (dt.now() - td(hours=3)).strftime("%d/%m/%Y")
+        rows.append(
+            [last_row, now, "", "", "", "", "", "", "", "", "", operator]
+            )
+        return render_template("cco-informa.html",
+                               users=operators.get(),
+                               columns=gsheet.columns,
+                               letters=gsheet.letters,
+                               last_row=last_row, rows=rows)
+
     data = dict(request.get_json())
     row = data.pop("row", None)
     if not row or not str(row).isnumeric():
-        return abort(400)
-    match method:
-        case "remove":
-            cco_informa.delete_row(row)
-        case "insert":
-            cco_informa.add_row(row, data)
-        case "editing":
-            cco_informa.update_row(row, data)
-        case "message-delete":
-            messages.hidden(row)
+        return "Número da linha invalido.", 400
+
+    if request.method.__eq__("DELETE"):
+        gsheet.delete_row(row)
+
+    if request.method.__eq__("POST"):
+        gsheet.add_row(row, data)
+
+    if request.method.__eq__("PUT"):
+        gsheet.update_row(row, data)
+
     return "Sucesso!"
 
 

@@ -23,19 +23,19 @@
         <figure class="" id="logo-mob">
             <img class="wh100" src="/src/assets/img/mob.png" alt="Logo da mob, é a palavra mob escrita em azul com o fundo transparente">
         </figure>
-        <form id="login" class="row overflow x-hidden" action="/login" method="post" autocomplete="off" class="row">
-        <label for="operator" class="row gap5">
-            <i class="fa-solid fa-user"></i>
-            <input type="text" name="operator" id="operator" value="{{ operator }}" autocomplete="off">
-        </label>
-        <label for="password" class="row gap5">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" name="password" id="password" value="{{ password }}" autocomplete="off">
-        </label>
-        <div class="row buttons">
-            <button type="submit" id="submit-login"><i class="fa-solid fa-paper-plane"></i></button>
-            <button type="reset" id="reset-login"><i class="fa-solid fa-ban"></i></button>
-        </div>
+        <form id="login" class="row overflow x-hidden" autocomplete="off">
+            <label for="operator" class="row gap5">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" name="operator" id="operator" value="{{ operator }}" autocomplete="off">
+            </label>
+            <label for="password" class="row gap5">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" name="password" id="password" value="{{ password }}" autocomplete="off">
+            </label>
+            <div class="row buttons">
+                <button type="submit" id="submit-login"><i class="fa-solid fa-paper-plane"></i></button>
+                <button type="reset" id="reset-login"><i class="fa-solid fa-ban"></i></button>
+            </div>
         </form>
         <button id="open-config"><i class="fa-solid fa-gear"></i></button>
         <button id="open-cco-wpp"><i class="fa-brands fa-whatsapp"></i></button>
@@ -43,14 +43,12 @@
         <button id="toggle-login" class="col buttons toggle overflow hidden"><i class="fa-solid fa-user-xmark x"></i><i class="fa-solid fa-user-check y"></i></button>
     </header>
     <section class="overflow hidden">
-        <h2 style="display: none">*CCO Informa*</h2>
-
+        <h2 id="overlay">*CCO Informa*</h2>
         <div id="config" class="container">
             <div class="row between header">
                 <span>Configurações</span>
                 <button id="close-config"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
         </div>
         <div id="wpp" class="container">
             <div class="row between header">
@@ -69,14 +67,11 @@
                 <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
-
         <div id="table">
         </div>
-
     </section>
     <footer class="row center">
         <address>&copy;Adryan Maikel</address>
     </footer>
-
 </body>
 </html>
