@@ -40,7 +40,7 @@ header{
             width: 30px;
             height: 30px;
             padding: 2px;
-            margin-left: 12px;
+            margin-left: 9px;
         }
     }
     form#login{
@@ -75,7 +75,7 @@ header{
                 background-color: var(--c-black-white);
             }
             & input:-webkit-autofill {
-                -webkit-box-shadow: 0 0 0px 1000px var(--c-ice) inset;
+                -webkit-box-shadow: 0 0 0px 1000px var(--c-gray) inset;
                 border: none;
             }
         }
