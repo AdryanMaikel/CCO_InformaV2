@@ -1,14 +1,13 @@
-const div_wpp = document.querySelector("#wpp");
+const div_wpp = document.getElementById("wpp");
 
-document.querySelector("#open-cco-wpp").addEventListener("click", function(){
+document.getElementById("open-cco-wpp").onclick = function(_) {
     if(section.querySelector(".container.open")
-    || form_login.classList.contains("open")){
+    || form_login.classList.contains("open"))
         return;
-    }
     div_wpp.classList.add("open");
 
-});
+}
 
-document.querySelector("#close-wpp").addEventListener("click", function(){
+document.querySelector("#close-wpp").onclick = function(_) {
     div_wpp.classList.remove("open");
-});
+}
