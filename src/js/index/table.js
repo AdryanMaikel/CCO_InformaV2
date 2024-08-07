@@ -1,41 +1,53 @@
-const table = document.getElementById("table");
-
-function update_cookie_width_columns(new_width_columns){
-    document.cookie=`columns=${JSON.stringify(new_width_columns)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+function update_cookie_columns(new_width_columns){
+    const string_json = JSON.stringify(new_width_columns);
+    document.cookie=`columns=${string_json}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+    return new_width_columns;
 };
 
 function sum_columns(columns_widths) {
-    Object.entries(columns_widths).forEach(([column, width]) => {
+    const sum = Object.entries(columns_widths).reduce((accumulator, [column, width]) => {
         document.documentElement.style.setProperty(`--${column}`, `${width}px`);
-        columns_widths.sum += width;
-    });
-    console.log(columns_widths.sum)
-    document.documentElement.style.setProperty(`--sum`, `${columns_widths.sum}px`);
+        return column !== "sum" ? accumulator + width : accumulator;
+    }, 0);
+    document.documentElement.style.setProperty(`--sum`, `${sum}px`);
+    console.log(`Soma das colunas: ${sum}px.`);
+    return { ...columns_widths, sum };
 }
 
-function create_cookie_width_columns() {
-    const widths = {_: 35,A: 90,B: 80,C: 55,D: 55,E: 92,F: 55,G: 70,H: 325,I: 250,J: 400,K: 80, sum: 0};
-    sum_columns(widths);
-    update_cookie_width_columns(widths);
-    return widths;
+function create_cookie_columns() {
+    return update_cookie_columns(
+        sum_columns({
+            _: 35,
+            A: 90,
+            B: 80,
+            C: 55,
+            D: 55,
+            E: 92,
+            F: 55,
+            G: 70,
+            H: 325,
+            I: 250,
+            J: 400,
+            K: 80,
+            sum: 0    
+        })
+    );
 }
 
-function load_cookie_width_columns() {
-    const _cookie = JSON.parse(decodeURIComponent(document.cookie.split(";").find(
-        cookie=>cookie.trim().startsWith("columns=")).split("=")[1]));
-    sum_columns(_cookie);
-    return _cookie;
+let _cookie_columns = document.cookie.split(";").find(cookie=>cookie.trim().startsWith("columns="))
+function load_cookie_columns() {
+    return sum_columns(JSON.parse(decodeURIComponent(_cookie_columns.split("=")[1])));
 }
 
-const width_columns = document.cookie.split(";").find(cookie=>cookie.trim().startsWith("columns="))
-?load_cookie_width_columns():create_cookie_width_columns();
+const width_columns = _cookie_columns?load_cookie_columns():create_cookie_columns();
 
+
+const div_table = document.getElementById("table");
+const table = div_table.querySelector("table");
 function adjust_width_table(width) {
-    const _table = table.querySelector("table");
-    if(!_table)return;
-    width_columns.sum = 0;
+    if(!table)return;
     sum_columns(width_columns);
-    _table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum + 12}px`;
+    table.style.width = width <= width_columns.sum ? `100%` : `${width_columns.sum + 12}px`;
 }
 
 let editing_row = {element: null, values: {}, method: null};
@@ -47,7 +59,7 @@ let button_delete_row = null;
 let button_add_row = null;
 let input_number_row = null;
 let last_row = null;
-
+let overlay = document.querySelector("#overlay");
 
 let old_table = "";
 async function get_table() {
@@ -59,29 +71,31 @@ async function get_table() {
     if(old_messages == text)return;
 
     old_messages = text;
-    table.innerHTML = text;
-    div_actions_table = table.querySelector("#actions-table");
+    div_table.innerHTML = text;
+    div_actions_table = div_table.querySelector("#actions-table");
     button_cancel_edit = div_actions_table.querySelector("#cancel-edit");
     button_submit_edit = div_actions_table.querySelector("#submit-edit");
     button_delete_row = div_actions_table.querySelector("#delete-row");
-    button_add_row = table.querySelector("#button-add-row");
-    input_number_row = table.querySelector("#number-row");
+    button_add_row = div_table.querySelector("#button-add-row");
+    input_number_row = div_table.querySelector("#number-row");
     button_add_row.addEventListener("click", add_row);
     
     console.log("Atualizando tabela...");
     adjust_width_table(window.innerWidth);
 
-    table.querySelectorAll("button.resize").forEach(button=>{
+    div_table.querySelectorAll("button.resize").forEach(button=>{
         button.addEventListener("mousedown", resizing_column);
     });
 
-    const tbody = table.querySelector("tbody");
+    const tbody = div_table.querySelector("tbody");
     tbody.scrollTop = tbody.scrollHeight;
     const rows = tbody.querySelectorAll("tr");
     rows.forEach(tr=>{
         if(tr.classList.contains("last-row")){last_row = tr;return};
         tr.addEventListener("click", edit_row);
     });
+
+    overlay.classList.add("w0");
 }
 
 function edit_row(event) {
@@ -106,6 +120,7 @@ function edit_row(event) {
 
 async function submit_edit_row() {
     if(!editing_row.element)return;
+    overlay.classList.remove("w0");
     let url = `/${editing_row.method}/${operator.value}/${password.value}`;
     let json = {};
     json["row"] = parseInt(editing_row.element.id.slice(4));
@@ -215,7 +230,7 @@ function resize(event) {
 
 function confirm_resize(){
     width_columns[column_focus] = width;
-    update_cookie_width_columns(width_columns);
+    update_cookie_columns(width_columns);
     removeEvents();
     adjust_width_table(window.innerWidth);
 }
