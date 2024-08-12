@@ -41,7 +41,6 @@ function load_cookie_columns() {
 
 const width_columns = _cookie_columns?load_cookie_columns():create_cookie_columns();
 
-const div_table = document.getElementById("table");
 let table = null;
 function adjust_width_table(width) {
     if(!table)return;
@@ -49,6 +48,9 @@ function adjust_width_table(width) {
     table.style.width = width <= width_columns.sum + 58 ? `100%` : `${width_columns.sum + 12}px`;
 }
 
+window.onresize = function({target}){adjust_width_table(target.innerWidth)}
+
+const div_table = document.getElementById("table");
 let editing_row = {element: null, values: {}, method: null};
 
 let div_actions_table = null;
@@ -72,6 +74,7 @@ async function get_table() {
     if(old_messages == text)return;
     old_messages = text;
     div_table.innerHTML = text;
+
     table = div_table.querySelector("table");
 
     div_actions_table = div_table.querySelector("#actions-table");
@@ -102,7 +105,6 @@ async function get_table() {
         };
         tr.onclick = edit_row;
     });
-
     overlay.classList.add("w0");
 }
 
@@ -140,6 +142,12 @@ async function submit_edit_row() {
                     json[column] = textarea.value;
             }
         );
+        if(Object.keys(json).length <= 1){
+            console.log("Nada de diferente");
+            cancel_edit_row();
+            return;
+        }
+        console.log(`Editando valores: ${JSON.stringify(json)}`)
     }
 
     if(editing_row.method == "post"){
@@ -158,8 +166,7 @@ async function submit_edit_row() {
         }
     );
 
-    const text = await response.text()
-    if(text == "Sucesso!"){
+    if(await response.text() == "Sucesso!"){
         cancel_edit_row();
         get_table();
     }
@@ -167,7 +174,8 @@ async function submit_edit_row() {
 
 
 function cancel_edit_row() {
-    console.log("cancelando")
+    console.log("cancelando");
+    window.setTimeout(function(){overlay.classList.add("w0")}, 500)
     if(!editing_row.element)return;
 
     button_submit_edit.disabled = true;
@@ -262,3 +270,4 @@ function remove_events() {
     clicked = false;
 }
 
+get_table()

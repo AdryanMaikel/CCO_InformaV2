@@ -1,6 +1,6 @@
 const div_wpp = document.getElementById("wpp");
 
-document.getElementById("open-cco-wpp").onclick = function(_) {
+document.querySelector("#open-wpp").onclick = function(_) {
     if(section.querySelector(".container.open")
     || form_login.classList.contains("open"))
         return;

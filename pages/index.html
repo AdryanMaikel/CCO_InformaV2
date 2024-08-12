@@ -5,17 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/src/assets/img/favicon.ico" type="image/x-icon">
     <title>CCO Informa</title>
-
+    <!-- Styles -->
     <link rel="stylesheet" href="/src/css/style.css">
-
+    <!-- Scripts -->
     <script type="module" src="/src/js/font-awesome.js"></script>
-
+    <script src="/src/js/index/requests.js" defer></script>
     <script src="/src/js/index/login.js" defer></script>
-    <script src="/src/js/index/chat.js" defer></script>
-    <script src="/src/js/index/table.js" defer></script>
-    <script src="/src/js/index/page.js" defer></script>
-    <script src="/src/js/index/wpp.js" defer></script>
-    <script src="/src/js/index/config.js" defer></script>
 </head>
 <body>
     <header class="col center">
@@ -38,7 +33,7 @@
             </div>
         </form>
         <button id="open-config"><i class="fa-solid fa-gear"></i></button>
-        <button id="open-cco-wpp"><i class="fa-brands fa-whatsapp"></i></button>
+        <button id="open-wpp"><i class="fa-brands fa-whatsapp"></i></button>
         <button id="open-chat"><i class="fa-solid fa-walkie-talkie"></i></button>
         <button id="toggle-login" class="col buttons toggle overflow hidden"><i class="fa-solid fa-user-xmark x"></i><i class="fa-solid fa-user-check y"></i></button>
     </header>
@@ -67,8 +62,7 @@
                 <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
-        <div id="table">
-        </div>
+        <div id="table"></div>
     </section>
     <footer class="row center">
         <address>&copy;Adryan Maikel</address>

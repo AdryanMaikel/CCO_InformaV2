@@ -4,7 +4,7 @@ const form_login = document.getElementById("login");
 let logged = false;
 
 button_login.onclick = async function(_) {
-    if(section.querySelector(".container.open")||logged)return;
+    if(document.querySelector(".container.open")||logged)return;
     form_login.classList.add("open");
 }
 
@@ -31,9 +31,8 @@ async function login() {
     form_login.classList.remove("open", "error");
     window.document.title = `${operator.value} 🤙`;
     button_login.classList.add("active")
-    logged = true;
-    get_chat();
-    get_table();
+    logged = true;   
+    await load_containers();
 }
 
 async function unlogin() {

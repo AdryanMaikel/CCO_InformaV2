@@ -111,16 +111,24 @@ def table(operator, password):
     if not row or not str(row).isnumeric():
         return "Número da linha invalido.", 400
 
-    if request.method.__eq__("DELETE"):
-        gsheet.delete_row(row)
-
-    if request.method.__eq__("POST"):
-        gsheet.add_row(row, data)
-
-    if request.method.__eq__("PUT"):
-        gsheet.update_row(row, data)
-
+    match request.method:
+        case "DELETE":
+            gsheet.delete_row(row)
+        case "POST":
+            gsheet.add_row(row, data)
+        case "PUT":
+            gsheet.update_row(row, data)
     return "Sucesso!"
+
+
+@app.route("/scripts/<operator>/<password>")
+def scripts(operator, password):
+    logged = operators.check_password(operator, password)
+    if not logged:
+        return "Operador ou senha inválidos.", 400
+    scripts = ["/src/js/logged/table.js", "/src/js/logged/chat.js",
+               "/src/js/logged/config.js", "/src/js/logged/wpp.js"]
+    return scripts
 
 
 if __name__ == "__main__":

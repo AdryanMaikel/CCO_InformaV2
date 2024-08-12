@@ -1,14 +1,12 @@
 const chat = document.querySelector("#chat");
-const content_chat = document.querySelector("#content-chat");
+const content_chat = chat.querySelector("#content-chat");
 const span_count_requests_chat = document.querySelector("#count-requests-chat");
 
 let old_messages = "";
 let count_requests_chat = 99;
 async function get_chat() {
-    if(logged == false)return;
-    const response = await fetch(
-        `/chat/${operator.value}/${password.value}`, { method: "GET" }
-    );
+    if(!logged)return;
+    const response = await fetch(`/chat/${operator.value}/${password.value}`);
     if(response.status != 200)return;
     const text = await response.text();
     count_requests_chat -= 1;
