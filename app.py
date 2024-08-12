@@ -131,5 +131,16 @@ def scripts(operator, password):
     return scripts
 
 
+@app.route("/wpp/<operator>/<password>")
+def wpp(operator, password):
+    logged = operators.check_password(operator, password)
+    if not logged:
+        return "Operador ou senha inválidos.", 400
+    if request.method == "GET":
+        emps = ["Navegantes", "Nortran", "Sopal"]
+        return render_template("wpp.html", emps=emps)
+    return ""
+
+
 if __name__ == "__main__":
     app.run(debug=True)

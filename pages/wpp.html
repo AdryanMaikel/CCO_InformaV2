@@ -1,0 +1,313 @@
+<!-- <form id="form_cco_informa" autocomplete="off"> -->
+<style>
+#wpp .content{
+    font-size: 14px;
+    
+    & i{font-size: 15px}
+    /* & input{border-bottom: 1px solid var(--c-black-white);} */
+}
+
+.box{
+    position: relative;
+    padding: 2px 5px;
+    gap: 2px;
+}
+
+.surge{
+    position: relative;
+    width: 15px;
+    height: 15px;
+    & * {color: var(--c-red)}
+    &.active * {color: var(--c-green)}
+    & .x, & .y{position: absolute;font-size: 15px;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94)}
+    & .x, &.active .y{scale: 0}
+    & .y, &.active .x{scale: 1}
+}
+label{
+    & .list{
+        position: absolute;
+        width: auto;
+        height: auto;
+        min-width: 100px;
+        max-height: 300px;
+        list-style: none;
+        transform-origin: top;
+        top: 100%;
+        overflow-y: auto;
+        /* border: 1px solid var(); */
+
+        & .item{
+            position: relative;
+            height: 0;
+            top: 0;
+            transform-origin: top;
+            transition: height .5s;
+        }
+    }
+    & i.fa-chevron-down{rotate: 0;transition: rotate .5s}
+    &.open .list .item{height: 21px}
+    &.open i.fa-chevron-down{rotate: 180deg}
+}
+
+
+/* Primeira linha */
+input#who_informed{
+    width: 100px;
+}
+
+</style>
+
+<div class="row">
+    <div id="informed" class="row center box">
+        Informado?
+        <div class="surge">
+            <i class="fa-solid fa-check x"></i>
+            <i class="fa-solid fa-xmark y"></i>
+        </div>
+    </div>
+
+    <div class="row center box">
+        por quem?
+        <label for="who_informed" class="row">
+            <input type="text" name="who_informed" id="who_informed">
+            <ul class="list">{% for emp in emps %}
+                <li class="item">{{ emp }}</li>{% endfor %}
+            </ul>
+            <i class="fa-solid fa-chevron-down icon"></i>
+        </label>
+    </div>
+</div>
+<!-- 
+    <label id="who_informed" class="box" for="supervision">
+        <i class="fa-solid fa-user icon"></i>
+        <input type="text" name="supervision" id="supervision" placeholder="Qual?">
+    </label>
+    <ul class="list"></ul>
+    <div class="box mini trash surge">
+        <i class="fa-regular fa-trash-can icon"></i>
+    </div>
+    
+    <div class="row">
+      <label id="box_table" class="box" for="table">
+        <span>- </span>
+        <i class="fa-solid fa-clipboard icon"></i>
+        <input type="text" name="table" id="table" placeholder="Tabela" maxlength="8">
+      </label>
+      <label id="box_car" class="box" for="input_car">
+        <i class="fa-solid fa-bus icon"></i>
+        <input type="text" class="car" name="input_car" id="input_car" placeholder="Carro" maxlength="4">
+      </label>
+      <div id="replace" class="box mini">
+        <i class="fa-solid fa-arrows-rotate icon text_decoration"></i>
+      </div>
+      <label id="box_car_two" class="box surge" for="car_two">
+        <i class="fa-solid fa-bus icon"></i>
+        <input type="text" class="car" name="car_two" id="car_two" placeholder="Carro" maxlength="4" disabled>
+      </label>
+    </div>
+    <div class="row">
+      <label for="line" class="box">
+        <span>- </span>
+        <i class="fa-solid fa-route icon"></i>
+        <input type="text" name="line" id="line" placeholder="Linha" maxlength="5">
+      </label>
+      <label for="hour" class="box">
+        <i class="fa-solid fa-clock icon"></i>
+        <input type="text" name="hour" id="hour" class="hour" placeholder="Hora" maxlength="5">
+      </label>
+      <label id="box_direction" for="direction" class="box">
+        <i class="fa-solid fa-compass icon"></i>
+        <input type="text" name="direction" id="direction" placeholder="Std" maxlength="2">
+        <i class="fa-solid fa-chevron-down icon"></i>
+      </label>
+      <ul id="directions" class="list"></ul>
+      <div class="box mini trash surge">
+        <i class="fa-regular fa-trash-can icon"></i>
+      </div>
+    </div>
+    <div class="row">
+      <label for="event" id="box_event" class="box">
+        <span>- Viagem </span>
+        <input type="text" name="event" id="event" placeholder="foi...">
+        <i class="fa-solid fa-chevron-down icon"></i>
+      </label>
+      <ul id="events" class="list"></ul>
+      <div class="box mini trash surge">
+        <i class="fa-regular fa-trash-can icon"></i>
+      </div>
+      <div class="align">
+        <label id="box_min" for="min" class="box surge">
+          <i class="fa-regular fa-hourglass-half icon"></i>
+          <input type="text" name="min" id="min" maxlength="2" placeholder="00" disabled>
+          <span>minutos</span>
+        </label>
+        <div id="box_local" class="box surge">
+          <span>onde?</span><i class="fa-solid fa-chevron-down icon"></i>
+        </div>
+      </div>
+    </div>
+    <div id="row_local" class="row revel">
+      <label id="box_input_local" class="box" for="local">
+        <i class="fa-solid fa-location-dot icon"></i>
+        <span id="interrupted_text">A partir d</span>
+        <input type="text" name="local" id="local" maxlength="100" placeholder="a Av. Assis Brasil" disabled>
+      </label>
+      <div id="continued" class="box mini surge">
+        <span class="text_decoration">continuou?</span>
+        <i class="fa-solid fa-arrows-rotate icon text_decoration"></i>
+      </div>
+    </div>
+    <div id="box_continued" class="row revel">
+      <label id="box_input_continued" class="box" for="input_continued">
+        <i class="fa-solid fa-location-dot icon"></i>
+        <span>a partir d</span>
+        <input type="text" name="input_continued" id="input_continued" placeholder="o terminal Triângulo" disabled>
+      </label>
+      <div class="box mini" id="dropping_passengers">
+        <i class="fa-solid fa-person-running icon text_decoration"></i>
+      </div>
+      <div id="info_drop" class="box">
+        <text>Somente largando os passageiros</text>
+      </div>
+    </div>
+    <div id="row_motive" class="row">
+      <label id="box_motive" class="box" for="motive">
+        <span>- Motivo:</span>
+        <input type="text" name="motive" id="motive" placeholder="Quebra?">
+        <i class="fa-solid fa-chevron-down icon"></i>
+      </label>
+      <ul class="list" id="list_motives"></ul>
+      <div class="box mini trash surge">
+        <i class="fa-regular fa-trash-can icon"></i>
+      </div>
+    </div>
+    <div id="row_gps" class="row revel">
+      <div id="box_gps" class="box collumn">
+        <text>Qual?</text>
+        <label for="parou" class="box">
+          <input type="radio" name="gps" id="parou" checked>
+          <span>Parou de comunicar</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+        <label for="trancou" class="box">
+          <input type="radio" name="gps" id="trancou">
+          <span>Trancou no centro</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+      </div>
+      <div id="box_hours" class="box hours collumn surge active">
+        <label for="hour_stop" class="box">
+          <i class="fa-solid fa-clock icon"></i>
+          <input type="text" name="hour_stop" id="hour_stop" class="hour" placeholder="Hora" maxlength="5" disabled>
+          <span>parou</span>
+        </label>
+        <label for="hour_return" class="box">
+          <i class="fa-solid fa-clock icon"></i>
+          <input type="text" name="hour_return" id="hour_return" class="hour" placeholder="Hora" maxlength="5" disabled>
+          <span>voltou</span>
+        </label>
+      </div>
+    </div>
+    <div id="row_problems" class="row revel">
+      <label id="box_problems" for="problem" class="box">
+        <span>Problema:</span>
+        <input type="text" name="problem" id="problem">
+        <i class="fa-solid fa-chevron-down icon"></i>
+      </label>
+      <ul class="list" id="list_problems"></ul>
+      <div class="box mini trash surge">
+        <i class="fa-regular fa-trash-can icon"></i>
+      </div>
+    </div>
+    <div id="row_congestion" class="row revel">
+      <label id="box_congestion" for="congestion_locale" class="box">
+        <i class="fa-solid fa-location-dot icon"></i>
+        <span>Onde? n</span>
+        <input type="text" name="congestion_locale" id="congestion_locale" placeholder="a Av. Assis Brasil"
+          disabled>
+      </label>
+    </div>
+    <div id="row_tripulation" class="row revel">
+      <div class="box">
+        <span>Qual?</span>
+        <label for="motorista" class="box">
+          <i class="fa-solid fa-user icon"></i>
+          <input type="radio" name="tripulation" id="motorista" checked>
+          <span>Motorista</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+        <label for="cobrador" class="box">
+          <i class="fa-solid fa-user icon"></i>
+          <input type="radio" name="tripulation" id="cobrador">
+          <span>Cobrador</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+      </div>
+    </div>
+    <div id="row_roullet_and_validator" class="row revel">
+      <div class="box">
+        <span>Qual?</span>
+        <label for="roullet" class="box">
+          <input type="radio" name="roullet_and_validator" id="roullet" checked>
+          <span>Roleta</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+        <label for="validator" class="box">
+          <input type="radio" name="roullet_and_validator" id="validator">
+          <span>Validador</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+      </div>
+    </div>
+     
+    <div id="row_limpador_espelho" class="row revel">
+      <div class="box">
+        <span>Qual?</span>
+        <label for="Limpador" class="box">
+          <input type="radio" name="limpador_espelho" id="Limpador" checked>
+          <span>Limpador</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+        <label for="Espelho" class="box">
+          <input type="radio" name="limpador_espelho" id="Espelho">
+          <span>Espelho</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+      </div>
+    </div>
+    <div id="row_embreagem_caixa" class="row revel">
+      <div class="box">
+        <span>Qual?</span>
+        <label for="Embreagem" class="box">
+          <input type="radio" name="embreagem_caixa" id="Embreagem" checked>
+          <span>Embreagem</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+        <label for="Caixa" class="box">
+          <input type="radio" name="embreagem_caixa" id="Caixa">
+          <span>Caixa</span>
+          <i class="fa-solid fa-check icon"></i>
+        </label>
+      </div>
+    </div>
+    <div id="row_button" class="row footer">
+      <label for="generate_cco_informa" class="box">
+        <span>GERAR *CCO INFORMA*</span>
+        <input type="submit" value="" id="generate_cco_informa">
+      </label>
+      <div id="generate_other" class="box buttons">
+        <div class="icons"><i class="fa-solid fa-plus icon"></i></div>
+      </div>
+      -->
+      <!-- <div id="send_sheets" class="box buttons">
+        <div class="icons">
+          <i class="fa-solid fa-paper-plane icon"></i>
+        </div>
+      </div> -->
+      <!-- <div id="reset_cco_informa" class="box buttons">
+        <div class="icons">
+          <i class="fa-solid fa-skull icon"></i> -->
+        <!-- </div>
+      </div>
+    </div>
+  </form> -->

@@ -30,8 +30,8 @@ async function login() {
     }
     form_login.classList.remove("open", "error");
     window.document.title = `${operator.value} 🤙`;
-    button_login.classList.add("active")
-    logged = true;   
+    button_login.classList.add("active");
+    logged = true;
     await load_containers();
 }
 
@@ -43,7 +43,7 @@ async function unlogin() {
 
 form_login.onsubmit = async function(event) {
     event.preventDefault();
-    if(logged)form_login.reset()
+    if(logged)form_login.reset();
     login();
 }
 

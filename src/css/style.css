@@ -106,6 +106,7 @@ section{
         position: absolute;
         left: -510px;
         width: 500px;
+        padding: 0 5px;
         top: 5px;
         height: calc(100% - 10px);
         background-color: var(--c-ice);
@@ -114,17 +115,16 @@ section{
         transition: left .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         z-index: 99;
         &.open{left: 0px}
+        & .header{
+            height: 40px;
+            border-bottom: 1px solid var(--c-black-white);
+        }
     }
     & #chat{
-        & .header{height: 40px}
         & #content-chat{
-            scroll-behavior: smooth;
             overflow-x: hidden;
-            width: calc(100% - 10px);
             height: calc(100% - 110px);
-            margin: 0 5px;
             border-bottom: 1px solid var(--c-black-white);
-            border-top: 1px solid var(--c-black-white);
     
             & .date{
                 padding: 4px 2px;
@@ -152,10 +152,9 @@ section{
         }
         & .footer{
             position: absolute;
-            bottom: 0;
+            bottom: 5px;
             height: 60px;
             width: calc(100% - 10px);
-            margin: 5px;
             border: 1px solid var(--c-black-white);
     
             & textarea {
@@ -219,7 +218,7 @@ section{
                         &.A, &.C, &.B, &.E, &.D, &.G, &.F, &.I, &.H, &.K {
                             textarea{
                                 text-align: center;
-                                padding-top: calc(13px);
+                                align-content: center;
                                 text-wrap: nowrap;
                             }
                         }
@@ -263,12 +262,13 @@ section{
                 height: calc(100% - 70px);
                 & tr{
                     position: relative;
-                    z-index: 10;
+                    z-index: 9;
                     border: 1px solid transparent;
                     transition: border .5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
                     box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01),
                     height .5s cubic-bezier(0.165, 0.84, 0.44, 1);
                     &:hover{
+                        z-index: 10;
                         box-shadow: 0 0 15px -7px var(--c-black-white);
                     }
                     &.editing{

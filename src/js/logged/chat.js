@@ -3,7 +3,7 @@ const content_chat = chat.querySelector("#content-chat");
 const span_count_requests_chat = document.querySelector("#count-requests-chat");
 
 let old_messages = "";
-let count_requests_chat = 99;
+let count_requests_chat = 100;
 async function get_chat() {
     if(!logged)return;
     const response = await fetch(`/chat/${operator.value}/${password.value}`);
@@ -13,7 +13,7 @@ async function get_chat() {
     span_count_requests_chat.textContent = `Chat fechando em ${count_requests_chat}`;
     if(count_requests_chat <= 0)close_chat();
     if(old_messages == text)return;
-    count_requests_chat = 99;
+    count_requests_chat = 100;
     old_messages = text;
     content_chat.innerHTML = text;
     content_chat.scrollTop = content_chat.scrollHeight;
