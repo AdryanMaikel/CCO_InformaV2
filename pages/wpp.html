@@ -2,28 +2,34 @@
 <style>
 #wpp .content{
     font-size: 14px;
-    
-    & i{font-size: 15px}
+    & i{
+        font-size: 15px;
+        &.fa-trash-can{font-size: 13px}
+    }
     /* & input{border-bottom: 1px solid var(--c-black-white);} */
+
+    & .toggle{
+        position: relative;
+        width: 15px;
+        height: 15px;
+        & * {color: var(--c-red)}
+        &.active * {color: var(--c-green)}
+        & .x, & .y{position: absolute;font-size: 15px;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94)}
+        & .x, &.active .y{scale: 0}
+        & .y, &.active .x{scale: 1}
+    }
+
 }
 
 .box{
     position: relative;
     padding: 2px 5px;
     gap: 2px;
+    font-weight: 410;
 }
 
-.surge{
-    position: relative;
-    width: 15px;
-    height: 15px;
-    & * {color: var(--c-red)}
-    &.active * {color: var(--c-green)}
-    & .x, & .y{position: absolute;font-size: 15px;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94)}
-    & .x, &.active .y{scale: 0}
-    & .y, &.active .x{scale: 1}
-}
 label{
+    gap: 4px;
     & .list{
         position: absolute;
         width: auto;
@@ -33,6 +39,7 @@ label{
         list-style: none;
         transform-origin: top;
         top: 100%;
+        transform: translateX(25px);
         overflow-y: auto;
         /* border: 1px solid var(); */
 
@@ -42,13 +49,20 @@ label{
             top: 0;
             transform-origin: top;
             transition: height .5s;
+            overflow: hidden;
+            font-weight: 400;
         }
     }
     & i.fa-chevron-down{rotate: 0;transition: rotate .5s}
     &.open .list .item{height: 21px}
     &.open i.fa-chevron-down{rotate: 180deg}
-}
 
+    & button.surge{
+        scale: 0;
+        transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        &.active{scale: 1}
+    }
+}
 
 /* Primeira linha */
 input#who_informed{
@@ -60,22 +74,24 @@ input#who_informed{
 <div class="row">
     <div id="informed" class="row center box">
         Informado?
-        <div class="surge">
+        <div class="toggle">
             <i class="fa-solid fa-check x"></i>
             <i class="fa-solid fa-xmark y"></i>
         </div>
     </div>
 
-    <div class="row center box">
+    <label id="div_who_informed" for="who_informed" class="row center box">
         por quem?
-        <label for="who_informed" class="row">
-            <input type="text" name="who_informed" id="who_informed">
-            <ul class="list">{% for emp in emps %}
-                <li class="item">{{ emp }}</li>{% endfor %}
-            </ul>
-            <i class="fa-solid fa-chevron-down icon"></i>
-        </label>
-    </div>
+        <input type="text" name="who_informed" id="who_informed">
+        <i class="fa-solid fa-chevron-down"></i>
+        <button class="surge">
+            <i class="fa-regular fa-trash-can"></i>
+        </button>
+        <ul class="list">{% for emp in emps %}
+            <li class="item">{{ emp }}</li>{% endfor %}
+        </ul>
+    </label>
+
 </div>
 <!-- 
     <label id="who_informed" class="box" for="supervision">
