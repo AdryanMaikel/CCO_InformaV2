@@ -4,6 +4,7 @@ const content_wpp = div_wpp.querySelector(".content");
 let div_informed = null;
 let div_who_informed = null;
 
+
 async function load_wpp(){
     const response = await fetch(`/wpp/${operator.value}/${password.value}`)
     if(response.status != 200)return;
@@ -11,53 +12,69 @@ async function load_wpp(){
 
     // Informado?
     div_informed = content_wpp.querySelector("#informed");
-    div_who_informed = content_wpp.querySelector("#div_who_informed");
 
+    // div_who_informed = content_wpp.querySelector("#div_who_informed");
+    div_who_informed = new DivEvents(content_wpp.querySelector("#div_who_informed"));
 }
 
 load_wpp();
 
-function create_events(div) {
-    const input = div.querySelector(`input`);
-    const items = div.querySelectorAll(`.list .item`);
-    const tresh = div.querySelector("button.surge");
-    div.onclick = function() {
-        if(div.classList.contains("open"))
-            return;
-        div.classList.add("open");
-        items.forEach(item=>item.onclick = function() {
-            if(!tresh.classList.contains("active"))
-                tresh.classList.add("active");
-            input.value = item.textContent;
-        });
-    };
-    tresh.onclick = function(event) {
-        event.stopPropagation();
-        input.value = "";
-        tresh.classList.remove("active");
-        input.focus();
-        
+class DivEvents {
+    constructor(div) {
+        this.div = div;
+        this.input = div.querySelector("input");
+        this.tresh = div.querySelector("button.surge");
+        this.items = div.querySelectorAll(".list .item");
     }
-    input.oninput = function(event) {
-        console.log(event);
-        if(input.value == "" || tresh.classList.contains("active"))
-            return;
-        tresh.classList.add("active");
-    }
-    input.onblur = function() {
-        if(input.value == "" && tresh.classList.contains("active"))
-            tresh.classList.remove("active");
-        
-        window.setTimeout(function() {
-            div.classList.remove("open");
-            items.forEach(item=>item.onclick = null);
-        }, 150);
-    };
-}
 
-function remove_events(div) {
-    div.onclick = null;
-    div.querySelector(`input`).onblur = null;
+    load() {
+        this.div.onclick = () => {
+            if (this.div.classList.contains("open")) {
+                return;
+            }
+            this.div.classList.add("open");
+            this.items.forEach(item => {
+                item.onclick = () => {
+                    if (!this.tresh.classList.contains("active")) {
+                        this.tresh.classList.add("active");
+                    }
+                    this.input.value = item.textContent;
+                };
+            });
+        };
+
+        this.tresh.onclick = (event) => {
+            event.stopPropagation();
+            this.input.value = "";
+            this.tresh.classList.remove("active");
+            this.input.focus();
+        };
+
+        this.input.oninput = (event) => {
+            console.log(event);
+            if (this.input.value === "" || this.tresh.classList.contains("active")) {
+                return;
+            }
+            this.tresh.classList.add("active");
+        };
+
+        this.input.onblur = () => {
+            if (this.input.value === "" && this.tresh.classList.contains("active")) {
+                this.tresh.classList.remove("active");
+            }
+            window.setTimeout(() => {
+                this.div.classList.remove("open");
+                this.items.forEach(item => item.onclick = null);
+            }, 150);
+        };
+    }
+
+    unload() {
+        this.div.onclick = null;
+        this.tresh.onclick = null;
+        this.input.oninput = null;
+        this.input.onblur = null;
+    }
 }
 
 document.querySelector("#open-wpp").onclick = function(_) {
@@ -68,21 +85,17 @@ document.querySelector("#open-wpp").onclick = function(_) {
 
     // Primeira linha
     let div_informed_surge = div_informed.querySelector(".toggle");
-    console.log("1")
     div_informed.onclick = function() {
         if(!div_informed_surge)return;
         div_informed_surge.classList.toggle("active");
     };
-
-    create_events(div_who_informed);
-
+    div_who_informed.load()
 }
 
 document.querySelector("#close-wpp").onclick = function(_) {
     div_wpp.classList.remove("open");
 
+    // Primeira linha
     div_informed.onclick = null;
-    console.log("1")
-
-    remove_events(div_who_informed);
+    div_who_informed.unload()
 }
