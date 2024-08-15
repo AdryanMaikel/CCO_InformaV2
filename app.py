@@ -138,7 +138,8 @@ def wpp(operator, password):
         return "Operador ou senha inválidos.", 400
     if request.method == "GET":
         emps = ["Navegantes", "Nortran", "Sopal"]
-        return render_template("wpp.html", emps=emps)
+        sentidos = ["BC", "CB", "CC", "TB", "BT", "TT"]
+        return render_template("wpp.html", emps=emps, sentidos=sentidos)
     return ""
 
 
