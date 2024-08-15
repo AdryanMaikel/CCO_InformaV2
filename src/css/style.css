@@ -220,6 +220,7 @@ section{
                                 text-align: center;
                                 align-content: center;
                                 text-wrap: nowrap;
+                                line-height: 43px;
                             }
                         }
                     }
