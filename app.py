@@ -139,9 +139,8 @@ def wpp(operator, password):
     if request.method == "GET":
         emps = ["Navegantes", "Nortran", "Sopal"]
         sentidos = ["BC", "CB", "CC", "TB", "BT", "TT"]
-        events = ["Problemas mecânicos - Viagem realizada a frente",
-                  "Problemas mecânicos - Viagem realizada a frente",
-                  "Problemas mecânicos - Viagem realizada a frente"]
+        events = ["adiantada", "atrasada", "interrompida", "perdida",
+                  "realizada a frente"]
         return render_template("wpp.html", emps=emps, sentidos=sentidos,
                                events=events)
     return ""

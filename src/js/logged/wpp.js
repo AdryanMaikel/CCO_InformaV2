@@ -11,19 +11,15 @@ class DivEvents {
 
     active_events() {
         this.input.onfocus = (event) => {
-            if(this.div.classList.contains("open")) {
-                console.log("blur");
-                // this.div.classList.remove("open")
+            if (this.div.classList.contains("open")) {
                 event.target.blur();
                 return;
             }
             this.div.classList.add("open");
-            this.items.forEach(item => {
-                item.onclick = () => {
-                    if (!this.tresh.classList.contains("active"))
-                        this.tresh.classList.add("active");
-                    this.input.value = item.textContent;
-                };
+            this.items.forEach(item => item.onclick = ({target}) => {
+                if (!this.tresh.classList.contains("active"))
+                    this.tresh.classList.add("active");
+                this.input.value = target.textContent;
             });
         };
 
@@ -34,11 +30,23 @@ class DivEvents {
         };
 
         this.input.oninput = (event) => {
-            console.log(event);
-            if (this.input.value === "" || this.tresh.classList.contains("active")) {
+            if (this.input.value === "") {
                 return;
             }
             this.tresh.classList.add("active");
+            let elements = [];
+            this.items.forEach(item => {
+                if (!item.textContent.toLowerCase().includes(this.input.value.toLowerCase())) {
+                    item.classList.add("h0");
+                } else {
+                    item.classList.remove("h0");
+                    elements.push(item);
+                }
+            });
+            if (elements.length == 1) {
+                this.input.value = elements[0].textContent;
+                event.target.blur();
+            }
         };
 
         this.input.onblur = () => {
