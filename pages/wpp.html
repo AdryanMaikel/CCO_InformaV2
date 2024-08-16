@@ -103,6 +103,7 @@
         &#line{width: 44px}
         &#hour{width: 40px}
         &#direction{width: 22px}
+        &#event{width: 342px;}
     }
 }
 
@@ -170,16 +171,35 @@
     <label for="direction" id="div_directions" class="box">
         <i class="fa-solid fa-compass"></i>
         <input type="text" name="direction" id="direction" placeholder="BC" maxlength="2">
+        <ul class="list">{% for sentido in sentidos %}
+            <li class="item">{{ sentido }}</li>{% endfor %}
+        </ul>
         <i class="fa-solid fa-chevron-down"></i>
         <button class="surge">
             <i class="fa-regular fa-trash-can"></i>
         </button>
-        <ul class="list">{% for sentido in sentidos %}
-            <li class="item">{{ sentido }}</li>{% endfor %}
-        </ul>
     </label>
  </div>
+
+<!-- Quarta Linha -->
+<div class="row">
+    <label for="event" id="div_event" class="box">
+        <pre>- Viagem </pre>
+        <input type="text" id="event" placeholder="foi...">
+        <ul class="list">{% for event in events %}
+            <li class="item">{{ event }}</li>{% endfor %}
+        </ul>
+        <i class="fa-solid fa-chevron-down"></i>
+        <button class="surge">
+            <i class="fa-regular fa-trash-can"></i>
+        </button>
+    </label>
+</div>
 <!-- 
+
+Passar ticket para jackson
+Arrumar HTML
+
 
 <div class="row">
 

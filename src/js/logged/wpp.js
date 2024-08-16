@@ -10,9 +10,11 @@ class DivEvents {
     }
 
     active_events() {
-        this.div.onclick = () => {
-            if (this.div.classList.contains("open")) {
-                // this.input.blur();
+        this.input.onfocus = (event) => {
+            if(this.div.classList.contains("open")) {
+                console.log("blur");
+                // this.div.classList.remove("open")
+                event.target.blur();
                 return;
             }
             this.div.classList.add("open");
@@ -46,12 +48,12 @@ class DivEvents {
             window.setTimeout(() => {
                 this.div.classList.remove("open");
                 this.items.forEach(item => item.onclick = null);
-            }, 150);
+            }, 100);
         };
     }
 
     remove_events() {
-        this.div.onclick = null;
+        this.input.onfocus = null;
         this.tresh.onclick = null;
         this.input.oninput = null;
         this.input.onblur = null;
@@ -60,11 +62,10 @@ class DivEvents {
 
 let div_informed = null;
 let div_who_informed = null;
-
 let replace = null;
 let car_substitute = null;
-
 let div_directions = null;
+let div_event = null;
 
 async function load_wpp(){
     const response = await fetch(`/wpp/${operator.value}/${password.value}`)
@@ -81,6 +82,10 @@ async function load_wpp(){
     
     // Terceira Linha
     div_directions = new DivEvents(content_wpp.querySelector("#div_directions"));
+
+    // Quarta Linha
+    div_event = new DivEvents(content_wpp.querySelector("#div_event"))
+
 }
 
 load_wpp();
@@ -114,6 +119,9 @@ document.querySelector("#open-wpp").onclick = function(_) {
     // Terceira Linha
     div_directions.active_events();
 
+    // Quarta Linha
+    div_event.active_events();
+
 }
 
 document.querySelector("#close-wpp").onclick = function(_) {
@@ -128,4 +136,7 @@ document.querySelector("#close-wpp").onclick = function(_) {
 
     // Terceira Linha
     div_directions.remove_events();
+
+    // Quarta Linha
+    div_event.remove_events();
 }
