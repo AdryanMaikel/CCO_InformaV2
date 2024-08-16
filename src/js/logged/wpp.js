@@ -1,9 +1,33 @@
 const div_wpp = document.getElementById("wpp");
 const content_wpp = div_wpp.querySelector(".content");
 
+function check_event({div, event}) {
+    switch (event) {
+        case "adiantada":
+        case "atrasada":
+            div.classList.add("revel");
+            
+            break;
+        case "interrompida":
+            div.classList.add("")
+            
+            break;
+        case "realizada a frente":
+            div.classList.add("")
+            
+            break;
+    
+        default:
+            div.classList.remove("revel");
+            break;
+    }
+    console.log(div, event)
+}
+
 class DivEvents {
     constructor(div) {
         this.div = div;
+        this.id_div = this.div.id;
         this.input = div.querySelector("input");
         this.tresh = div.querySelector("button.surge");
         this.items = div.querySelectorAll(".list .item");
@@ -16,10 +40,15 @@ class DivEvents {
                 return;
             }
             this.div.classList.add("open");
-            this.items.forEach(item => item.onclick = ({target}) => {
-                if (!this.tresh.classList.contains("active"))
-                    this.tresh.classList.add("active");
-                this.input.value = target.textContent;
+            this.items.forEach(item => {
+                if (item.classList.contains("h0")) {
+                    item.classList.remove("h0");
+                }
+                item.onclick = ({target}) => {
+                    if (!this.tresh.classList.contains("active"))
+                        this.tresh.classList.add("active");
+                    this.input.value = target.textContent;
+                }
             });
         };
 
@@ -34,6 +63,7 @@ class DivEvents {
                 return;
             }
             this.tresh.classList.add("active");
+
             let elements = [];
             this.items.forEach(item => {
                 if (!item.textContent.toLowerCase().includes(this.input.value.toLowerCase())) {
@@ -43,9 +73,18 @@ class DivEvents {
                     elements.push(item);
                 }
             });
-            if (elements.length == 1) {
-                this.input.value = elements[0].textContent;
+            if (elements.length == 1 && this.id_div != "div_who_informed") {
+                const text_content = elements[0].textContent;
+                this.input.value = text_content;
                 event.target.blur();
+                switch (this.id_div) {
+                    case "div_event":
+                        check_event({div: this.div, event: text_content});
+                        break;
+                
+                    default:
+                        break;
+                }
             }
         };
 
