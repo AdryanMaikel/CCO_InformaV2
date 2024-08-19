@@ -2,6 +2,9 @@
 <style>
 #wpp .content{
     font-size: 14px;
+
+    .row{margin-top: 2px;height: 25px;transition: height .25s cubic-bezier(0.46, 0.1, 1, 0.37)}
+
     & i{
         font-size: 15px;
         &.fa-trash-can{font-size: 13px}
@@ -9,21 +12,17 @@
     /* & input{border-bottom: 1px solid var(--c-black-white);} */
 
     & .toggle.icons{
-        position: relative;
-        width: 15px;
-        height: 15px;
+        position: relative;width: 15px;height: 15px;
+        display: flex;align-items: center;justify-content: center;
         & * {color: var(--c-red)}
         &.active * {color: var(--c-green)}
-        & .x, & .y{position: absolute;font-size: 15px;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94)}
+        & .x, & .y{position: absolute;font-size: 17px;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);}
         & .x, &.active .y{scale: 0}
         & .y, &.active .x{scale: 1}
     }
     input {
         border-bottom: 1px solid var(--c-black);
-
-        &::placeholder{
-            color: #0006;
-        }
+        &::placeholder{color: #0006}
     }
     
     button{
@@ -35,6 +34,7 @@
             & ~ .surge{
                 transition: scale .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 scale: 0;
+                transform-origin: left;
             }
             &.active{
                 & i.fa-arrows-rotate{
@@ -58,7 +58,7 @@
     }
     
     & label{
-        gap: 4px;
+        /* gap: 4px; */
         & .list{
             position: absolute;
             width: auto;
@@ -84,7 +84,6 @@
         }
         & i.fa-chevron-down{rotate: 0;transition: rotate .5s}
         &.open .list .item{height: 21px}
-        &.open .list .item.h0{height: 0}
         &.open i.fa-chevron-down{rotate: 180deg}
     
         & button{
@@ -97,11 +96,19 @@
         
         &#div_event{
             &.revel ~ #div_minutes{scale: 1}
-            & ~ #div_minutes{scale: 0;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94)}
+            & ~ #div_minutes{scale: 0;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);transform-origin: left;}
+        }
 
+        &.surge{
+            scale: 0;
+            transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-origin: left;
+            &.active{
+                scale: 1;
+            }
         }
     }
-    
+
     & input{
         padding: 0 2px;
         &#who_informed{width: 100px}
@@ -112,13 +119,25 @@
         &#direction,&#minutes{width: 24px}
         &#event{width: 122px}
     }
+
+    & #div_interrupted{
+        & label pre, &.h0 ~ #div_continuation label pre{transform: translate(4px, -1px)}
+        &.h0 ~ #div_continuation{margin-top: 0}
+    }
+    & #div_interrupted ~ #div_continuation label pre{transform: translateX(4px)}
+    
+    & .hidden{
+        visibility: hidden;
+        transition: visibility .5s;
+    }
+
 }
 
 </style>
 
 <!-- Primeira Linha -->
 <div class="row">
-    <div id="informed" class="box">
+    <div id="div_informed" class="box">
         Informado?
         <div class="toggle icons">
             <i class="fa-solid fa-check x"></i>
@@ -128,7 +147,7 @@
 
     <label for="who_informed" id="div_who_informed" class="box">
         por quem?
-        <input type="text" name="who_informed" id="who_informed">
+        <input type="text" name="who_informed" id="who_informed" placeholder="Adryan">
         <i class="fa-solid fa-chevron-down"></i>
         <button class="surge">
             <i class="fa-regular fa-trash-can"></i>
@@ -207,53 +226,45 @@
         <input type="text" name="minutes" id="minutes" placeholder="00" disabled>
         <pre> minutos</pre>
     </label>
-
 </div>
-<!-- 
 
-Passar ticket para jackson
-Arrumar HTML
-
-
-<div class="row">
-
-
-<div class="row">
-  <div class="align">
-    <label id="box_min" for="min" class="box surge">
-      <i class="fa-regular fa-hourglass-half icon"></i>
-      <input type="text" name="min" id="min" maxlength="2" placeholder="00" disabled>
-      <span>minutos</span>
+<!-- Continuação da Quarta Linha, Linha escondida. -->
+<div id="div_interrupted" class="row h0">
+    <label for="interrupted" class="box">
+        <i class="fa-solid fa-location-dot"></i>
+        <pre>N</pre>
+        <input type="text" name="interrupted" id="interrupted" maxlength="100" placeholder="a Av. Assis Brasil" disabled>
     </label>
-    <div id="box_local" class="box surge">
-      <span>onde?</span><i class="fa-solid fa-chevron-down icon"></i>
+
+    <div id="div_has_continued" class="box">
+        continuou?
+        <div class="toggle icons">
+            <i class="fa-solid fa-check x"></i>
+            <i class="fa-solid fa-xmark y"></i>
+        </div>
     </div>
-  </div>
 </div>
-<div id="row_local" class="row revel">
-  <label id="box_input_local" class="box" for="local">
-    <i class="fa-solid fa-location-dot icon"></i>
-    <span id="interrupted_text">A partir d</span>
-    <input type="text" name="local" id="local" maxlength="100" placeholder="a Av. Assis Brasil" disabled>
-  </label>
-  <div id="continued" class="box mini surge">
-    <span class="text_decoration">continuou?</span>
-    <i class="fa-solid fa-arrows-rotate icon text_decoration"></i>
-  </div>
+
+<div id="div_continuation" class="row h0">
+    <label for="continuation" class="box">
+        <i class="fa-solid fa-location-dot"></i>
+        <pre>A partir d</pre>
+        <input type="text" name="continuation" id="continuation" maxlength="100" placeholder="a Av. Assis Brasil" disabled>
+    </label>
+
+    <div id="dropping_passengers" class="box hidden">
+        <i class="fa-solid fa-person-running"></i>
+        <pre>largando os passageiros</pre>
+        <div class="toggle icons">
+            <i class="fa-solid fa-check x"></i>
+            <i class="fa-solid fa-xmark y"></i>
+        </div>
+    </div>
 </div>
-<div id="box_continued" class="row revel">
-  <label id="box_input_continued" class="box" for="input_continued">
-    <i class="fa-solid fa-location-dot icon"></i>
-    <span>a partir d</span>
-    <input type="text" name="input_continued" id="input_continued" placeholder="o terminal Triângulo" disabled>
-  </label>
-  <div class="box mini" id="dropping_passengers">
-    <i class="fa-solid fa-person-running icon text_decoration"></i>
-  </div>
-  <div id="info_drop" class="box">
-    <text>Somente largando os passageiros</text>
-  </div>
-</div>
+
+<!-- 
+-------------------
+
 <div id="row_motive" class="row">
   <label id="box_motive" class="box" for="motive">
     <span>- Motivo:</span>

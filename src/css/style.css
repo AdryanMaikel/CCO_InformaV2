@@ -357,8 +357,8 @@ button{
     &.y-visible{overflow-y: visible}
 
 }
-.w0{width: 0;overflow: hidden;&.open{width: auto}}
-.h0{height: 0;overflow: hidden;&.open{height: auto}}
+.w0{width: 0!important;overflow: hidden;&.open{width: auto}}
+.h0{height: 0!important;overflow: hidden;&.open{height: auto}}
 .wh100,.w100{width: 100%}.wh100,.h100{height: 100%}
 .row{
     display: flex;

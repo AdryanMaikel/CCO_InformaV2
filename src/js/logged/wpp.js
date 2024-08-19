@@ -2,26 +2,91 @@ const div_wpp = document.getElementById("wpp");
 const content_wpp = div_wpp.querySelector(".content");
 
 function check_event({div, event}) {
+    const _input_interrupted = div_interrupted.querySelector("input");
+    const _input_continued = div_continuation.querySelector("input");
+    const toggle_has_continued = div_has_continued.querySelector(".toggle");
+    const toggle_dropping_passengers = dropping_passengers.querySelector(".toggle");
     switch (event) {
         case "adiantada":
         case "atrasada":
             div.classList.add("revel");
-            
+            minutes.disabled = false;
+            setTimeout(()=>minutes.focus(), 150);
+            if(!div_interrupted.classList.contains("h0"))
+                div_interrupted.classList.add("h0");
+            _input_interrupted.disabled = true;
+            _input_continued.disabled = true;
+            div_has_continued.onclick = null;
+            div_continuation.classList.add("h0");
+            toggle_has_continued.classList.remove("active")
+            dropping_passengers.onclick = null;
+            dropping_passengers.classList.add("hidden");
+            toggle_dropping_passengers.classList.remove("active");
             break;
         case "interrompida":
-            div.classList.add("")
-            
+            div.classList.remove("revel");
+            minutes.disabled = true;
+            if(div_interrupted.classList.contains("h0"))
+                div_interrupted.classList.remove("h0");
+            if(!div_interrupted.classList.contains("h0"))
+                div_continuation.classList.add("h0");
+            _input_interrupted.disabled = false;
+            setTimeout(()=>_input_interrupted.focus(), 150);
+            _input_continued.disabled = true;
+            dropping_passengers.onclick = null;
+            dropping_passengers.classList.add("hidden");
+            toggle_dropping_passengers.classList.remove("active");
+            div_has_continued.onclick = function() {
+                toggle_has_continued.classList.toggle("active");
+                if(toggle_has_continued.classList.contains("active")) {
+                    div_continuation.classList.remove("h0");
+                    dropping_passengers.classList.remove("hidden");
+                    dropping_passengers.onclick = function() {
+                        toggle_dropping_passengers.classList.toggle("active");
+                    }
+                    _input_continued.disabled = false;
+                    _input_continued.focus();
+                } else {
+                    div_continuation.classList.add("h0");
+                    dropping_passengers.onclick = null;
+                    dropping_passengers.classList.add("hidden");
+                    toggle_dropping_passengers.classList.remove("active");
+                    _input_continued.disabled = true;
+                    _input_interrupted.focus();
+                }
+            };
             break;
         case "realizada a frente":
-            div.classList.add("")
-            
+            div.classList.remove("revel");
+            minutes.disabled = true;
+            if(!div_interrupted.classList.contains("h0"))
+                div_interrupted.classList.add("h0");
+            div_continuation.classList.remove("h0");
+            _input_interrupted.disabled = true;
+            _input_continued.disabled = false;
+            div_has_continued.onclick = null;
+            toggle_has_continued.classList.remove("active");
+            dropping_passengers.onclick = null;
+            dropping_passengers.classList.add("hidden");
+            toggle_dropping_passengers.classList.remove("active");
+            setTimeout(()=>_input_continued.focus(), 150);
             break;
-    
         default:
             div.classList.remove("revel");
+            minutes.disabled = true;
+            _input_interrupted.disabled = true;
+            _input_continued.disabled = true;
+            div_has_continued.onclick = null;
+            if(!div_interrupted.classList.contains("h0"))
+                div_interrupted.classList.add("h0");
+            if(!div_continuation.classList.contains("h0"))
+                div_continuation.classList.add("h0");
+            toggle_has_continued.classList.remove("active");
+            dropping_passengers.onclick = null;
+            dropping_passengers.classList.add("hidden");
+            toggle_dropping_passengers.classList.remove("active");
             break;
     }
-    console.log(div, event)
 }
 
 class DivEvents {
@@ -41,13 +106,15 @@ class DivEvents {
             }
             this.div.classList.add("open");
             this.items.forEach(item => {
-                if (item.classList.contains("h0")) {
+                if (item.classList.contains("h0"))
                     item.classList.remove("h0");
-                }
                 item.onclick = ({target}) => {
                     if (!this.tresh.classList.contains("active"))
                         this.tresh.classList.add("active");
-                    this.input.value = target.textContent;
+                    const text_content = target.textContent;
+                    this.input.value = text_content;
+                    if(this.id_div === "div_event")
+                        check_event({div: this.div, event: text_content});
                 }
             });
         };
@@ -56,12 +123,14 @@ class DivEvents {
             event.stopPropagation();
             this.input.value = "";
             this.tresh.classList.remove("active");
+
+            if(this.id_div === "div_event")
+                check_event({div: this.div, event: ""});
         };
 
         this.input.oninput = (event) => {
-            if (this.input.value === "") {
+            if (this.input.value === "")
                 return;
-            }
             this.tresh.classList.add("active");
 
             let elements = [];
@@ -91,6 +160,8 @@ class DivEvents {
         this.input.onblur = () => {
             if (this.input.value === "" && this.tresh.classList.contains("active")) {
                 this.tresh.classList.remove("active");
+                if(this.id_div === "div_event")
+                    check_event({div: this.div, event: ""});
             }
             window.setTimeout(() => {
                 this.div.classList.remove("open");
@@ -107,12 +178,10 @@ class DivEvents {
     }
 }
 
-let div_informed = null;
-let div_who_informed = null;
-let replace = null;
-let car_substitute = null;
-let div_directions = null;
-let div_event = null;
+let div_informed, div_who_informed = null;
+let replace, car_substitute, div_directions = null;
+let div_event, minutes, div_interrupted, div_has_continued, div_continuation = null;
+let dropping_passengers = null;
 
 async function load_wpp(){
     const response = await fetch(`/wpp/${operator.value}/${password.value}`)
@@ -120,7 +189,7 @@ async function load_wpp(){
     content_wpp.innerHTML = await response.text();
 
     // Primeira Linha
-    div_informed = content_wpp.querySelector("#informed");
+    div_informed = content_wpp.querySelector("#div_informed");
     div_who_informed = new DivEvents(content_wpp.querySelector("#div_who_informed"));
 
     // Segunda Linha
@@ -131,8 +200,12 @@ async function load_wpp(){
     div_directions = new DivEvents(content_wpp.querySelector("#div_directions"));
 
     // Quarta Linha
-    div_event = new DivEvents(content_wpp.querySelector("#div_event"))
-
+    div_event = new DivEvents(content_wpp.querySelector("#div_event"));
+    minutes = content_wpp.querySelector("#minutes");
+    div_interrupted = content_wpp.querySelector("#div_interrupted");
+    div_has_continued = content_wpp.querySelector("#div_has_continued");
+    div_continuation = content_wpp.querySelector("#div_continuation");
+    dropping_passengers = content_wpp.querySelector("#dropping_passengers");
 }
 
 load_wpp();
