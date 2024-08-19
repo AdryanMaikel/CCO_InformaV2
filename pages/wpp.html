@@ -1,53 +1,58 @@
-<!-- <form id="form_cco_informa" autocomplete="off"> -->
 <style>
 #wpp .content{
     font-size: 14px;
 
     .row{margin-top: 2px;height: 25px;transition: height .25s cubic-bezier(0.46, 0.1, 1, 0.37)}
 
-    & i{
+    i{
         font-size: 15px;
-        &.fa-trash-can{font-size: 13px}
+        &.fa-trash-can{font-size: 14px}
     }
-    /* & input{border-bottom: 1px solid var(--c-black-white);} */
 
-    & .toggle.icons{
+    .toggle.icons{
         position: relative;width: 15px;height: 15px;
         display: flex;align-items: center;justify-content: center;
-        & * {color: var(--c-red)}
+        * {color: var(--c-red)}
         &.active * {color: var(--c-green)}
-        & .x, & .y{position: absolute;font-size: 17px;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);}
-        & .x, &.active .y{scale: 0}
-        & .y, &.active .x{scale: 1}
-    }
-    input {
-        border-bottom: 1px solid var(--c-black);
-        &::placeholder{color: #0006}
+        .x, .y{
+            position: absolute;
+            font-size: 17px;
+            transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+        }
+        .x, &.active .y{scale: 0}
+        .y, &.active .x{scale: 1}
     }
     
     button{
+        &.surge{
+            scale: 0;
+            transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            &.active{scale: 1}
+        }
+
         &.toggle{
-            & i.fa-arrows-rotate{
-                transition: .7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                color: var(--c-red);
-            }
-            & ~ .surge{
-                transition: scale .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                scale: 0;
-                transform-origin: left;
-            }
             &.active{
-                & i.fa-arrows-rotate{
+                ~ .surge{scale: 1}
+                i.fa-arrows-rotate{
                     rotate: 180deg;
                     color: var(--c-green);
                 }
-                & ~ .surge{
-                    scale: 1;
-                }
+            }
+
+            ~ .surge{
+                scale: 0;
+                transform-origin: left;
+                transition: scale .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            i.fa-arrows-rotate{
+                color: var(--c-red);
+                transition: .7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
         }
     }
-    & .box{
+
+    .box{
         position: relative;
         padding: 2px 5px;
         gap: 2px;
@@ -58,7 +63,6 @@
     }
     
     & label{
-        /* gap: 4px; */
         & .list{
             position: absolute;
             width: auto;
@@ -70,7 +74,6 @@
             top: 100%;
             transform: translateX(25px);
             overflow-y: auto;
-            /* border: 1px solid var(); */
     
             & .item{
                 position: relative;
@@ -82,18 +85,14 @@
                 font-weight: 400;
             }
         }
-        & i.fa-chevron-down{rotate: 0;transition: rotate .5s}
-        &.open .list .item{height: 21px}
-        &.open i.fa-chevron-down{rotate: 180deg}
-    
-        & button{
-            &.surge{
-                scale: 0;
-                transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                &.active{scale: 1}
-            }
+
+        &.open{
+            .list .item{height: 21px}
+            i.fa-chevron-down{rotate: 180deg}
         }
         
+        i.fa-chevron-down{rotate: 0;transition: rotate .5s}
+
         &#div_event{
             &.revel ~ #div_minutes{scale: 1}
             & ~ #div_minutes{scale: 0;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);transform-origin: left;}
@@ -103,14 +102,14 @@
             scale: 0;
             transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             transform-origin: left;
-            &.active{
-                scale: 1;
-            }
+            &.active{scale: 1}
         }
     }
 
-    & input{
+    input{
         padding: 0 2px;
+        border-bottom: 1px solid var(--c-black);
+        &::placeholder{color: #0006}
         &#who_informed{width: 100px}
         &#table{width: 80px}
         &#car, &#car_substitute{width: 38px}
@@ -120,22 +119,21 @@
         &#event{width: 122px}
     }
 
-    & #div_interrupted{
-        & label pre, &.h0 ~ #div_continuation label pre{transform: translate(4px, -1px)}
+    #div_interrupted{
+        label pre, &.h0 ~ #div_continuation label pre{transform: translate(4px, -1px)}
         &.h0 ~ #div_continuation{margin-top: 0}
     }
-    & #div_interrupted ~ #div_continuation label pre{transform: translateX(4px)}
+    #div_interrupted ~ #div_continuation label pre{transform: translateX(4px)}
     
-    & .hidden{
+    .hidden{
         visibility: hidden;
         transition: visibility .5s;
     }
 
 }
-
 </style>
 
-<!-- Primeira Linha -->
+<!-- Informado -->
 <div class="row">
     <div id="div_informed" class="box">
         Informado?
@@ -157,8 +155,7 @@
         </ul>
     </label>
 </div>
-
-<!-- Segunda Linha -->
+<!-- Tabela / Carro / Trc de Carro -->
 <div class="row">
     <label for="table" id="div_table" class="box">
         <pre>- </pre>
@@ -180,8 +177,7 @@
         <input type="text" name="car_substitute" id="car_substitute" placeholder="6668" maxlength="4" disabled>
     </label>
 </div>
-
-<!-- Terceira Linha -->
+<!-- Linha / Horário / Sentido -->
  <div class="row">
     <label for="line" id="div_line" class="box">
         <pre>- </pre>
@@ -206,8 +202,7 @@
         </button>
     </label>
  </div>
-
-<!-- Quarta Linha -->
+<!-- Eventos / Minutos -->
 <div class="row">
     <label for="event" id="div_event" class="box">
         <pre>- Viagem </pre>
@@ -227,8 +222,7 @@
         <pre> minutos</pre>
     </label>
 </div>
-
-<!-- Continuação da Quarta Linha, Linha escondida. -->
+<!-- Interrompida / Continuou puxando viagem -->
 <div id="div_interrupted" class="row h0">
     <label for="interrupted" class="box">
         <i class="fa-solid fa-location-dot"></i>
@@ -244,7 +238,7 @@
         </div>
     </div>
 </div>
-
+<!-- Local que continuou puxando / Largando os passageiros -->
 <div id="div_continuation" class="row h0">
     <label for="continuation" class="box">
         <i class="fa-solid fa-location-dot"></i>
@@ -261,6 +255,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- 
 -------------------
