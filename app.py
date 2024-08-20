@@ -126,8 +126,10 @@ def scripts(operator, password):
     logged = operators.check_password(operator, password)
     if not logged:
         return "Operador ou senha inválidos.", 400
-    scripts = ["/src/js/logged/table.js", "/src/js/logged/chat.js",
-               "/src/js/logged/config.js", "/src/js/logged/wpp.js"]
+    scripts = ("/src/js/logged/table.js,"
+               "/src/js/logged/chat.js,"
+               "/src/js/logged/config.js,"
+               "/src/js/logged/wpp.js")
     return scripts
 
 
@@ -141,8 +143,20 @@ def wpp(operator, password):
         sentidos = ["BC", "CB", "CC", "TB", "BT", "TT"]
         events = ["adiantada", "atrasada", "interrompida", "perdida",
                   "realizada a frente"]
-        return render_template("wpp.html", emps=emps, sentidos=sentidos,
-                               events=events)
+        motives = ['Acidente', 'Adiantado com autorização',
+                   'Adiantado sem autorização', 'Assalto', 'Atrasado',
+                   'Avaria', 'Congestionamento', 'Falta de Carro',
+                   'Falta de Tripulação',
+                   'GPS com problemas de Comunicação', 'Pneu Furado',
+                   'Problema com passageiro', 'Problemas mecânicos',
+                   'Tempo insuficiente', 'Validador/ Roleta', 'Vandalismo',
+                   'Vistoria EPTC']
+        return render_template("wpp.html",
+                               emps=emps,
+                               sentidos=sentidos,
+                               events=events,
+                               motives=motives
+                               )
     return ""
 
 

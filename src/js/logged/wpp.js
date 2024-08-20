@@ -59,12 +59,12 @@ function check_event({div, event}) {
         case "realizada a frente":
             div.classList.remove("revel");
             minutes.disabled = true;
-            if(!div_interrupted.classList.contains("h0"))
-                div_interrupted.classList.add("h0");
-            div_continuation.classList.remove("h0");
             _input_interrupted.disabled = true;
             _input_continued.disabled = false;
             div_has_continued.onclick = null;
+            if(!div_interrupted.classList.contains("h0"))
+                div_interrupted.classList.add("h0");
+            div_continuation.classList.remove("h0");
             toggle_has_continued.classList.remove("active");
             dropping_passengers.onclick = null;
             dropping_passengers.classList.add("hidden");
@@ -85,6 +85,85 @@ function check_event({div, event}) {
             dropping_passengers.onclick = null;
             dropping_passengers.classList.add("hidden");
             toggle_dropping_passengers.classList.remove("active");
+            break;
+    }
+}
+
+function check_motive({div, motive}) {
+    if(!div_hrs_gps.classList.contains("h0"))
+        div_hrs_gps.classList.add("h0");
+    gps_hours.forEach(input=>input.disabled = true);
+    if(!div_gps.classList.contains("h0"))
+        div_gps.classList.add("h0");
+    radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
+
+    switch (motive) {
+        case "Adiantado com autorização":
+        case "Adiantado sem autorização":
+            if(!div_hrs_gps.classList.contains("h0"))
+                div_hrs_gps.classList.add("h0");
+            gps_hours.forEach(input=>input.disabled = true);
+            if(!div_gps.classList.contains("h0"))
+                div_gps.classList.add("h0");
+            radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
+        
+            div_event.input.value = "adiantada";
+            div_event.tresh.classList.add("active");
+            check_event({div: div_event.div, event: "adiantada"});
+            break;
+        case "Atrasado":
+            if(!div_hrs_gps.classList.contains("h0"))
+                div_hrs_gps.classList.add("h0");
+            gps_hours.forEach(input=>input.disabled = true);
+            if(!div_gps.classList.contains("h0"))
+                div_gps.classList.add("h0");
+            radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
+            div_event.input.value = "atrasada";
+            div_event.tresh.classList.add("active");
+            check_event({div: div_event.div, event: "atrasada"});
+            break;
+        case "Congestionamento":
+            if(!div_hrs_gps.classList.contains("h0"))
+                div_hrs_gps.classList.add("h0");
+            gps_hours.forEach(input=>input.disabled = true);
+            if(!div_gps.classList.contains("h0"))
+                div_gps.classList.add("h0");
+            radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
+        
+            break;
+        case "Falta de Tripulação":
+
+            break;
+        case "GPS com problemas de Comunicação":
+            if(div_gps.classList.contains("h0"))
+                div_gps.classList.remove("h0");
+            if(radios_gps[0].checked){
+                div_hrs_gps.classList.remove("h0");
+                gps_hours.forEach(input=>input.disabled = false);
+                setTimeout(()=>gps_hours[0].focus(), 150);
+            }
+            radios_gps.forEach(input=>{
+                input.disabled = false;
+                input.onchange = function() {
+                    if(input.id == "parou"){
+                        div_hrs_gps.classList.remove("h0");
+                        gps_hours.forEach(input=>input.disabled = false);
+                        setTimeout(()=>gps_hours[0].focus(), 150);
+                    } else {
+                        div_hrs_gps.classList.add("h0");
+                        gps_hours.forEach(input=>input.disabled = true)
+                    }
+                }
+            });
+            break;
+        default:
+            if(!div_hrs_gps.classList.contains("h0"))
+                div_hrs_gps.classList.add("h0");
+            gps_hours.forEach(input=>input.disabled = true);
+            if(!div_gps.classList.contains("h0"))
+                div_gps.classList.add("h0");
+            radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
+        
             break;
     }
 }
@@ -115,6 +194,8 @@ class DivEvents {
                     this.input.value = text_content;
                     if(this.id_div === "div_event")
                         check_event({div: this.div, event: text_content});
+                    if(this.id_div === "div_motive")
+                        check_motive({div: this.div, motive: text_content});
                 }
             });
         };
@@ -126,6 +207,8 @@ class DivEvents {
 
             if(this.id_div === "div_event")
                 check_event({div: this.div, event: ""});
+            if(this.id_div === "div_motive")
+                check_motive({div: this.div, motive: ""});
         };
 
         this.input.oninput = (event) => {
@@ -150,7 +233,8 @@ class DivEvents {
                     case "div_event":
                         check_event({div: this.div, event: text_content});
                         break;
-                
+                    case "div_motive":
+                        check_motive({div: this.div, motive: text_content});
                     default:
                         break;
                 }
@@ -162,6 +246,8 @@ class DivEvents {
                 this.tresh.classList.remove("active");
                 if(this.id_div === "div_event")
                     check_event({div: this.div, event: ""});
+                if(this.id_div === "div_motive")
+                    check_motive({div: this.div, motive: ""});
             }
             window.setTimeout(() => {
                 this.div.classList.remove("open");
@@ -182,6 +268,10 @@ let div_informed, div_who_informed = null;
 let replace, car_substitute, div_directions = null;
 let div_event, minutes, div_interrupted, div_has_continued, div_continuation = null;
 let dropping_passengers = null;
+
+let div_motive = null;
+let div_gps, div_hrs_gps = null;
+let radios_gps, gps_hours = [];
 
 async function load_wpp(){
     const response = await fetch(`/wpp/${operator.value}/${password.value}`)
@@ -206,6 +296,13 @@ async function load_wpp(){
     div_has_continued = content_wpp.querySelector("#div_has_continued");
     div_continuation = content_wpp.querySelector("#div_continuation");
     dropping_passengers = content_wpp.querySelector("#dropping_passengers");
+
+    div_motive = new DivEvents(content_wpp.querySelector("#div_motive"));
+    div_gps = content_wpp.querySelector("#div_gps");
+    radios_gps = div_gps.querySelectorAll(`input[name="gps"]`);
+    radios_gps.forEach(input=>input.onclick = event=>event.stopPropagation())
+    div_hrs_gps = content_wpp.querySelector("#div_hrs_gps");
+    gps_hours = div_hrs_gps.querySelectorAll("input");
 }
 
 load_wpp();
@@ -235,28 +332,20 @@ document.querySelector("#open-wpp").onclick = function(_) {
         car_substitute.disabled = true;
         // .focus()
     }
-
-    // Terceira Linha
     div_directions.active_events();
-
-    // Quarta Linha
     div_event.active_events();
+    div_motive.active_events();
 
 }
 
 document.querySelector("#close-wpp").onclick = function(_) {
     div_wpp.classList.remove("open");
 
-    // Primeira linha
     div_informed.onclick = null;
     div_who_informed.remove_events();
-    
-    // Segunda Linha
+
     replace.onclick = null;
-
-    // Terceira Linha
     div_directions.remove_events();
-
-    // Quarta Linha
     div_event.remove_events();
+    div_motive.remove_events();
 }

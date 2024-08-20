@@ -63,7 +63,7 @@
     }
     
     & label{
-        & .list{
+        .list{
             position: absolute;
             width: auto;
             height: auto;
@@ -74,11 +74,14 @@
             top: 100%;
             transform: translateX(25px);
             overflow-y: auto;
+            z-index: 99;
+            background-color: var(--c-ice);
     
-            & .item{
+            .item{
                 position: relative;
                 height: 0;
                 top: 0;
+                padding: 0 2px;
                 transform-origin: top;
                 transition: height .5s;
                 overflow: hidden;
@@ -89,6 +92,11 @@
         &.open{
             .list .item{height: 21px}
             i.fa-chevron-down{rotate: 180deg}
+        }
+
+        &#div_directions .list{
+            min-width: 22px !important;
+            transform: translateX(-6px) !important;
         }
         
         i.fa-chevron-down{rotate: 0;transition: rotate .5s}
@@ -106,17 +114,25 @@
         }
     }
 
-    input{
+    input[type="text"]{
         padding: 0 2px;
         border-bottom: 1px solid var(--c-black);
         &::placeholder{color: #0006}
+        &.hour{width: 40px}
         &#who_informed{width: 100px}
         &#table{width: 80px}
         &#car, &#car_substitute{width: 38px}
         &#line{width: 44px}
-        &#hour{width: 40px}
         &#direction,&#minutes{width: 24px}
         &#event{width: 122px}
+        &#motive{width: 270px}
+    }
+    input[type="radio"]{
+        ~ i.fa-check{color: var(--c-green);scale: 0;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);}
+        &:checked{~ i.fa-check{scale: 1}}
+        /* width: 0;
+        height: 0;
+        overflow: hidden; */
     }
 
     #div_interrupted{
@@ -255,49 +271,54 @@
         </div>
     </div>
 </div>
+<!-- Motivo -->
+<div class="row">
+    <label for="motive" id="div_motive" class="box">
+        <pre>- Motivo: </pre>
+        <input type="text" name="motive" id="motive" placeholder="Quebra?">
+        <ul class="list">{% for motive in motives %}
+            <li class="item">{{ motive }}</li>{% endfor %}
+        </ul>
+        <i class="fa-solid fa-chevron-down"></i>
+        <button class="surge">
+            <i class="fa-regular fa-trash-can"></i>
+        </button>
+    </label>
+</div>
+<!-- GPS com Problemas -->
+<div class="col w100">
+    <div id="div_gps" class="row h0">
+        Qual?
+        <label for="parou" class="box">
+            <input type="radio" name="gps" id="parou" hidden checked disabled>
+            Parou de Comunicar
+            <i class="fa-solid fa-check"></i>
+        </label>
 
+        <label for="trancou" class="box">
+            <input type="radio" name="gps" id="trancou" hidden disabled>
+            Trancou no centro
+            <i class="fa-solid fa-check"></i>
+        </label>
+    </div>
+
+    <div id="div_hrs_gps" class="row h0">
+        <label for="gps_hr_stop" class="box">
+            <i class="fa-solid fa-clock"></i>
+            <input type="text" name="gps_hr_stop" id="gps_hr_stop" class="hour" placeholder="00:00" maxlength="5" disabled>
+            <pre>parou.</pre>
+        </label>
+
+        <label for="gps_hr_return" class="box">
+            <i class="fa-solid fa-clock"></i>
+            <input type="text" name="gps_hr_return" id="gps_hr_return" class="hour" placeholder="00:00" maxlength="5" disabled>
+            <pre>voltou.</pre>
+        </label>
+    </div>
+</div>
 
 <!-- 
 -------------------
-
-<div id="row_motive" class="row">
-  <label id="box_motive" class="box" for="motive">
-    <span>- Motivo:</span>
-    <input type="text" name="motive" id="motive" placeholder="Quebra?">
-    <i class="fa-solid fa-chevron-down icon"></i>
-  </label>
-  <ul class="list" id="list_motives"></ul>
-  <div class="box mini trash surge">
-    <i class="fa-regular fa-trash-can icon"></i>
-  </div>
-</div>
-<div id="row_gps" class="row revel">
-  <div id="box_gps" class="box collumn">
-    <text>Qual?</text>
-    <label for="parou" class="box">
-      <input type="radio" name="gps" id="parou" checked>
-      <span>Parou de comunicar</span>
-      <i class="fa-solid fa-check icon"></i>
-    </label>
-    <label for="trancou" class="box">
-      <input type="radio" name="gps" id="trancou">
-      <span>Trancou no centro</span>
-      <i class="fa-solid fa-check icon"></i>
-    </label>
-  </div>
-  <div id="box_hours" class="box hours collumn surge active">
-    <label for="hour_stop" class="box">
-      <i class="fa-solid fa-clock icon"></i>
-      <input type="text" name="hour_stop" id="hour_stop" class="hour" placeholder="Hora" maxlength="5" disabled>
-      <span>parou</span>
-    </label>
-    <label for="hour_return" class="box">
-      <i class="fa-solid fa-clock icon"></i>
-      <input type="text" name="hour_return" id="hour_return" class="hour" placeholder="Hora" maxlength="5" disabled>
-      <span>voltou</span>
-    </label>
-  </div>
-</div>
 <div id="row_problems" class="row revel">
   <label id="box_problems" for="problem" class="box">
     <span>Problema:</span>
@@ -380,6 +401,8 @@
     </label>
   </div>
 </div>
+
+
 <div id="row_button" class="row footer">
   <label for="generate_cco_informa" class="box">
     <span>GERAR *CCO INFORMA*</span>

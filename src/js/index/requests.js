@@ -10,5 +10,5 @@ function create_script(src){
 async function load_containers(){
     const response = await fetch(`/scripts/${operator.value}/${password.value}`);
     if(response.status != 200)return;
-    (await response.json()).forEach(src=>create_script(src))
+    ((await response.text()).split(",")).forEach(src=>create_script(src))
 }
