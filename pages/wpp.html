@@ -7,6 +7,21 @@
         &.h0{margin-top: 0 !important}
     }
 
+    .box{
+        position: relative;
+        padding: 2px 5px;
+        gap: 2px;
+        font-weight: 410;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hidden{
+        visibility: hidden;
+        transition: visibility .5s;
+    }
+
     i{
         font-size: 15px;
         &.fa-trash-can{font-size: 14px}
@@ -54,16 +69,6 @@
             }
         }
     }
-
-    .box{
-        position: relative;
-        padding: 2px 5px;
-        gap: 2px;
-        font-weight: 410;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
     
     & label{
         .list{
@@ -97,16 +102,16 @@
             i.fa-chevron-down{rotate: 180deg}
         }
 
-        &#div_directions .list{
+        &#directions .list{
             min-width: 22px !important;
             transform: translateX(-6px) !important;
         }
         
         i.fa-chevron-down{rotate: 0;transition: rotate .5s}
 
-        &#div_event{
-            &.revel ~ #div_minutes{scale: 1}
-            & ~ #div_minutes{scale: 0;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);transform-origin: left;}
+        &#label_event{
+            &.revel ~ #label_minutes{scale: 1}
+            & ~ #label_minutes{scale: 0;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);transform-origin: left;}
         }
 
         &.surge{
@@ -136,30 +141,27 @@
         &:checked{~ i.fa-check{scale: 1}}
     }
 
-    #div_interrupted label pre,
-    #div_interrupted.h0 ~ #div_continuation label pre,
-    #div_interrupted ~ #div_continuation ~ #div_congestion label pre{
+    #row_interrupted label pre,
+    #row_interrupted.h0 ~ #row_continuation label pre,
+    #row_interrupted ~ #row_continuation ~ #row_congestion label pre{
         transform: translate(4px, -1px)
     }
     
-    #div_interrupted.h0 ~ #div_continuation.h0 ~ #div_congestion label pre,
-    #div_interrupted.h0 ~ #div_continuation ~ #div_congestion label pre,
-    #div_interrupted ~ #div_continuation.h0 ~ #div_congestion label pre,
-    #div_interrupted ~ #div_continuation label pre{
+    #row_interrupted.h0 ~ #row_continuation.h0 ~ #row_congestion label pre,
+    #row_interrupted.h0 ~ #row_continuation ~ #row_congestion label pre,
+    #row_interrupted ~ #row_continuation.h0 ~ #row_congestion label pre,
+    #row_interrupted ~ #row_continuation label pre{
         transform: translate(4px)
     }
 
-    .hidden{
-        visibility: hidden;
-        transition: visibility .5s;
-    }
+    
 
 }
 </style>
 
 <!-- Informado -->
 <div class="row">
-    <div id="div_informed" class="box">
+    <div id="informed" class="box">
         Informado?
         <div class="toggle icons">
             <i class="fa-solid fa-check x"></i>
@@ -167,7 +169,7 @@
         </div>
     </div>
 
-    <label for="who_informed" id="div_who_informed" class="box">
+    <label for="who_informed" id="label_who_informed" class="box">
         por quem?
         <input type="text" name="who_informed" id="who_informed" placeholder="Adryan">
         <i class="fa-solid fa-chevron-down"></i>
@@ -181,13 +183,13 @@
 </div>
 <!-- Tabela / Carro / Trc de Carro -->
 <div class="row">
-    <label for="table" id="div_table" class="box">
+    <label for="table" class="box">
         <pre>- </pre>
         <i class="fa-solid fa-clipboard"></i>
         <input type="text" name="table" id="table" placeholder="SD73/005" maxlength="9">
     </label>
 
-    <label for="car" id="div_car" class="box">
+    <label for="car" class="box">
         <i class="fa-solid fa-bus"></i>
         <input type="text" name="car" id="car" placeholder="6669" maxlength="4">
     </label>
@@ -196,25 +198,25 @@
         <i class="fa-solid fa-arrows-rotate"></i>    
     </button>
 
-    <label for="car_substitute" id="div_car_substitute" class="box surge">
+    <label for="car_substitute" class="box surge">
         <i class="fa-solid fa-bus"></i>
         <input type="text" name="car_substitute" id="car_substitute" placeholder="6668" maxlength="4" disabled>
     </label>
 </div>
 <!-- Linha / Horário / Sentido -->
 <div class="row">
-    <label for="line" id="div_line" class="box">
+    <label for="line" class="box">
         <pre>- </pre>
         <i class="fa-solid fa-route"></i>
         <input type="text" name="line" id="line" placeholder="SD73" maxlength="5">
     </label>
 
-    <label for="hour" id="div_hour" class="box">
+    <label for="hour" class="box">
         <i class="fa-solid fa-clock"></i>
         <input type="text" name="hour" id="hour" class="hour" placeholder="00:00" maxlength="5">
     </label>
 
-    <label for="direction" id="div_directions" class="box">
+    <label for="direction" id="directions" class="box">
         <i class="fa-solid fa-compass"></i>
         <input type="text" name="direction" id="direction" placeholder="BC" maxlength="2">
         <ul class="list">{% for sentido in sentidos %}
@@ -228,7 +230,7 @@
 </div>
 <!-- Eventos / Minutos -->
 <div class="row">
-    <label for="event" id="div_event" class="box">
+    <label for="event" id="label_event" class="box">
         <pre>- Viagem </pre>
         <input type="text" name="event" id="event" placeholder="foi...">
         <ul class="list">{% for event in events %}
@@ -240,21 +242,21 @@
         </button>
     </label>
 
-    <label for="minutes" id="div_minutes" class="box surge">
+    <label for="minutes" id="label_minutes" class="box surge">
         <i class="fa-solid fa-clock"></i>
         <input type="text" name="minutes" id="minutes" placeholder="00" disabled>
         <pre> minutos</pre>
     </label>
 </div>
 <!-- Interrompida / Continuou puxando viagem -->
-<div id="div_interrupted" class="row h0">
+<div id="row_interrupted" class="row h0">
     <label for="interrupted" class="box">
         <i class="fa-solid fa-location-dot"></i>
         <pre>N</pre>
         <input type="text" name="interrupted" id="interrupted" maxlength="100" placeholder="a Av. Assis Brasil" disabled>
     </label>
 
-    <div id="div_has_continued" class="box">
+    <div id="has_continued" class="box">
         continuou?
         <div class="toggle icons">
             <i class="fa-solid fa-check x"></i>
@@ -263,7 +265,7 @@
     </div>
 </div>
 <!-- Local que continuou puxando / Largando os passageiros -->
-<div id="div_continuation" class="row h0">
+<div id="row_continuation" class="row h0">
     <label for="continuation" class="box">
         <i class="fa-solid fa-location-dot"></i>
         <pre>A partir d</pre>
@@ -281,7 +283,7 @@
 </div>
 <!-- Motivo -->
 <div class="row">
-    <label for="motive" id="div_motive" class="box">
+    <label for="motive" id="label_motive" class="box">
         <pre>- Motivo: </pre>
         <input type="text" name="motive" id="motive" placeholder="Quebra?">
         <ul class="list">{% for motive in motives %}
@@ -295,7 +297,7 @@
 </div>
 <!-- GPS com Problemas -->
 <div class="col w100">
-    <div id="div_gps" class="row h0">
+    <div id="row_gps" class="row h0">
         Qual?
         <label for="parou" class="box">
             <input type="radio" name="gps" id="parou" hidden checked disabled>
@@ -310,7 +312,7 @@
         </label>
     </div>
 
-    <div id="div_hrs_gps" class="row h0">
+    <div id="row_hrs_gps" class="row h0">
         <label for="gps_hr_stop" class="box">
             <i class="fa-solid fa-clock"></i>
             <input type="text" name="gps_hr_stop" id="gps_hr_stop" class="hour" placeholder="00:00" maxlength="5" disabled>
@@ -325,7 +327,7 @@
     </div>
 </div>
 <!-- Congestionamento -->
-<div id="div_congestion" class="row h0">
+<div id="row_congestion" class="row h0">
     <label for="congestion" class="box">
         <i class="fa-solid fa-location-dot"></i>
         <pre>Onde? n</pre>
@@ -333,7 +335,7 @@
     </label>
 </div>
 <!-- Validador / Roleta -->
-<div id="div_roullet_and_validator" class="row h0">
+<div id="row_roullet_and_validator" class="row h0">
     Qual?
     <label for="validator" class="box">
         <input type="radio" name="roullet_and_validator" id="validator" hidden checked disabled>
@@ -348,7 +350,7 @@
     </label>
 </div>
 <!-- Motorista / Cobrador -->
-<div id="div_tripulation" class="row h0">
+<div id="row_tripulation" class="row h0">
     Qual?
     <label for="motorista" class="box">
         <input type="radio" name="tripulation" id="motorista" hidden checked disabled>
@@ -364,7 +366,7 @@
 </div>
 <!-- Problema -->
 <div id="row_problem" class="row h0">
-    <label for="problem" id="div_problem" class="box">
+    <label for="problem" id="label_problem" class="box">
         <pre>Problema: </pre>
         <input type="text" name="problem" id="problem" disabled>
         <ul class="list">{% for problem in problems %}
@@ -377,7 +379,7 @@
     </label>
 </div>
 <!-- Limpador / Espelho -->
-<div id="div_limpador_espelho" class="row h0">
+<div id="row_limpador_espelho" class="row h0">
     Qual?
     <label for="limpador" class="box">
         <input type="radio" name="limpador_espelho" id="limpador" hidden checked disabled>
@@ -392,7 +394,7 @@
     </label>
 </div>
 <!-- Embreagem / Caixa -->
-<div id="div_embreagem_caixa" class="row h0">
+<div id="row_embreagem_caixa" class="row h0">
     Qual?
     <label for="embreagem" class="box">
         <input type="radio" name="embreagem_caixa" id="embreagem" hidden checked disabled>
