@@ -151,11 +151,37 @@ def wpp(operator, password):
                    'Problema com passageiro', 'Problemas mecânicos',
                    'Tempo insuficiente', 'Validador/ Roleta', 'Vandalismo',
                    'Vistoria EPTC']
+        problems = ['Carroceria - Ar Condicionado',
+                    'Carroceria - Elevador APD',
+                    'Carroceria - Itens de segurança',
+                    'Carroceria - Limpador / Espelho',
+                    'Carroceria - Outros', 'Carroceria - Portas',
+                    'Elétrica - Alternador',
+                    'Elétrica - Iluminação Externa',
+                    'Elétrica - Iluminação interna',
+                    'Elétrica - Letreiro',
+                    'Elétrica - Pane elétrica',
+                    'Elétrica - Sem arranque',
+                    'Motor - Cigarra/Aquecimento',
+                    'Motor - Cigarra/óleo motor',
+                    'Motor - Correias',
+                    'Motor - Sem Força',
+                    'Motor - Vazamento de água',
+                    'Motor - Vazamento de óleo Diesel',
+                    'Motor - Vazamento de óleo motor',
+                    'Problemas na viagem anterior',
+                    'Suspensão - Arriada',
+                    'Suspensão - Carro atravessado',
+                    'Suspensão - Embreagem / Caixa',
+                    'Suspensão - Freio',
+                    'Suspensão - Roda',
+                    'Suspensão - Vazamento de ar']
         return render_template("wpp.html",
                                emps=emps,
                                sentidos=sentidos,
                                events=events,
-                               motives=motives
+                               motives=motives,
+                               problems=problems
                                )
     return ""
 

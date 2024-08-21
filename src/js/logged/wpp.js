@@ -1,7 +1,7 @@
 const div_wpp = document.getElementById("wpp");
 const content_wpp = div_wpp.querySelector(".content");
 
-function check_event({div, event}) {
+function check_event({ div, event }) {
     const _input_interrupted = div_interrupted.querySelector("input");
     const _input_continued = div_continuation.querySelector("input");
     const toggle_has_continued = div_has_continued.querySelector(".toggle");
@@ -89,54 +89,39 @@ function check_event({div, event}) {
     }
 }
 
-function check_motive({div, motive}) {
+function check_motive({ motive }) {
     if(!div_hrs_gps.classList.contains("h0"))
         div_hrs_gps.classList.add("h0");
     gps_hours.forEach(input=>input.disabled = true);
     if(!div_gps.classList.contains("h0"))
         div_gps.classList.add("h0");
     radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
-    div_congestion.classList.add("h0");
+    if(!div_congestion.classList.contains("h0"))
+        div_congestion.classList.add("h0");
     congestion.disabled = true;
-    div_roullet_and_validator.classList.add("h0");
+    if(!div_roullet_and_validator.classList.contains("h0"))
+        div_roullet_and_validator.classList.add("h0");
     radios_roullet_and_validator.forEach(input=>input.disabled = true);
-    div_tripulation.classList.add("h0");
+    if(!div_tripulation.classList.contains("h0"))
+        div_tripulation.classList.add("h0");
     radios_tripulation.forEach(input=>input.disabled = true);
+    if(!row_problem.classList.contains("h0"))
+        row_problem.classList.add("h0");
+    div_problem.input.disabled = true;
 
     switch (motive) {
         case "Adiantado com autorização":
         case "Adiantado sem autorização":
-            if(!div_hrs_gps.classList.contains("h0"))
-                div_hrs_gps.classList.add("h0");
-            gps_hours.forEach(input=>input.disabled = true);
-            if(!div_gps.classList.contains("h0"))
-                div_gps.classList.add("h0");
-            radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
-        
             div_event.input.value = "adiantada";
             div_event.tresh.classList.add("active");
             check_event({div: div_event.div, event: "adiantada"});
             break;
         case "Atrasado":
-            if(!div_hrs_gps.classList.contains("h0"))
-                div_hrs_gps.classList.add("h0");
-            gps_hours.forEach(input=>input.disabled = true);
-            if(!div_gps.classList.contains("h0"))
-                div_gps.classList.add("h0");
-            radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
-
             div_event.input.value = "atrasada";
             div_event.tresh.classList.add("active");
             check_event({div: div_event.div, event: "atrasada"});
             break;
         case "Congestionamento":
-            if(!div_hrs_gps.classList.contains("h0"))
-                div_hrs_gps.classList.add("h0");
-            gps_hours.forEach(input=>input.disabled = true);
-            if(!div_gps.classList.contains("h0"))
-                div_gps.classList.add("h0");
-            radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
-
             div_congestion.classList.remove("h0");
             congestion.disabled = false;
             setTimeout(()=>congestion.focus(), 150);
@@ -167,18 +152,35 @@ function check_motive({div, motive}) {
                 }
             });
             break;
+        case "Problemas mecânicos":
+            row_problem.classList.remove("h0");
+            div_problem.input.disabled = false;
+            setTimeout(()=>div_problem.input.focus(), 150);
+            break;
         case "Validador/ Roleta":
             div_roullet_and_validator.classList.remove("h0");
             radios_roullet_and_validator.forEach(input=>input.disabled = false);
             break;
-        default:
-            if(!div_hrs_gps.classList.contains("h0"))
-                div_hrs_gps.classList.add("h0");
-            gps_hours.forEach(input=>input.disabled = true);
-            if(!div_gps.classList.contains("h0"))
-                div_gps.classList.add("h0");
-            radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
-        
+    }
+}
+
+function check_problem({ problem }) {
+    if(!div_limpador_espelho.classList.contains("h0"))
+        div_limpador_espelho.classList.add("h0");
+    radios_limpador_espelho.forEach(input=>input.disabled = true);
+    if(!div_embreagem_caixa.classList.contains("h0"))
+        div_embreagem_caixa.classList.add("h0");
+    radios_embreagem_caixa.forEach(input=>input.disabled = true);
+    switch (problem) {
+        case "Carroceria - Limpador / Espelho":
+            if(div_limpador_espelho.classList.contains("h0"))
+                div_limpador_espelho.classList.remove("h0");
+            radios_limpador_espelho.forEach(input=>input.disabled = false);
+            break;
+        case "Suspensão - Embreagem / Caixa":
+            if(div_embreagem_caixa.classList.contains("h0"))
+                div_embreagem_caixa.classList.remove("h0");
+            radios_embreagem_caixa.forEach(input=>input.disabled = false);
             break;
     }
 }
@@ -205,12 +207,15 @@ class DivEvents {
                 item.onclick = ({target}) => {
                     if (!this.tresh.classList.contains("active"))
                         this.tresh.classList.add("active");
+                    this.tresh.disabled = false;
                     const text_content = target.textContent;
                     this.input.value = text_content;
                     if(this.id_div === "div_event")
                         check_event({div: this.div, event: text_content});
                     if(this.id_div === "div_motive")
-                        check_motive({div: this.div, motive: text_content});
+                        check_motive({motive: text_content});
+                    if(this.id_div === "div_problem")
+                        check_problem({problem: text_content})
                 }
             });
         };
@@ -219,17 +224,21 @@ class DivEvents {
             event.stopPropagation();
             this.input.value = "";
             this.tresh.classList.remove("active");
+            this.tresh.disabled = true;
 
             if(this.id_div === "div_event")
                 check_event({div: this.div, event: ""});
             if(this.id_div === "div_motive")
-                check_motive({div: this.div, motive: ""});
+                check_motive({motive: ""});
+            if(this.id_div === "div_problem")
+                check_problem({problem: ""})
         };
 
         this.input.oninput = (event) => {
             if (this.input.value === "")
                 return;
             this.tresh.classList.add("active");
+            this.tresh.disabled = false;
 
             let elements = [];
             this.items.forEach(item => {
@@ -249,7 +258,10 @@ class DivEvents {
                         check_event({div: this.div, event: text_content});
                         break;
                     case "div_motive":
-                        check_motive({div: this.div, motive: text_content});
+                        check_motive({motive: text_content});
+                        break;
+                    case "div_problem":
+                        check_problem({problem: text_content});
                     default:
                         break;
                 }
@@ -259,10 +271,14 @@ class DivEvents {
         this.input.onblur = () => {
             if (this.input.value === "" && this.tresh.classList.contains("active")) {
                 this.tresh.classList.remove("active");
+                this.tresh.disabled = true;
+
                 if(this.id_div === "div_event")
                     check_event({div: this.div, event: ""});
                 if(this.id_div === "div_motive")
-                    check_motive({div: this.div, motive: ""});
+                    check_motive({motive: ""});
+                if(this.id_div === "div_problem")
+                    check_problem({problem: ""})
             }
             window.setTimeout(() => {
                 this.div.classList.remove("open");
@@ -292,7 +308,11 @@ let div_roullet_and_validator = null;
 let radios_roullet_and_validator = [];
 let div_tripulation = null;
 let radios_tripulation = []
-let x = null;
+
+let row_problem, div_problem, problem = null;
+let div_limpador_espelho, div_embreagem_caixa = null;
+let radios_limpador_espelho, radios_embreagem_caixa = [];
+
 
 async function load_wpp(){
     const response = await fetch(`/wpp/${operator.value}/${password.value}`)
@@ -330,6 +350,14 @@ async function load_wpp(){
     radios_roullet_and_validator = div_roullet_and_validator.querySelectorAll("input");
     div_tripulation = content_wpp.querySelector("#div_tripulation");
     radios_tripulation = div_tripulation.querySelectorAll("input");
+
+    row_problem = content_wpp.querySelector("#row_problem");
+    div_problem =  new DivEvents(row_problem.querySelector("#div_problem"));
+
+    div_limpador_espelho = content_wpp.querySelector("#div_limpador_espelho");
+    radios_limpador_espelho = div_limpador_espelho.querySelectorAll("input");
+    div_embreagem_caixa = content_wpp.querySelector("#div_embreagem_caixa");
+    radios_embreagem_caixa = div_embreagem_caixa.querySelectorAll("input");
 }
 
 load_wpp();
@@ -362,6 +390,7 @@ document.querySelector("#open-wpp").onclick = function(_) {
     div_directions.active_events();
     div_event.active_events();
     div_motive.active_events();
+    div_problem.active_events();
 
 }
 
@@ -375,4 +404,5 @@ document.querySelector("#close-wpp").onclick = function(_) {
     div_directions.remove_events();
     div_event.remove_events();
     div_motive.remove_events();
+    div_problem.remove_events();
 }

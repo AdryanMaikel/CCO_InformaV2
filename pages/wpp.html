@@ -33,7 +33,7 @@
             &.active{scale: 1}
         }
 
-        &.toggle{
+        &.toggle{  
             &.active{
                 ~ .surge{scale: 1}
                 i.fa-arrows-rotate{
@@ -129,6 +129,7 @@
         &#direction,&#minutes{width: 24px}
         &#event{width: 122px}
         &#motive{width: 270px}
+        &#problem{width: 245px}
     }
     input[type="radio"]{
         ~ i.fa-check{color: var(--c-green);scale: 0;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);}
@@ -170,7 +171,7 @@
         por quem?
         <input type="text" name="who_informed" id="who_informed" placeholder="Adryan">
         <i class="fa-solid fa-chevron-down"></i>
-        <button class="surge">
+        <button class="surge" disabled>
             <i class="fa-regular fa-trash-can"></i>
         </button>
         <ul class="list">{% for emp in emps %}
@@ -201,7 +202,7 @@
     </label>
 </div>
 <!-- Linha / Horário / Sentido -->
- <div class="row">
+<div class="row">
     <label for="line" id="div_line" class="box">
         <pre>- </pre>
         <i class="fa-solid fa-route"></i>
@@ -220,11 +221,11 @@
             <li class="item">{{ sentido }}</li>{% endfor %}
         </ul>
         <i class="fa-solid fa-chevron-down"></i>
-        <button class="surge">
+        <button class="surge" disabled>
             <i class="fa-regular fa-trash-can"></i>
         </button>
     </label>
- </div>
+</div>
 <!-- Eventos / Minutos -->
 <div class="row">
     <label for="event" id="div_event" class="box">
@@ -234,7 +235,7 @@
             <li class="item">{{ event }}</li>{% endfor %}
         </ul>
         <i class="fa-solid fa-chevron-down"></i>
-        <button class="surge">
+        <button class="surge" disabled>
             <i class="fa-regular fa-trash-can"></i>
         </button>
     </label>
@@ -287,7 +288,7 @@
             <li class="item">{{ motive }}</li>{% endfor %}
         </ul>
         <i class="fa-solid fa-chevron-down"></i>
-        <button class="surge">
+        <button class="surge" disabled>
             <i class="fa-regular fa-trash-can"></i>
         </button>
     </label>
@@ -361,73 +362,47 @@
         <i class="fa-solid fa-check"></i>
     </label>
 </div>
-
-<!-- 
------------------------------------------------------
-
-<div id="row_problems" class="row revel">
-  <label id="box_problems" for="problem" class="box">
-    <span>Problema:</span>
-    <input type="text" name="problem" id="problem">
-    <i class="fa-solid fa-chevron-down icon"></i>
-  </label>
-  <ul class="list" id="list_problems"></ul>
-  <div class="box mini trash surge">
-    <i class="fa-regular fa-trash-can icon"></i>
-  </div>
-</div>
-  
-<div id="row_limpador_espelho" class="row revel">
-  <div class="box">
-    <span>Qual?</span>
-    <label for="Limpador" class="box">
-      <input type="radio" name="limpador_espelho" id="Limpador" checked>
-      <span>Limpador</span>
-      <i class="fa-solid fa-check icon"></i>
+<!-- Problema -->
+<div id="row_problem" class="row h0">
+    <label for="problem" id="div_problem" class="box">
+        <pre>Problema: </pre>
+        <input type="text" name="problem" id="problem" disabled>
+        <ul class="list">{% for problem in problems %}
+            <li class="item">{{ problem }}</li>{% endfor %}
+        </ul>
+        <i class="fa-solid fa-chevron-down"></i>
+        <button class="surge" disabled>
+            <i class="fa-regular fa-trash-can"></i>
+        </button>
     </label>
-    <label for="Espelho" class="box">
-      <input type="radio" name="limpador_espelho" id="Espelho">
-      <span>Espelho</span>
-      <i class="fa-solid fa-check icon"></i>
-    </label>
-  </div>
 </div>
-<div id="row_embreagem_caixa" class="row revel">
-  <div class="box">
-    <span>Qual?</span>
-    <label for="Embreagem" class="box">
-      <input type="radio" name="embreagem_caixa" id="Embreagem" checked>
-      <span>Embreagem</span>
-      <i class="fa-solid fa-check icon"></i>
+<!-- Limpador / Espelho -->
+<div id="div_limpador_espelho" class="row h0">
+    Qual?
+    <label for="limpador" class="box">
+        <input type="radio" name="limpador_espelho" id="limpador" hidden checked disabled>
+        <pre>Limpador</pre>
+        <i class="fa-solid fa-check"></i>
     </label>
-    <label for="Caixa" class="box">
-      <input type="radio" name="embreagem_caixa" id="Caixa">
-      <span>Caixa</span>
-      <i class="fa-solid fa-check icon"></i>
-    </label>
-  </div>
-</div>
 
-
-<div id="row_button" class="row footer">
-  <label for="generate_cco_informa" class="box">
-    <span>GERAR *CCO INFORMA*</span>
-    <input type="submit" value="" id="generate_cco_informa">
-  </label>
-  <div id="generate_other" class="box buttons">
-    <div class="icons"><i class="fa-solid fa-plus icon"></i></div>
-  </div>
-  -->
-  <!-- <div id="send_sheets" class="box buttons">
-    <div class="icons">
-      <i class="fa-solid fa-paper-plane icon"></i>
-    </div>
-  </div> -->
-  <!-- <div id="reset_cco_informa" class="box buttons">
-    <div class="icons">
-      <i class="fa-solid fa-skull icon"></i> -->
-    <!-- </div>
-  </div>
+    <label for="espelho" class="box">
+        <input type="radio" name="limpador_espelho" id="espelho" hidden disabled>
+        <pre>Espelho</pre>
+        <i class="fa-solid fa-check"></i>
+    </label>
 </div>
-</form>
--->
+<!-- Embreagem / Caixa -->
+<div id="div_embreagem_caixa" class="row h0">
+    Qual?
+    <label for="embreagem" class="box">
+        <input type="radio" name="embreagem_caixa" id="embreagem" hidden checked disabled>
+        <pre>Embreagem</pre>
+        <i class="fa-solid fa-check"></i>
+    </label>
+
+    <label for="caixa" class="box">
+        <input type="radio" name="embreagem_caixa" id="caixa" hidden disabled>
+        <pre>Caixa</pre>
+        <i class="fa-solid fa-check"></i>
+    </label>
+</div>
