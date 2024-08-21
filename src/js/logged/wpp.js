@@ -96,6 +96,12 @@ function check_motive({div, motive}) {
     if(!div_gps.classList.contains("h0"))
         div_gps.classList.add("h0");
     radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
+    div_congestion.classList.add("h0");
+    congestion.disabled = true;
+    div_roullet_and_validator.classList.add("h0");
+    radios_roullet_and_validator.forEach(input=>input.disabled = true);
+    div_tripulation.classList.add("h0");
+    radios_tripulation.forEach(input=>input.disabled = true);
 
     switch (motive) {
         case "Adiantado com autorização":
@@ -118,6 +124,7 @@ function check_motive({div, motive}) {
             if(!div_gps.classList.contains("h0"))
                 div_gps.classList.add("h0");
             radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
+
             div_event.input.value = "atrasada";
             div_event.tresh.classList.add("active");
             check_event({div: div_event.div, event: "atrasada"});
@@ -129,10 +136,14 @@ function check_motive({div, motive}) {
             if(!div_gps.classList.contains("h0"))
                 div_gps.classList.add("h0");
             radios_gps.forEach(input=>{input.disabled = true;input.onchange = null;});
-        
+
+            div_congestion.classList.remove("h0");
+            congestion.disabled = false;
+            setTimeout(()=>congestion.focus(), 150);
             break;
         case "Falta de Tripulação":
-
+            div_tripulation.classList.remove("h0");
+            radios_tripulation.forEach(input=>input.disabled = false);
             break;
         case "GPS com problemas de Comunicação":
             if(div_gps.classList.contains("h0"))
@@ -155,6 +166,10 @@ function check_motive({div, motive}) {
                     }
                 }
             });
+            break;
+        case "Validador/ Roleta":
+            div_roullet_and_validator.classList.remove("h0");
+            radios_roullet_and_validator.forEach(input=>input.disabled = false);
             break;
         default:
             if(!div_hrs_gps.classList.contains("h0"))
@@ -272,6 +287,12 @@ let dropping_passengers = null;
 let div_motive = null;
 let div_gps, div_hrs_gps = null;
 let radios_gps, gps_hours = [];
+let div_congestion, congestion = null;
+let div_roullet_and_validator = null;
+let radios_roullet_and_validator = [];
+let div_tripulation = null;
+let radios_tripulation = []
+let x = null;
 
 async function load_wpp(){
     const response = await fetch(`/wpp/${operator.value}/${password.value}`)
@@ -303,6 +324,12 @@ async function load_wpp(){
     radios_gps.forEach(input=>input.onclick = event=>event.stopPropagation())
     div_hrs_gps = content_wpp.querySelector("#div_hrs_gps");
     gps_hours = div_hrs_gps.querySelectorAll("input");
+    div_congestion = content_wpp.querySelector("#div_congestion");
+    congestion = div_congestion.querySelector("input");
+    div_roullet_and_validator = content_wpp.querySelector("#div_roullet_and_validator");
+    radios_roullet_and_validator = div_roullet_and_validator.querySelectorAll("input");
+    div_tripulation = content_wpp.querySelector("#div_tripulation");
+    radios_tripulation = div_tripulation.querySelectorAll("input");
 }
 
 load_wpp();

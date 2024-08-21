@@ -2,7 +2,10 @@
 #wpp .content{
     font-size: 14px;
 
-    .row{margin-top: 2px;height: 25px;transition: height .25s cubic-bezier(0.46, 0.1, 1, 0.37)}
+    .row{
+        margin-top: 2px;height: 25px;transition: height .25s cubic-bezier(0.46, 0.1, 1, 0.37);
+        &.h0{margin-top: 0 !important}
+    }
 
     i{
         font-size: 15px;
@@ -12,8 +15,8 @@
     .toggle.icons{
         position: relative;width: 15px;height: 15px;
         display: flex;align-items: center;justify-content: center;
-        * {color: var(--c-red)}
-        &.active * {color: var(--c-green)}
+        *{color: var(--c-red)}
+        &.active *{color: var(--c-green)}
         .x, .y{
             position: absolute;
             font-size: 17px;
@@ -130,17 +133,21 @@
     input[type="radio"]{
         ~ i.fa-check{color: var(--c-green);scale: 0;transition: scale .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);}
         &:checked{~ i.fa-check{scale: 1}}
-        /* width: 0;
-        height: 0;
-        overflow: hidden; */
     }
 
-    #div_interrupted{
-        label pre, &.h0 ~ #div_continuation label pre{transform: translate(4px, -1px)}
-        &.h0 ~ #div_continuation{margin-top: 0}
+    #div_interrupted label pre,
+    #div_interrupted.h0 ~ #div_continuation label pre,
+    #div_interrupted ~ #div_continuation ~ #div_congestion label pre{
+        transform: translate(4px, -1px)
     }
-    #div_interrupted ~ #div_continuation label pre{transform: translateX(4px)}
     
+    #div_interrupted.h0 ~ #div_continuation.h0 ~ #div_congestion label pre,
+    #div_interrupted.h0 ~ #div_continuation ~ #div_congestion label pre,
+    #div_interrupted ~ #div_continuation.h0 ~ #div_congestion label pre,
+    #div_interrupted ~ #div_continuation label pre{
+        transform: translate(4px)
+    }
+
     .hidden{
         visibility: hidden;
         transition: visibility .5s;
@@ -316,9 +323,48 @@
         </label>
     </div>
 </div>
+<!-- Congestionamento -->
+<div id="div_congestion" class="row h0">
+    <label for="congestion" class="box">
+        <i class="fa-solid fa-location-dot"></i>
+        <pre>Onde? n</pre>
+        <input type="text" name="congestion" id="congestion" placeholder="a Av. Assis Brasil" disabled>
+    </label>
+</div>
+<!-- Validador / Roleta -->
+<div id="div_roullet_and_validator" class="row h0">
+    Qual?
+    <label for="validator" class="box">
+        <input type="radio" name="roullet_and_validator" id="validator" hidden checked disabled>
+        <pre>Validador</pre>
+        <i class="fa-solid fa-check"></i>
+    </label>
+
+    <label for="roullet" class="box">
+        <input type="radio" name="roullet_and_validator" id="roullet" hidden disabled>
+        <pre>Roleta</pre>
+        <i class="fa-solid fa-check"></i>
+    </label>
+</div>
+<!-- Motorista / Cobrador -->
+<div id="div_tripulation" class="row h0">
+    Qual?
+    <label for="motorista" class="box">
+        <input type="radio" name="tripulation" id="motorista" hidden checked disabled>
+        <pre>Motorista</pre>
+        <i class="fa-solid fa-check"></i>
+    </label>
+
+    <label for="cobrador" class="box">
+        <input type="radio" name="tripulation" id="cobrador" hidden disabled>
+        <pre>Cobrador</pre>
+        <i class="fa-solid fa-check"></i>
+    </label>
+</div>
 
 <!-- 
--------------------
+-----------------------------------------------------
+
 <div id="row_problems" class="row revel">
   <label id="box_problems" for="problem" class="box">
     <span>Problema:</span>
@@ -328,46 +374,6 @@
   <ul class="list" id="list_problems"></ul>
   <div class="box mini trash surge">
     <i class="fa-regular fa-trash-can icon"></i>
-  </div>
-</div>
-<div id="row_congestion" class="row revel">
-  <label id="box_congestion" for="congestion_locale" class="box">
-    <i class="fa-solid fa-location-dot icon"></i>
-    <span>Onde? n</span>
-    <input type="text" name="congestion_locale" id="congestion_locale" placeholder="a Av. Assis Brasil"
-      disabled>
-  </label>
-</div>
-<div id="row_tripulation" class="row revel">
-  <div class="box">
-    <span>Qual?</span>
-    <label for="motorista" class="box">
-      <i class="fa-solid fa-user icon"></i>
-      <input type="radio" name="tripulation" id="motorista" checked>
-      <span>Motorista</span>
-      <i class="fa-solid fa-check icon"></i>
-    </label>
-    <label for="cobrador" class="box">
-      <i class="fa-solid fa-user icon"></i>
-      <input type="radio" name="tripulation" id="cobrador">
-      <span>Cobrador</span>
-      <i class="fa-solid fa-check icon"></i>
-    </label>
-  </div>
-</div>
-<div id="row_roullet_and_validator" class="row revel">
-  <div class="box">
-    <span>Qual?</span>
-    <label for="roullet" class="box">
-      <input type="radio" name="roullet_and_validator" id="roullet" checked>
-      <span>Roleta</span>
-      <i class="fa-solid fa-check icon"></i>
-    </label>
-    <label for="validator" class="box">
-      <input type="radio" name="roullet_and_validator" id="validator">
-      <span>Validador</span>
-      <i class="fa-solid fa-check icon"></i>
-    </label>
   </div>
 </div>
   
