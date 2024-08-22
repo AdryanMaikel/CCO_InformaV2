@@ -29,7 +29,7 @@ function reset_motives() {
     congestion.disabled = true;
     if(!row_roullet_and_validator.classList.contains("h0"))
         row_roullet_and_validator.classList.add("h0");
-    radios_roullet_and_validator.forEach(input=>input.disabled = true);
+    radios_validator_and_roullet.forEach(input=>input.disabled = true);
     if(!row_tripulation.classList.contains("h0"))
         row_tripulation.classList.add("h0");
     radios_tripulation.forEach(input=>input.disabled = true);
@@ -144,7 +144,7 @@ function check_motive({ motive }) {
             break;
         case "Validador/ Roleta":
             row_roullet_and_validator.classList.remove("h0");
-            radios_roullet_and_validator.forEach(input=>input.disabled = false);
+            radios_validator_and_roullet.forEach(input=>input.disabled = false);
             break;
     }
 }
@@ -162,6 +162,11 @@ function check_problem({ problem }) {
                 row_embreagem_caixa.classList.remove("h0");
             radios_embreagem_caixa.forEach(input=>input.disabled = false);
             break;
+        case "Problemas na viagem anterior":
+            input_car.value = car_substitute.value;
+            car_substitute.value = "";
+            if (replace.classList.contains("active"))
+                replace.classList.remove("active");
     }
 }
 
@@ -275,12 +280,15 @@ class DivEvents {
     }
 }
 
-let informed, label_who_informed = null;
-let replace, car_substitute, directions = null;
+let informed, toggle_informed, label_who_informed = null;
+
+let input_table, input_car, replace, car_substitute = null;
+
+let input_line, input_hour, directions = null;
+
 let label_event, minutes = null;
 let row_interrupted, interrupted = null;
-let has_continued, row_continuation, continued = null;
-let dropping_passengers = null;
+let has_continued, row_continuation, continued, dropping_passengers = null;
 let toggle_has_continued, toggle_dropping_passengers = null;
 
 let label_motive = null;
@@ -288,13 +296,17 @@ let row_gps, row_hrs_gps = null;
 let radios_gps, gps_hours = [];
 let row_congestion, congestion = null;
 let row_roullet_and_validator = null;
-let radios_roullet_and_validator = [];
+let radios_validator_and_roullet = [];
 let row_tripulation = null;
 let radios_tripulation = []
 
 let row_problem, label_problem, problem = null;
 let row_limpador_espelho, row_embreagem_caixa = null;
 let radios_limpador_espelho, radios_embreagem_caixa = [];
+
+let button_generate = null;
+let informations_generated = null;
+let problema_viagem_anterior = "";
 
 
 async function load_wpp(){
@@ -303,21 +315,29 @@ async function load_wpp(){
     content_wpp.innerHTML = await response.text();
 
     informed = content_wpp.querySelector("#informed");
+    toggle_informed = informed.querySelector(".toggle");
     label_who_informed = new DivEvents(content_wpp.querySelector("#label_who_informed"));
 
+    input_table = content_wpp.querySelector("#table");
+    input_car = content_wpp.querySelector("#car");
     replace = content_wpp.querySelector("#replace");
     car_substitute = content_wpp.querySelector("#car_substitute");
 
+    input_line = content_wpp.querySelector("#line");
+    input_hour = content_wpp.querySelector("#hour");
     directions = new DivEvents(content_wpp.querySelector("#directions"));
 
     label_event = new DivEvents(content_wpp.querySelector("#label_event"));
     minutes = content_wpp.querySelector("#minutes");
+
     row_interrupted = content_wpp.querySelector("#row_interrupted");
     interrupted = row_interrupted.querySelector("input");
+
     has_continued = content_wpp.querySelector("#has_continued");
     row_continuation = content_wpp.querySelector("#row_continuation");
     continued = row_continuation.querySelector("input");
     dropping_passengers = content_wpp.querySelector("#dropping_passengers");
+
     toggle_has_continued = has_continued.querySelector(".toggle");
     toggle_dropping_passengers = dropping_passengers.querySelector(".toggle");
 
@@ -330,7 +350,7 @@ async function load_wpp(){
     row_congestion = content_wpp.querySelector("#row_congestion");
     congestion = row_congestion.querySelector("input");
     row_roullet_and_validator = content_wpp.querySelector("#row_roullet_and_validator");
-    radios_roullet_and_validator = row_roullet_and_validator.querySelectorAll("input");
+    radios_validator_and_roullet = row_roullet_and_validator.querySelectorAll("input");
     row_tripulation = content_wpp.querySelector("#row_tripulation");
     radios_tripulation = row_tripulation.querySelectorAll("input");
 
@@ -341,6 +361,9 @@ async function load_wpp(){
     radios_limpador_espelho = row_limpador_espelho.querySelectorAll("input");
     row_embreagem_caixa = content_wpp.querySelector("#row_embreagem_caixa");
     radios_embreagem_caixa = row_embreagem_caixa.querySelectorAll("input");
+
+    button_generate = content_wpp.querySelector("#generate-cco-informa");
+    informations_generated = content_wpp.querySelector("#informations-generated");
 }
 
 load_wpp();
@@ -350,7 +373,6 @@ document.querySelector("#open-wpp").onclick = function() {
     || form_login.classList.contains("open"))
         return;
     div_wpp.classList.add("open");
-    let toggle_informed = informed.querySelector(".toggle");
     informed.onclick = function() {
         if(!toggle_informed)return;
         toggle_informed.classList.toggle("active");
@@ -370,6 +392,7 @@ document.querySelector("#open-wpp").onclick = function() {
     label_motive.active_events();
     label_problem.active_events();
 
+    button_generate.onclick = generate_cco_informa;
 }
 
 document.querySelector("#close-wpp").onclick = function() {
@@ -381,4 +404,293 @@ document.querySelector("#close-wpp").onclick = function() {
     label_event.remove_events();
     label_motive.remove_events();
     label_problem.remove_events();
+
+    button_generate.onclick = null;
+}
+
+function get_full_date() {
+    const date = new Date()
+    const day = String(date.getDate()).padStart(2, "0")
+    const month = String(date.getMonth() + 1).padStart(2, "0")
+    const year = date.getFullYear()
+    return `${day}/${month}/${year}`
+}
+
+function get_who_informed() {
+    const was_informed = toggle_informed.classList.contains("active")
+    ? "Conforme informado ao CCO pelo"
+    : "Conforme contato feito pelo CCO ao"
+    const name = label_who_informed.input.value;
+    const informed_by = ["Navegantes", "Nortran", "Sopal"].includes(name)
+    ? `largador da ${name}`
+    : `fiscal ${name}`;
+    return `${was_informed} ${informed_by}`
+}
+
+function process_event() {
+    let _event = "Viagem ";
+    let _ocorrencia = "";
+    switch (label_event.input.value) {
+        case "adiantada":
+            _event += `realizada com ${minutes.value} minutos antes do horário previsto,`;
+            _ocorrencia = "Problemas mecânicos";
+            break;
+        case "atrasada":
+            _event += `realizada com ${minutes.value} minutos de atraso`;
+            _ocorrencia = "Problemas mecânicos - Atrasado";
+            break;
+        case "perdida":
+            _event += "não realizada";
+            _ocorrencia = "Problemas mecânicos - Viagem perdida";
+            break;
+        case "realizada a frente":
+            _event += `realizada a partir d${continued.value}`;
+            _ocorrencia = "Problemas mecânicos - Viagem realizada a frente";
+            break;
+        case "interrompida":
+            _event += `interrompida n${interrupted.value}`;
+            _ocorrencia = "Problemas mecânicos - Viagem interrompida";
+            break;
+    }
+    return [ _ocorrencia, _event ];
+}
+
+function process_motive(_event) {
+    let _motive = "";
+    switch (label_motive.input.value) {
+        case "Acidente":
+            _motive += `Carro ${input_car.value} ter se envolvido em um acidente`;
+            break;
+        case "Adiantado com autorização":
+            _event += ` autorizado pelo ${label_who_informed.input.value}.`
+            break
+        case "Adiantado sem autorização":
+            _event += ` sem autorização da fiscalização.`
+            break
+        case "Assalto":
+            _motive += `Carro ${input_car.value} ter sido assaltado`;
+            break;
+        case "Atrasado":
+            _motive += "Atraso";
+            break;
+        case "Avaria":
+            _motive += `Carro ${input_car.value} ter sofrido avaria`;
+            break;
+        case "Congestionamento":
+            if (congestion.value.length > 0)
+                _motive += `Congestionamento n${congestion.value}`;
+            else
+                congestion.focus();
+            break;
+        case "Falta de Carro":
+            _motive += "Falta de carro";
+            break;
+        case "Falta de Tripulação":
+            let motorista = radios_tripulation[0];
+            _motive += "Falta de " + String(motorista.checked ? "motorista" : "cobrador");
+            break;
+        case "Pneu Furado":
+            _motive += "Pneu furado do carro "+input_car.value;
+            break;
+        case "Problema com passageiro":
+            _motive += "problema com passageiro";
+            break;
+        case "Tempo insuficiente":
+            _motive += "tempo insuficiente para realizar viagem";
+            break;
+        case "Validador/ Roleta":
+            let roullet = radios_validator_and_roullet[0];
+            _motive += "Problemas n" + String(roullet.checked ? "a roleta" : "o validador");
+            _motive += ` do carro ${input_car.value}`;
+            break;
+        case "Vandalismo":
+            _motive += `Carro ${input_car.value} ter sofrido vandalismo`.
+            break;
+        case "Vistoria EPTC":
+            _motive += "Vistoria da EPTC";
+            break;
+        case "Problemas mecânicos":
+            switch (label_problem.input.value) {
+                case "Carroceria - Ar Condicionado":
+                    _motive += `Problemas no ar-condicionado do carro ${input_car.value}`;
+                    break;
+                case "Carroceria - Elevador APD":
+                    _motive += `Problemas no elevador APD do carro ${input_car.value}`;
+                    break;
+                case "Carroceria - Itens de segurança":
+                    _motive += "";
+                    break;
+                case "Carroceria - Limpador / Espelho":
+                    let limpador = radios_limpador_espelho[0];
+                    _motive += limpador.checked ? "Problemas no limpador" : "Queda do espelho";
+                    _motive += ` do carro ${input_car.value}`;
+                    break;
+                case "Carroceria - Outros":
+                    _motive += "";
+                    break;
+                case "Carroceria - Portas":
+                    _motive += `Problemas nas portas do carro ${input_car.value}`;
+                    break;
+                case "Elétrica - Alternador":
+                    _motive += `Problemas no alternador do carro ${input_car.value}`;
+                    break;
+                case "Elétrica - Iluminação interna":
+                    _motive += `Problemas de iluminação interna no carro ${input_car.value}`;
+                    break;
+                case "Elétrica - Letreiro":
+                    _motive += `Problemas no letreiro do carro ${input_car.value}`;
+                    break;
+                case "Elétrica - Pane elétrica":
+                    _motive += `Pane elétrica do carro ${input_car.value}`;
+                    break;
+                case "Elétrica - Sem arranque":
+                    _motive += `Carro ${input_car.value} não pegar`;
+                    break;
+                case "Motor - Cigarra/Aquecimento":
+                    _motive += `Carro ${input_car.value} ter super aquecido`;
+                    break;
+                case "Motor - Cigarra/óleo motor":
+                    _motive += `Carro ${input_car.value} ter super aquecido`;
+                    break;
+                case "Motor - Correias":
+                    _motive += `Problemas nas correias do motor do carro ${input_car.value}`;
+                    break;
+                case "Motor - Sem Força":
+                    _motive += `Carro ${input_car.value} estar sem força`;
+                    break;
+                case "Motor - Vazamento de água":
+                    _motive += `Vazamento de água no carro ${input_car.value}`;
+                    break;
+                case "Motor - Vazamento de óleo Diesel":
+                    _motive += `Vazamento de diesel no carro ${input_car.value}`;
+                    break;
+                case "Motor - Vazamento de óleo motor":
+                    _motive += `Vazamento de óleo do motor no carro ${input_car.value}`;
+                    break;
+                case "Problemas na viagem anterior":
+                    _motive = problema_viagem_anterior;
+                    break;
+                case "Suspensão - Arriada":
+                    _motive += `Problemas na suspensão do carro ${input_car.value}`;
+                    break;
+                case "Suspensão - Carro atravessado":
+                    _motive += `Carro ${input_car.value} estar atravessado`;
+                    break;
+                case "Suspensão - Embreagem / Caixa":
+                    let embreagem = radios_embreagem_caixa[0];
+                    _motive += "Problemas na " + String(embreagem.checked ? "embreagem" : "caixa das marchas");
+                    _motive += ` do carro ${input_car.value}`;
+                break;
+                case "Suspensão - Freio":
+                    _motive += `Problemas nos freios do carro ${input_car.value}`;
+                    break;
+                case "Suspensão - Roda":
+                    _motive += `Problemas nas rodas do carro ${input_car.value}`;
+                    break;
+                case "Suspensão - Vazamento de ar":
+                    _motive += `Vazamento de ar no carro ${input_car.value}`;
+                    break;
+            }
+            break;
+  }
+
+  if (problema_viagem_anterior != _motive)
+    problema_viagem_anterior = `${_motive} na viagem anterior`;
+
+  if (replace.classList.contains("active"))
+    _motive += `, trocado pelo carro ${car_substitute.value}`;
+
+  let continued_text = "";
+  if (toggle_has_continued.classList.contains("active")) {
+        if (continued.value.length > 0) {
+            continued_text += String(car_substitute.disabled ? " e " : " que ");
+            continued_text += `continuou puxando viagem a partir d${continued.value}`;
+            if (toggle_dropping_passengers.classList.contains("active"))
+                continued_text += " somente largando os passageiros";
+            _motive += continued_text;
+        } else {
+            continued.focus();
+        }
+    }
+  return [ _motive, _event ]
+}
+
+function generate_cco_informa() {
+    let [_ocorrencia, _event]  = process_event()
+    let _motive = "";
+    [_motive, _event] = process_motive(_event);
+
+    let cco_informa = `\
+*CCO INFORMA*
+${get_who_informed()}
+- ${input_table.value}, carro ${input_car.value}
+- ${input_line.value} das ${input_hour.value}, ${directions.input.value}
+- ${_event}
+- Motivo: ${_motive}`;
+
+    const _json = {}
+    if (last_row) {
+        // _json.row = parseInt(last_row.getAttribute("row"));
+        _json.A = get_full_date();
+        _json.B = input_table.value;
+        _json.C = input_line.value;
+        _json.D = input_car.value;
+        _json.E = String(!car_substitute.disabled ? car_substitute.value : "");
+        _json.F = input_hour.value;
+        _json.G = directions.input.value;
+        if (label_motive.input.value == "Problemas mecânicos") {
+            _json.H =  _ocorrencia;
+            _json.I = label_problem.input.value;
+        } else {
+            _json.H = label_motive.input.value;
+            _json.I = "";
+        }
+        _json.J = `${_event} devido a ${_motive.charAt(0).toLowerCase()}${_motive.slice(1)}`;
+        _json.K = operator.value;
+    }
+    
+    console.log(_json);
+
+    informations_generated.innerHTML += `\
+<div class="row cco-informa">
+    <textarea>${cco_informa}</textarea>
+    <div class="col center">
+        <button class="copy" onclick="copy_cco_informa(event)"><i class="fa-solid fa-copy"></i></button>
+        <button class="send" onclick='insert_to_table(${JSON.stringify(_json, "", "")})'><i class="fa-solid fa-paper-plane"></i></button>
+        <button class="remove"><i class="fa-regular fa-star"></i></button>
+        <button class="favorite"><i class="fa-solid fa-trash-can"></i></button>
+    </div>
+</div>
+`
+   
+
+}
+
+
+function copy_cco_informa(event) {
+    const text_to_copy = event.target.closest(".cco-informa").querySelector("textarea").value;
+    navigator.clipboard.writeText(text_to_copy).then(() => {
+        console.log("Texto copiado!");
+    }).catch(error => {
+        console.error('Erro ao copiar texto: ', error);
+    });
+}
+
+async function insert_to_table(data) {
+    data.row = parseInt(last_row.getAttribute("row"));
+    overlay.classList.remove("w0");
+    const response = await fetch(
+        `/table/${operator.value}/${password.value}`,
+        {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        }
+    );
+    if(await response.text() == "Sucesso!"){
+        await get_table();
+        setTimeout(()=>overlay.classList.add("w0"), 500)
+        return;
+    }
+    window.location.reload();
 }

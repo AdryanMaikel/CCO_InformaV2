@@ -192,7 +192,7 @@ function cancel_edit_row() {
     editing_row = {element: null, values: {}, method: null};
 
     div_actions_table.classList.remove("open");
-    last_row.classList.remove("open");
+    last_row.classList.add("h0");
     input_number_row.classList.remove("open");
     button_add_row.parentElement.classList.remove("open");
 
@@ -219,7 +219,7 @@ async function add_row() {
     last_row.querySelectorAll("textarea").forEach(
         textarea=>editing_row.values[textarea.getAttribute("cell")] = textarea.value
     );
-    last_row.classList.add("open");
+    last_row.classList.remove("h0");
     button_add_row.parentElement.classList.add("open");
     input_number_row.classList.add("open");
     div_actions_table.classList.add("open");

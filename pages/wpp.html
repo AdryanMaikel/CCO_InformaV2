@@ -1,6 +1,8 @@
 <style>
 #wpp .content{
     font-size: 14px;
+    height: calc(100% - 43px);
+    overflow-y: auto;
 
     .row{
         margin-top: 2px;height: 25px;transition: height .25s cubic-bezier(0.46, 0.1, 1, 0.37);
@@ -154,257 +156,293 @@
         transform: translate(4px)
     }
 
-    
+    #result_cco_informa{
+        width: 400px;
+        height: 300px;
+        top: 0;
+        position: relative;
+    }
 
+    #informations-generated{
+        .row{
+            height: auto !important;
+            border-top: 1px solid var(--c-black-white);
+            border-bottom: 1px solid var(--c-black-white);
+            textarea{
+                width: 450px;
+                height: 140px;
+                resize: none;
+            }
+            .col.center{
+                width: 50px;
+                height: 135px;
+                gap: 10px;
+                justify-content: center;
+                i{font-size: 18px}
+            }
+        }
+    }
 }
 </style>
+<div class="col">
+    <!-- Informado -->
+    <div class="row">
+        <div id="informed" class="box">
+            Informado?
+            <div class="toggle icons">
+                <i class="fa-solid fa-check x"></i>
+                <i class="fa-solid fa-xmark y"></i>
+            </div>
+        </div>
 
-<!-- Informado -->
-<div class="row">
-    <div id="informed" class="box">
-        Informado?
-        <div class="toggle icons">
-            <i class="fa-solid fa-check x"></i>
-            <i class="fa-solid fa-xmark y"></i>
+        <label for="who_informed" id="label_who_informed" class="box">
+            por quem?
+            <input type="text" name="who_informed" id="who_informed" placeholder="Adryan">
+            <i class="fa-solid fa-chevron-down"></i>
+            <button class="surge" disabled>
+                <i class="fa-regular fa-trash-can"></i>
+            </button>
+            <ul class="list">{% for emp in emps %}
+                <li class="item">{{ emp }}</li>{% endfor %}
+            </ul>
+        </label>
+    </div>
+    <!-- Tabela / Carro / Trc de Carro -->
+    <div class="row">
+        <label for="table" class="box">
+            <pre>- </pre>
+            <i class="fa-solid fa-clipboard"></i>
+            <input type="text" name="table" id="table" placeholder="SD73/005" maxlength="9">
+        </label>
+
+        <label for="car" class="box">
+            <i class="fa-solid fa-bus"></i>
+            <input type="text" name="car" id="car" placeholder="6669" maxlength="4">
+        </label>
+
+        <button id="replace" class="toggle">
+            <i class="fa-solid fa-arrows-rotate"></i>    
+        </button>
+
+        <label for="car_substitute" class="box surge">
+            <i class="fa-solid fa-bus"></i>
+            <input type="text" name="car_substitute" id="car_substitute" placeholder="6668" maxlength="4" disabled>
+        </label>
+    </div>
+    <!-- Linha / Horário / Sentido -->
+    <div class="row">
+        <label for="line" class="box">
+            <pre>- </pre>
+            <i class="fa-solid fa-route"></i>
+            <input type="text" name="line" id="line" placeholder="SD73" maxlength="5">
+        </label>
+
+        <label for="hour" class="box">
+            <i class="fa-solid fa-clock"></i>
+            <input type="text" name="hour" id="hour" class="hour" placeholder="00:00" maxlength="5">
+        </label>
+
+        <label for="direction" id="directions" class="box">
+            <i class="fa-solid fa-compass"></i>
+            <input type="text" name="direction" id="direction" placeholder="BC" maxlength="2">
+            <ul class="list">{% for sentido in sentidos %}
+                <li class="item">{{ sentido }}</li>{% endfor %}
+            </ul>
+            <i class="fa-solid fa-chevron-down"></i>
+            <button class="surge" disabled>
+                <i class="fa-regular fa-trash-can"></i>
+            </button>
+        </label>
+    </div>
+    <!-- Eventos / Minutos -->
+    <div class="row">
+        <label for="event" id="label_event" class="box">
+            <pre>- Viagem </pre>
+            <input type="text" name="event" id="event" placeholder="foi...">
+            <ul class="list">{% for event in events %}
+                <li class="item">{{ event }}</li>{% endfor %}
+            </ul>
+            <i class="fa-solid fa-chevron-down"></i>
+            <button class="surge" disabled>
+                <i class="fa-regular fa-trash-can"></i>
+            </button>
+        </label>
+
+        <label for="minutes" id="label_minutes" class="box surge">
+            <i class="fa-solid fa-clock"></i>
+            <input type="text" name="minutes" id="minutes" placeholder="00" disabled>
+            <pre> minutos</pre>
+        </label>
+    </div>
+    <!-- Interrompida / Continuou puxando viagem -->
+    <div id="row_interrupted" class="row h0">
+        <label for="interrupted" class="box">
+            <i class="fa-solid fa-location-dot"></i>
+            <pre>N</pre>
+            <input type="text" name="interrupted" id="interrupted" maxlength="100" placeholder="a Av. Assis Brasil" disabled>
+        </label>
+
+        <div id="has_continued" class="box">
+            continuou?
+            <div class="toggle icons">
+                <i class="fa-solid fa-check x"></i>
+                <i class="fa-solid fa-xmark y"></i>
+            </div>
         </div>
     </div>
+    <!-- Local que continuou puxando / Largando os passageiros -->
+    <div id="row_continuation" class="row h0">
+        <label for="continuation" class="box">
+            <i class="fa-solid fa-location-dot"></i>
+            <pre>A partir d</pre>
+            <input type="text" name="continuation" id="continuation" maxlength="100" placeholder="a Av. Assis Brasil" disabled>
+        </label>
 
-    <label for="who_informed" id="label_who_informed" class="box">
-        por quem?
-        <input type="text" name="who_informed" id="who_informed" placeholder="Adryan">
-        <i class="fa-solid fa-chevron-down"></i>
-        <button class="surge" disabled>
-            <i class="fa-regular fa-trash-can"></i>
-        </button>
-        <ul class="list">{% for emp in emps %}
-            <li class="item">{{ emp }}</li>{% endfor %}
-        </ul>
-    </label>
-</div>
-<!-- Tabela / Carro / Trc de Carro -->
-<div class="row">
-    <label for="table" class="box">
-        <pre>- </pre>
-        <i class="fa-solid fa-clipboard"></i>
-        <input type="text" name="table" id="table" placeholder="SD73/005" maxlength="9">
-    </label>
-
-    <label for="car" class="box">
-        <i class="fa-solid fa-bus"></i>
-        <input type="text" name="car" id="car" placeholder="6669" maxlength="4">
-    </label>
-
-    <button id="replace" class="toggle">
-        <i class="fa-solid fa-arrows-rotate"></i>    
-    </button>
-
-    <label for="car_substitute" class="box surge">
-        <i class="fa-solid fa-bus"></i>
-        <input type="text" name="car_substitute" id="car_substitute" placeholder="6668" maxlength="4" disabled>
-    </label>
-</div>
-<!-- Linha / Horário / Sentido -->
-<div class="row">
-    <label for="line" class="box">
-        <pre>- </pre>
-        <i class="fa-solid fa-route"></i>
-        <input type="text" name="line" id="line" placeholder="SD73" maxlength="5">
-    </label>
-
-    <label for="hour" class="box">
-        <i class="fa-solid fa-clock"></i>
-        <input type="text" name="hour" id="hour" class="hour" placeholder="00:00" maxlength="5">
-    </label>
-
-    <label for="direction" id="directions" class="box">
-        <i class="fa-solid fa-compass"></i>
-        <input type="text" name="direction" id="direction" placeholder="BC" maxlength="2">
-        <ul class="list">{% for sentido in sentidos %}
-            <li class="item">{{ sentido }}</li>{% endfor %}
-        </ul>
-        <i class="fa-solid fa-chevron-down"></i>
-        <button class="surge" disabled>
-            <i class="fa-regular fa-trash-can"></i>
-        </button>
-    </label>
-</div>
-<!-- Eventos / Minutos -->
-<div class="row">
-    <label for="event" id="label_event" class="box">
-        <pre>- Viagem </pre>
-        <input type="text" name="event" id="event" placeholder="foi...">
-        <ul class="list">{% for event in events %}
-            <li class="item">{{ event }}</li>{% endfor %}
-        </ul>
-        <i class="fa-solid fa-chevron-down"></i>
-        <button class="surge" disabled>
-            <i class="fa-regular fa-trash-can"></i>
-        </button>
-    </label>
-
-    <label for="minutes" id="label_minutes" class="box surge">
-        <i class="fa-solid fa-clock"></i>
-        <input type="text" name="minutes" id="minutes" placeholder="00" disabled>
-        <pre> minutos</pre>
-    </label>
-</div>
-<!-- Interrompida / Continuou puxando viagem -->
-<div id="row_interrupted" class="row h0">
-    <label for="interrupted" class="box">
-        <i class="fa-solid fa-location-dot"></i>
-        <pre>N</pre>
-        <input type="text" name="interrupted" id="interrupted" maxlength="100" placeholder="a Av. Assis Brasil" disabled>
-    </label>
-
-    <div id="has_continued" class="box">
-        continuou?
-        <div class="toggle icons">
-            <i class="fa-solid fa-check x"></i>
-            <i class="fa-solid fa-xmark y"></i>
+        <div id="dropping_passengers" class="box hidden">
+            <i class="fa-solid fa-person-running"></i>
+            <pre>largando os passageiros</pre>
+            <div class="toggle icons">
+                <i class="fa-solid fa-check x"></i>
+                <i class="fa-solid fa-xmark y"></i>
+            </div>
         </div>
     </div>
-</div>
-<!-- Local que continuou puxando / Largando os passageiros -->
-<div id="row_continuation" class="row h0">
-    <label for="continuation" class="box">
-        <i class="fa-solid fa-location-dot"></i>
-        <pre>A partir d</pre>
-        <input type="text" name="continuation" id="continuation" maxlength="100" placeholder="a Av. Assis Brasil" disabled>
-    </label>
+    <!-- Motivo -->
+    <div class="row">
+        <label for="motive" id="label_motive" class="box">
+            <pre>- Motivo: </pre>
+            <input type="text" name="motive" id="motive" placeholder="Quebra?">
+            <ul class="list">{% for motive in motives %}
+                <li class="item">{{ motive }}</li>{% endfor %}
+            </ul>
+            <i class="fa-solid fa-chevron-down"></i>
+            <button class="surge" disabled>
+                <i class="fa-regular fa-trash-can"></i>
+            </button>
+        </label>
+    </div>
+    <!-- GPS com Problemas -->
+    <div class="col w100">
+        <div id="row_gps" class="row h0">
+            Qual?
+            <label for="parou" class="box">
+                <input type="radio" name="gps" id="parou" hidden checked disabled>
+                Parou de Comunicar
+                <i class="fa-solid fa-check"></i>
+            </label>
 
-    <div id="dropping_passengers" class="box hidden">
-        <i class="fa-solid fa-person-running"></i>
-        <pre>largando os passageiros</pre>
-        <div class="toggle icons">
-            <i class="fa-solid fa-check x"></i>
-            <i class="fa-solid fa-xmark y"></i>
+            <label for="trancou" class="box">
+                <input type="radio" name="gps" id="trancou" hidden disabled>
+                Trancou no centro
+                <i class="fa-solid fa-check"></i>
+            </label>
+        </div>
+
+        <div id="row_hrs_gps" class="row h0">
+            <label for="gps_hr_stop" class="box">
+                <i class="fa-solid fa-clock"></i>
+                <input type="text" name="gps_hr_stop" id="gps_hr_stop" class="hour" placeholder="00:00" maxlength="5" disabled>
+                <pre>parou.</pre>
+            </label>
+
+            <label for="gps_hr_return" class="box">
+                <i class="fa-solid fa-clock"></i>
+                <input type="text" name="gps_hr_return" id="gps_hr_return" class="hour" placeholder="00:00" maxlength="5" disabled>
+                <pre>voltou.</pre>
+            </label>
         </div>
     </div>
-</div>
-<!-- Motivo -->
-<div class="row">
-    <label for="motive" id="label_motive" class="box">
-        <pre>- Motivo: </pre>
-        <input type="text" name="motive" id="motive" placeholder="Quebra?">
-        <ul class="list">{% for motive in motives %}
-            <li class="item">{{ motive }}</li>{% endfor %}
-        </ul>
-        <i class="fa-solid fa-chevron-down"></i>
-        <button class="surge" disabled>
-            <i class="fa-regular fa-trash-can"></i>
-        </button>
-    </label>
-</div>
-<!-- GPS com Problemas -->
-<div class="col w100">
-    <div id="row_gps" class="row h0">
+    <!-- Congestionamento -->
+    <div id="row_congestion" class="row h0">
+        <label for="congestion" class="box">
+            <i class="fa-solid fa-location-dot"></i>
+            <pre>Onde? n</pre>
+            <input type="text" name="congestion" id="congestion" placeholder="a Av. Assis Brasil" disabled>
+        </label>
+    </div>
+    <!-- Validador / Roleta -->
+    <div id="row_roullet_and_validator" class="row h0">
         Qual?
-        <label for="parou" class="box">
-            <input type="radio" name="gps" id="parou" hidden checked disabled>
-            Parou de Comunicar
+        <label for="validator" class="box">
+            <input type="radio" name="roullet_and_validator" id="validator" hidden checked disabled>
+            <pre>Validador</pre>
             <i class="fa-solid fa-check"></i>
         </label>
 
-        <label for="trancou" class="box">
-            <input type="radio" name="gps" id="trancou" hidden disabled>
-            Trancou no centro
+        <label for="roullet" class="box">
+            <input type="radio" name="roullet_and_validator" id="roullet" hidden disabled>
+            <pre>Roleta</pre>
             <i class="fa-solid fa-check"></i>
         </label>
     </div>
-
-    <div id="row_hrs_gps" class="row h0">
-        <label for="gps_hr_stop" class="box">
-            <i class="fa-solid fa-clock"></i>
-            <input type="text" name="gps_hr_stop" id="gps_hr_stop" class="hour" placeholder="00:00" maxlength="5" disabled>
-            <pre>parou.</pre>
+    <!-- Motorista / Cobrador -->
+    <div id="row_tripulation" class="row h0">
+        Qual?
+        <label for="motorista" class="box">
+            <input type="radio" name="tripulation" id="motorista" hidden checked disabled>
+            <pre>Motorista</pre>
+            <i class="fa-solid fa-check"></i>
         </label>
 
-        <label for="gps_hr_return" class="box">
-            <i class="fa-solid fa-clock"></i>
-            <input type="text" name="gps_hr_return" id="gps_hr_return" class="hour" placeholder="00:00" maxlength="5" disabled>
-            <pre>voltou.</pre>
+        <label for="cobrador" class="box">
+            <input type="radio" name="tripulation" id="cobrador" hidden disabled>
+            <pre>Cobrador</pre>
+            <i class="fa-solid fa-check"></i>
         </label>
     </div>
-</div>
-<!-- Congestionamento -->
-<div id="row_congestion" class="row h0">
-    <label for="congestion" class="box">
-        <i class="fa-solid fa-location-dot"></i>
-        <pre>Onde? n</pre>
-        <input type="text" name="congestion" id="congestion" placeholder="a Av. Assis Brasil" disabled>
-    </label>
-</div>
-<!-- Validador / Roleta -->
-<div id="row_roullet_and_validator" class="row h0">
-    Qual?
-    <label for="validator" class="box">
-        <input type="radio" name="roullet_and_validator" id="validator" hidden checked disabled>
-        <pre>Validador</pre>
-        <i class="fa-solid fa-check"></i>
-    </label>
+    <!-- Problema -->
+    <div id="row_problem" class="row h0">
+        <label for="problem" id="label_problem" class="box">
+            <pre>Problema: </pre>
+            <input type="text" name="problem" id="problem" disabled>
+            <ul class="list">{% for problem in problems %}
+                <li class="item">{{ problem }}</li>{% endfor %}
+            </ul>
+            <i class="fa-solid fa-chevron-down"></i>
+            <button class="surge" disabled>
+                <i class="fa-regular fa-trash-can"></i>
+            </button>
+        </label>
+    </div>
+    <!-- Limpador / Espelho -->
+    <div id="row_limpador_espelho" class="row h0">
+        Qual?
+        <label for="limpador" class="box">
+            <input type="radio" name="limpador_espelho" id="limpador" hidden checked disabled>
+            <pre>Limpador</pre>
+            <i class="fa-solid fa-check"></i>
+        </label>
 
-    <label for="roullet" class="box">
-        <input type="radio" name="roullet_and_validator" id="roullet" hidden disabled>
-        <pre>Roleta</pre>
-        <i class="fa-solid fa-check"></i>
-    </label>
-</div>
-<!-- Motorista / Cobrador -->
-<div id="row_tripulation" class="row h0">
-    Qual?
-    <label for="motorista" class="box">
-        <input type="radio" name="tripulation" id="motorista" hidden checked disabled>
-        <pre>Motorista</pre>
-        <i class="fa-solid fa-check"></i>
-    </label>
+        <label for="espelho" class="box">
+            <input type="radio" name="limpador_espelho" id="espelho" hidden disabled>
+            <pre>Espelho</pre>
+            <i class="fa-solid fa-check"></i>
+        </label>
+    </div>
+    <!-- Embreagem / Caixa -->
+    <div id="row_embreagem_caixa" class="row h0">
+        Qual?
+        <label for="embreagem" class="box">
+            <input type="radio" name="embreagem_caixa" id="embreagem" hidden checked disabled>
+            <pre>Embreagem</pre>
+            <i class="fa-solid fa-check"></i>
+        </label>
 
-    <label for="cobrador" class="box">
-        <input type="radio" name="tripulation" id="cobrador" hidden disabled>
-        <pre>Cobrador</pre>
-        <i class="fa-solid fa-check"></i>
-    </label>
-</div>
-<!-- Problema -->
-<div id="row_problem" class="row h0">
-    <label for="problem" id="label_problem" class="box">
-        <pre>Problema: </pre>
-        <input type="text" name="problem" id="problem" disabled>
-        <ul class="list">{% for problem in problems %}
-            <li class="item">{{ problem }}</li>{% endfor %}
-        </ul>
-        <i class="fa-solid fa-chevron-down"></i>
-        <button class="surge" disabled>
-            <i class="fa-regular fa-trash-can"></i>
+        <label for="caixa" class="box">
+            <input type="radio" name="embreagem_caixa" id="caixa" hidden disabled>
+            <pre>Caixa</pre>
+            <i class="fa-solid fa-check"></i>
+        </label>
+    </div>
+    <!-- Buttons -->
+    <div class="row">
+        <button id="generate-cco-informa">
+            GERAR
+            <i class="fa-solid fa-plus"></i>
         </button>
-    </label>
+    </div>
 </div>
-<!-- Limpador / Espelho -->
-<div id="row_limpador_espelho" class="row h0">
-    Qual?
-    <label for="limpador" class="box">
-        <input type="radio" name="limpador_espelho" id="limpador" hidden checked disabled>
-        <pre>Limpador</pre>
-        <i class="fa-solid fa-check"></i>
-    </label>
 
-    <label for="espelho" class="box">
-        <input type="radio" name="limpador_espelho" id="espelho" hidden disabled>
-        <pre>Espelho</pre>
-        <i class="fa-solid fa-check"></i>
-    </label>
+<div id="informations-generated" class="col w100">
 </div>
-<!-- Embreagem / Caixa -->
-<div id="row_embreagem_caixa" class="row h0">
-    Qual?
-    <label for="embreagem" class="box">
-        <input type="radio" name="embreagem_caixa" id="embreagem" hidden checked disabled>
-        <pre>Embreagem</pre>
-        <i class="fa-solid fa-check"></i>
-    </label>
 
-    <label for="caixa" class="box">
-        <input type="radio" name="embreagem_caixa" id="caixa" hidden disabled>
-        <pre>Caixa</pre>
-        <i class="fa-solid fa-check"></i>
-    </label>
-</div>
