@@ -651,7 +651,7 @@ ${get_who_informed()}
 
     console.log(_json);
 
-    informations_generated.innerHTML += `\
+    informations_generated.innerHTML = `\
 <div class="row cco-informa" information_id="" data='${encodeURIComponent(JSON.stringify(_json))}'>
     <textarea>${cco_informa}</textarea>
     <div class="col center">
@@ -661,6 +661,7 @@ ${get_who_informed()}
         <button class="favorite" onclick="favorite_cco_informa(event)"><i class="fa-regular fa-star"></i></button>
     </div>
 </div>
+${informations_generated.innerHTML}
 `
 }
 
