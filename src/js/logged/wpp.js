@@ -631,7 +631,7 @@ ${get_who_informed()}
     const _json = {}
     if (last_row) {
         // _json.row = parseInt(last_row.getAttribute("row"));
-        _json.A = get_full_date();
+        // _json.A = get_full_date();
         _json.B = input_table.value;
         _json.C = input_line.value;
         _json.D = input_car.value;
@@ -687,6 +687,7 @@ async function insert_to_table(event) {
     const element = event.target.closest(".cco-informa");
     data = JSON.parse(decodeURIComponent(element.getAttribute("data")));
     data.row = parseInt(last_row.getAttribute("row"));
+    data.A = get_full_date();
     overlay.classList.remove("w0");
     const response = await fetch(
         `/table/${operator.value}/${password.value}`,
@@ -704,7 +705,6 @@ async function insert_to_table(event) {
     }
     window.location.reload();
 }
-
 
 async function favorite_cco_informa(event) {
     const button = event.target;  
