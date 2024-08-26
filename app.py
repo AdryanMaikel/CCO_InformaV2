@@ -5,6 +5,7 @@ from datetime import datetime as dt, timedelta as td, timezone
 from operators import operators
 from messages import messages
 from gsheets import gsheet
+from informations import informations
 
 app = Flask(__name__, static_folder="src", template_folder="pages")
 
@@ -176,14 +177,36 @@ def wpp(operator, password):
                     'Suspensão - Freio',
                     'Suspensão - Roda',
                     'Suspensão - Vazamento de ar']
+
+        # infos = render_template("informations.html",
+        #                         informations=informations.get(operator))
+
         return render_template("wpp.html",
                                emps=emps,
                                sentidos=sentidos,
                                events=events,
                                motives=motives,
-                               problems=problems
+                               problems=problems,
+                               informations=informations.get(operator)
                                )
     return ""
+
+
+@app.route("/informations/<operator>/<password>", methods=["POST", "DELETE"])
+def cco_information(operator, password):
+    logged = operators.check_password(operator, password)
+    if not logged:
+        return "Operador ou senha inválidos.", 400
+    json = dict(request.get_json())
+    if not json:
+        return "Erro.", 400
+    if request.method == "POST":
+        cco_informa = json.pop("information", "")
+        data = json.pop("data", "")
+        return informations.insert(operator, cco_informa, data)
+    if request.method == "DELETE":
+        information_id = json.pop("id", "")
+        return informations.delete(information_id)
 
 
 if __name__ == "__main__":

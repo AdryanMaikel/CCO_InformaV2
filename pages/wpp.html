@@ -27,6 +27,7 @@
     i{
         font-size: 15px;
         &.fa-trash-can{font-size: 14px}
+        &.fa-star{color: orange;}
     }
 
     .toggle.icons{
@@ -443,6 +444,15 @@
     </div>
 </div>
 
-<div id="informations-generated" class="col w100">
+<div id="informations-generated" class="col w100">{% for information in informations %}
+    <div class="row cco-informa" information_id="{{ information.id }}" data="{{ information.json }}">
+        <textarea>{{ information.cco_informa }}</textarea>
+        <div class="col center">
+            <button class="copy" onclick="copy_cco_informa(event)"><i class="fa-solid fa-copy"></i></button>
+            <button class="send" onclick="insert_to_table(event)"><i class="fa-solid fa-paper-plane"></i></button>
+            <button class="remove" onclick="remove_cco_informa(event)"><i class="fa-solid fa-trash-can"></i></button>
+            <button class="favorite" onclick="favorite_cco_informa(event)"><i class="fa-solid fa-star"></i></button>
+        </div>
+    </div>{% endfor %}
 </div>
 

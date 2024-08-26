@@ -4,7 +4,8 @@ create_table_message = """\
 CREATE TABLE IF NOT EXISTS informations (
     id INTEGER PRIMARY KEY,
     operator TEXT NOT NULL,
-    information TEXT NOT NULL
+    cco_informa TEXT NOT NULL,
+    json TEXT NOT NULL
 );"""
 
 
@@ -12,38 +13,34 @@ class Informations():
     def __init__(self):
         execute(create_table_message)
 
-    def get(self) -> list:
-        informations = list([{
+    def get(self, _operator) -> list[dict[str, str]]:
+        return list([{
             "id": _id,
             "operator": operator,
-            "information": information
-        }for _id, operator, information in execute(
+            "cco_informa": cco_informa,
+            "json": json
+        }for _id, operator, cco_informa, json in execute(
             query="SELECT*FROM informations", commit=False
-        )])
-        return informations
+        )if operator == _operator])
 
-    def insert(self, operator, information):
+    def insert(self, operator, cco_informa, json):
         if not str(operator).isalpha():
             return "Falha ao criar cco informa."
-        execute(
-            "INSERT INTO informations (operator, information) VALUES (?, ?)",
-            params=(operator, information)
-        ),
+        execute("""\
+INSERT INTO informations (operator, cco_informa, json) VALUES (?, ?, ?)""",
+                params=(operator, cco_informa, json)),
         ids = execute("SELECT id FROM informations ORDER BY id DESC")
-        id = ""
-        if ids:
-            id = ids[0]
-            return f"CCO Informa criado {id}."
-        return "Falha."
+        return ids[0] if ids else ""
 
     def delete(self, id):
-        if str(id).isnumeric():
-            execute("DELETE FROM informations WHERE id = ?", (id))
-            return f"CCO Informa excluido id: {id}"
-        return f"Falha ao remover cco informa id {id}"
+        if not str(id).isnumeric():
+            return "Falha ao deletar."
+        execute("DELETE FROM informations WHERE id = ?", (id,))
+        return "Sucesso!"
 
+
+informations = Informations()
 
 if __name__ == "__main__":
-    informations = Informations()
-    informations.insert("Adryan", "oi")
-    print(informations.get())
+    # informations = Informations()
+    print(informations.get("Adryan"))

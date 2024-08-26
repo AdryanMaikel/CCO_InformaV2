@@ -649,21 +649,21 @@ ${get_who_informed()}
         _json.K = operator.value;
     }
     
+    // _json.cco_informa = cco_informa;
     console.log(_json);
 
+
     informations_generated.innerHTML += `\
-<div class="row cco-informa">
+<div class="row cco-informa" information_id="" data='${encodeURIComponent(JSON.stringify(_json))}'>
     <textarea>${cco_informa}</textarea>
     <div class="col center">
         <button class="copy" onclick="copy_cco_informa(event)"><i class="fa-solid fa-copy"></i></button>
-        <button class="send" onclick="insert_to_table(${JSON.stringify(_json, '', '')})"><i class="fa-solid fa-paper-plane"></i></button>
-        <button class="remove" disabled><i class="fa-regular fa-star"></i></button>
-        <button class="favorite" disabled><i class="fa-solid fa-trash-can"></i></button>
+        <button class="send" onclick="insert_to_table(event)"><i class="fa-solid fa-paper-plane"></i></button>
+        <button class="remove" onclick="remove_cco_informa(event)"><i class="fa-solid fa-trash-can"></i></button>
+        <button class="favorite" onclick="favorite_cco_informa(event)"><i class="fa-regular fa-star"></i></button>
     </div>
 </div>
 `
-   
-
 }
 
 
@@ -676,7 +676,18 @@ function copy_cco_informa(event) {
     });
 }
 
-async function insert_to_table(data) {
+function remove_cco_informa(event) {
+    const element = event.target.closest(".cco-informa");
+    const _id = element.getAttribute("information_id");
+    element.remove();
+    if(_id) {
+        console.log(_id);
+    }
+}
+
+async function insert_to_table(event) {
+    const element = event.target.closest(".cco-informa");
+    data = JSON.parse(decodeURIComponent(element.getAttribute("data")));
     data.row = parseInt(last_row.getAttribute("row"));
     overlay.classList.remove("w0");
     const response = await fetch(
@@ -688,9 +699,48 @@ async function insert_to_table(data) {
         }
     );
     if(await response.text() == "Sucesso!"){
+        div_wpp.classList.remove("open");
         await get_table();
         setTimeout(()=>overlay.classList.add("w0"), 500)
         return;
     }
     window.location.reload();
+}
+
+
+async function favorite_cco_informa(event) {
+    const button = event.target;  
+    const element = button.closest(".cco-informa");
+    const i = button.querySelector("i");
+    if(i.classList.contains("fa-regular")) {
+        const response = await fetch(
+            `/informations/${operator.value}/${password.value}`,
+            {
+                method: "post",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(
+                    {
+                        information: element.querySelector("textarea").value,
+                        data: decodeURIComponent(element.getAttribute("data"))
+                    }
+                )
+            }
+        );
+        if(response.status == 200) {
+            element.setAttribute("information_id", await response.text())
+            i.classList.replace("fa-regular", "fa-solid");
+        }
+    } else {
+        const response = await fetch(
+            `/informations/${operator.value}/${password.value}`,
+            {
+                method: "delete",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({id: element.getAttribute("information_id")})
+            }
+        );
+        if(response.status == 200) {
+            i.classList.replace("fa-solid", "fa-regular");
+        }
+    }
 }
