@@ -656,9 +656,9 @@ ${get_who_informed()}
     <textarea>${cco_informa}</textarea>
     <div class="col center">
         <button class="copy" onclick="copy_cco_informa(event)"><i class="fa-solid fa-copy"></i></button>
-        <button class="send" onclick='insert_to_table(${JSON.stringify(_json, "", "")})'><i class="fa-solid fa-paper-plane"></i></button>
-        <button class="remove"><i class="fa-regular fa-star"></i></button>
-        <button class="favorite"><i class="fa-solid fa-trash-can"></i></button>
+        <button class="send" onclick="insert_to_table(${JSON.stringify(_json, '', '')})"><i class="fa-solid fa-paper-plane"></i></button>
+        <button class="remove" disabled><i class="fa-regular fa-star"></i></button>
+        <button class="favorite" disabled><i class="fa-solid fa-trash-can"></i></button>
     </div>
 </div>
 `
