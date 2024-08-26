@@ -203,7 +203,10 @@ def cco_information(operator, password):
     if request.method == "POST":
         cco_informa = json.pop("information", "")
         data = json.pop("data", "")
-        return informations.insert(operator, cco_informa, data)
+        _id = informations.insert(operator, cco_informa, data)
+        if _id:
+            return _id
+        return "Erro", 400
     if request.method == "DELETE":
         information_id = json.pop("id", "")
         return informations.delete(information_id)

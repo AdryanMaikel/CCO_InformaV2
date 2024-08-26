@@ -24,17 +24,14 @@ class Informations():
         )if operator == _operator])
 
     def insert(self, operator, cco_informa, json):
-        if not str(operator).isalpha():
-            return "Falha ao criar cco informa."
         execute("""\
 INSERT INTO informations (operator, cco_informa, json) VALUES (?, ?, ?)""",
                 params=(operator, cco_informa, json)),
-        ids = execute("SELECT id FROM informations ORDER BY id DESC")
-        return ids[0] if ids else ""
+        ids = execute("SELECT id FROM informations WHERE operator = ?",
+                      params=(operator,), commit=False)
+        return str(ids[-1]) if ids else ""
 
     def delete(self, id):
-        if not str(id).isnumeric():
-            return "Falha ao deletar."
         execute("DELETE FROM informations WHERE id = ?", (id,))
         return "Sucesso!"
 

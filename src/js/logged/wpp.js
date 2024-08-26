@@ -648,10 +648,8 @@ ${get_who_informed()}
         _json.J = `${_event} devido a ${_motive.charAt(0).toLowerCase()}${_motive.slice(1)}`;
         _json.K = operator.value;
     }
-    
-    // _json.cco_informa = cco_informa;
-    console.log(_json);
 
+    console.log(_json);
 
     informations_generated.innerHTML += `\
 <div class="row cco-informa" information_id="" data='${encodeURIComponent(JSON.stringify(_json))}'>
@@ -727,7 +725,7 @@ async function favorite_cco_informa(event) {
             }
         );
         if(response.status == 200) {
-            element.setAttribute("information_id", await response.text())
+            element.setAttribute("information_id", await response.text());
             i.classList.replace("fa-regular", "fa-solid");
         }
     } else {
@@ -740,6 +738,7 @@ async function favorite_cco_informa(event) {
             }
         );
         if(response.status == 200) {
+            element.setAttribute("information_id", "");
             i.classList.replace("fa-solid", "fa-regular");
         }
     }
