@@ -689,6 +689,12 @@ async function insert_to_table(event) {
     data = JSON.parse(decodeURIComponent(element.getAttribute("data")));
     data.row = parseInt(last_row.getAttribute("row"));
     data.A = get_full_date();
+    if(data.G == "BC"){
+        data.G = "1"
+    }
+    if(data.G == "CB"){
+        data.G = "2"
+    }
     overlay.classList.remove("w0");
     const response = await fetch(
         `/table/${operator.value}/${password.value}`,
