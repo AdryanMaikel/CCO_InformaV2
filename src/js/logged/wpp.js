@@ -419,9 +419,6 @@ async function load_wpp(){
     input_line.onblur = function() {
         autocomplete_direction();
     }
-    directions.input.onblur = function() {
-
-    }
 }
 
 load_wpp();
