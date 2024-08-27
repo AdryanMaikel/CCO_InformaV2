@@ -95,11 +95,13 @@ def table(operator, password):
         return "Operador ou senha inválidos.", 400
 
     if request.method.__eq__("GET"):
-        rows = gsheet.get_rows(dates=[])
-        last_row = len(rows) + 2
-        now = (dt.now() - td(hours=3)).strftime("%d/%m/%Y")
+        now = dt.now() - td(hours=3)
+        now_str = now.strftime("%d/%m/%Y")
+        rows = gsheet.get_rows(dates=[(now - td(days=i)).strftime("%d/%m/%Y")
+                                      for i in range(7)])
+        last_row = rows[-1][0] if rows else len(gsheet.get_rows(dates=[]))
         rows.append(
-            [last_row, now, "", "", "", "", "", "", "", "", "", operator]
+            [last_row, now_str, "", "", "", "", "", "", "", "", "", operator]
             )
         return render_template("cco-informa.html",
                                users=operators.get(),

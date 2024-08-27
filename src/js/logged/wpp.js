@@ -181,16 +181,16 @@ class DivEvents {
 
     active_events() {
         this.input.onfocus = (event) => {
-            if (this.div.classList.contains("open")) {
+            if(this.div.classList.contains("open")) {
                 event.target.blur();
                 return;
             }
             this.div.classList.add("open");
             this.items.forEach(item => {
-                if (item.classList.contains("h0"))
+                if(item.classList.contains("h0"))
                     item.classList.remove("h0");
                 item.onclick = ({target}) => {
-                    if (!this.tresh.classList.contains("active"))
+                    if(!this.tresh.classList.contains("active"))
                         this.tresh.classList.add("active");
                     this.tresh.disabled = false;
                     const text_content = target.textContent;
@@ -220,6 +220,10 @@ class DivEvents {
         };
 
         this.input.oninput = (event) => {
+            this.input.value = this.input.value.replace(/[^a-zA-Z]/, "");
+            if(this.id_div == "directions")
+                this.input.value = this.input.value.toUpperCase();
+
             if (this.input.value === "")
                 return;
             this.tresh.classList.add("active");
@@ -364,6 +368,60 @@ async function load_wpp(){
 
     button_generate = content_wpp.querySelector("#generate-cco-informa");
     informations_generated = content_wpp.querySelector("#informations-generated");
+
+    content_wpp.querySelectorAll("input.car").forEach(
+        input=>input.oninput = function() {
+            this.value = this.value.replace(/[^0-9]/, "");
+            if(this.value.length == 4){
+                if(this.id == "car" && replace.classList.contains("active")){
+                    return car_substitute.focus();
+                }
+                return input_line.focus();
+            }
+        }
+    );
+    [input_table, input_line].forEach(
+        input=>input.oninput = function() {
+            this.value = this.value.replace(/[^a-zA-Z0-9]/, "").toUpperCase();
+        }
+    );
+    input_hour.oninput = function({inputType}) {
+        this.value = this.value.replace(/[^0-9:]/, "");
+        if(input_hour.value.length == 2 && inputType != "deleteContentBackward")
+            return this.value += ":"
+        if(input_hour.value.length == 5){
+            if(directions.input.value == "")
+                return directions.input.focus();
+            else
+                return label_event.input.focus();
+        }
+    }
+    input_table.onblur = function () {
+        if(this.value.indexOf("/") >= 1 || this.value.length < 3)return;
+        var value = this.value.split("");
+        this.value = `${value.slice(0, this.value.length - 3).join("")}/${value.slice(this.value.length - 3, this.value.length + 1).join("")}`;
+        if(input_line.value == "") {
+            var _line = this.value.split("/")[0]
+            if(_line == "661"){
+                input_line.value = "761";
+            } else if(_line == "662"){
+                input_line.value = "762";
+            } else {
+                input_line.value = _line;
+            }
+            autocomplete_direction()
+            if(input_car.value == ""){
+                return input_car.focus();
+            }
+        }
+
+    }
+    input_line.onblur = function() {
+        autocomplete_direction();
+    }
+    directions.input.onblur = function() {
+
+    }
 }
 
 load_wpp();
@@ -685,6 +743,7 @@ function remove_cco_informa(event) {
 }
 
 async function insert_to_table(event) {
+    await get_table();
     const element = event.target.closest(".cco-informa");
     data = JSON.parse(decodeURIComponent(element.getAttribute("data")));
     data.row = parseInt(last_row.getAttribute("row"));
@@ -705,7 +764,6 @@ async function insert_to_table(event) {
         }
     );
     if(await response.text() == "Sucesso!"){
-        div_wpp.classList.remove("open");
         await get_table();
         setTimeout(()=>overlay.classList.add("w0"), 500)
         return;
@@ -749,4 +807,57 @@ async function favorite_cco_informa(event) {
             i.classList.replace("fa-solid", "fa-regular");
         }
     }
+}
+
+function autocomplete_direction() {
+    if(input_line.value == "B02"
+    || input_line.value == "B25"
+    || input_line.value == "B51"
+    || input_line.value == "B55"
+    || input_line.value == "B56"){
+        directions.input.value = "BB"
+    }else
+    if(input_line.value == "B09"
+    || input_line.value == "A53"
+    || input_line.value == "A63"
+    || input_line.value == "A60"){
+        directions.input.value = "TT"
+    }else
+    if(input_line.value == "6612"
+    || input_line.value == "7612"
+    || input_line.value == "8612"
+    || input_line.value == "855"){
+        directions.input.value = "CB"
+    }else
+    if(input_line.value == "605"
+    || input_line.value == "617"
+    || input_line.value == "650"
+    || input_line.value == "653"
+    || input_line.value == "7052"
+    || input_line.value == "7053"){
+        directions.input.value = "CC"
+    }else
+    if(input_line.value == "A631"
+    || input_line.value == "A21"
+    || input_line.value == "A24"
+    || input_line.value == "A27"
+    || input_line.value == "A31"
+    || input_line.value == "A33"){
+        directions.input.value = "BT"
+    }else
+    if(input_line.value == "A632"){
+        directions.input.value = "TB"
+    }else{
+        // direction.value = ""
+    }
+    if(directions.input.value != ""
+    && !directions.tresh.classList.contains("active")) {
+        directions.tresh.classList.add("active");
+        directions.tresh.disabled = false;
+    }
+    if(input_hour.value == "")
+        return input_hour.focus();
+    else if(directions.input.value == "")
+        return directions.input.focus();
+    return label_event.input.focus();
 }

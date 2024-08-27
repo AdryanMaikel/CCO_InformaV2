@@ -63,5 +63,5 @@ class Sheet:
 gsheet = Sheet("Histórico de eventos")
 
 if __name__ == "__main__":
-    rows = gsheet.get_rows(dates=["22/07/2024"])
+    rows = gsheet.get_rows(dates=["27/08/2024", "26/08/2024"])
     print(rows)
