@@ -517,7 +517,11 @@ function process_motive(_event) {
             _motive += `Carro ${input_car.value} ter se envolvido em um acidente`;
             break;
         case "Adiantado com autorização":
-            _event += ` autorizado pelo ${label_who_informed.input.value}.`
+            let name = label_who_informed.input.value;
+            let informed_by = ["Navegantes", "Nortran", "Sopal"].includes(name)
+            ? `largador da ${name}`
+            : `fiscal ${name}`;
+            _event += ` autorizado pelo ${informed_by}.`
             break
         case "Adiantado sem autorização":
             _event += ` sem autorização da fiscalização.`
@@ -555,7 +559,7 @@ function process_motive(_event) {
             break;
         case "Validador/ Roleta":
             let roullet = radios_validator_and_roullet[0];
-            _motive += "Problemas n" + String(roullet.checked ? "a roleta" : "o validador");
+            _motive += "Problemas n" + String(roullet.checked ? "o validador" : "a roleta");
             _motive += ` do carro ${input_car.value}`;
             break;
         case "Vandalismo":
@@ -683,10 +687,11 @@ ${get_who_informed()}
 - ${_event}
 - Motivo: ${_motive}`;
 
+    if(label_event.input.value == "adiantada")
+        cco_informa = cco_informa.replace("\n- Motivo: ", "");
+
     const _json = {}
     if (last_row) {
-        // _json.row = parseInt(last_row.getAttribute("row"));
-        // _json.A = get_full_date();
         _json.B = input_table.value;
         _json.C = input_line.value;
         _json.D = input_car.value;
@@ -700,11 +705,14 @@ ${get_who_informed()}
             _json.H = label_motive.input.value;
             _json.I = "";
         }
-        _json.J = `${_event} devido a ${_motive.charAt(0).toLowerCase()}${_motive.slice(1)}`;
+        if(label_event.input.value == "adiantada")
+            _json.J = `${_event}`;
+        else
+            _json.J = `${_event} devido a ${_motive.charAt(0).toLowerCase()}${_motive.slice(1)}`;
         _json.K = operator.value;
     }
 
-    console.log(_json);
+    console.log(`Gerou:\ncco informa:\n${cco_informa}\njson:\n${JSON.stringify(_json)}`);
 
     informations_generated.innerHTML = `\
 <div class="row cco-informa" information_id="" data='${encodeURIComponent(JSON.stringify(_json))}'>
