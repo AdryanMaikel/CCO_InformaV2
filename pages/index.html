@@ -36,8 +36,8 @@
         <button id="open-config"><i class="fa-solid fa-gear"></i></button>
         <button id="open-wpp"><i class="fa-brands fa-whatsapp"></i></button>
         <button id="open-chat"><i class="fa-solid fa-walkie-talkie"></i></button>
-        <button id="open-table"><i class="fa-solid fa-table-list"></i></button>
         <button id="toggle-login" class="col buttons toggle overflow hidden"><i class="fa-solid fa-user-xmark x"></i><i class="fa-solid fa-user-check y"></i></button>
+        <button id="open-notes"><i class="fa-solid fa-note-sticky"></i></button>
     </header>
     <section class="overflow hidden">
         <h2 id="overlay">*CCO Informa*</h2>
@@ -64,6 +64,16 @@
                 <textarea name="message" id="message"></textarea>
                 <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
+        </div>
+        <div id="notes" class="container">
+            <div class="row between header">
+                <span>Anotações</span>
+                <div class="row buttons">
+                    <button id="save-note"><i class="fa-solid fa-save"></i></button>
+                    <button id="close-notes"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <textarea name="note" id="note"></textarea>
         </div>
         <div id="table"></div>
     </section>

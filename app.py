@@ -53,7 +53,7 @@ def unlogin():
 
 
 @app.route("/chat/<operator>/<password>", methods=["GET", "POST", "DELETE"])
-def chat(operator, password):
+def chat(operator: str, password: str):
     if operator not in operators.get():
         return "Operador não encontrado.", 400
 
@@ -86,7 +86,7 @@ def chat(operator, password):
 
 @app.route("/table/<operator>/<password>",
            methods=["GET", "POST", "PUT", "DELETE"])
-def table(operator, password):
+def table(operator: str, password: str):
     if operator not in operators.get():
         return "Operador não encontrado.", 400
 
@@ -125,19 +125,20 @@ def table(operator, password):
 
 
 @app.route("/scripts/<operator>/<password>")
-def scripts(operator, password):
+def scripts(operator: str, password: str):
     logged = operators.check_password(operator, password)
     if not logged:
         return "Operador ou senha inválidos.", 400
     scripts = ("/src/js/logged/table.js,"
                "/src/js/logged/chat.js,"
                "/src/js/logged/config.js,"
-               "/src/js/logged/wpp.js")
+               "/src/js/logged/wpp.js,"
+               "/src/js/logged/notes.js")
     return scripts
 
 
 @app.route("/wpp/<operator>/<password>")
-def wpp(operator, password):
+def wpp(operator: str, password: str):
     logged = operators.check_password(operator, password)
     if not logged:
         return "Operador ou senha inválidos.", 400

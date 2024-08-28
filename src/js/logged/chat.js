@@ -46,7 +46,6 @@ async function get_chat() {
 }
 
 let interval_chat = null;
-const section = document.querySelector("section");
 document.getElementById("open-chat").onclick = async function(_) {
     if(section.querySelector(".container.open")
     || form_login.classList.contains("open"))

@@ -1,3 +1,5 @@
+const section = document.querySelector("section");
+
 function create_script(src){
     const script = document.createElement("script");
     script.src = src;

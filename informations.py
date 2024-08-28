@@ -20,8 +20,9 @@ class Informations():
             "cco_informa": cco_informa,
             "json": json
         }for _id, operator, cco_informa, json in execute(
-            query="SELECT*FROM informations", commit=False
-        )if operator == _operator])
+            query="SELECT*FROM informations WHERE operator = :operator",
+            params={"operator": _operator}, commit=False
+        )])
 
     def insert(self, operator, cco_informa, json):
         execute("""\
