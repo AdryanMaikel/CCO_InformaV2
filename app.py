@@ -6,6 +6,7 @@ from operators import operators
 from messages import messages
 from gsheets import gsheet
 from informations import informations
+from notes import notes
 
 app = Flask(__name__, static_folder="src", template_folder="pages")
 
@@ -213,6 +214,26 @@ def cco_information(operator, password):
     if request.method == "DELETE":
         information_id = json.pop("id", "")
         return informations.delete(information_id)
+
+
+@app.route("/notes/<operator>/<password>", methods=["GET", "POST"])
+def handle_notes(operator: str, password: str):
+    logged = operators.check_password(operator, password)
+    if not logged:
+        return "Operador ou senha inválidos.", 400
+    if request.method == "GET":
+        note = notes.get(operator)
+        if note or note == "":
+            return note
+        return "Nenhuma nota encontrada.", 404
+    if request.method == "POST":
+        json = dict(request.get_json())
+        if not json:
+            return "Erro.", 400
+        response = notes.set(operator, json.pop("note", ""))
+        if response:
+            return "Nota atualizada com sucesso.", 200
+        return "Erro ao atualizar nota.", 400
 
 
 if __name__ == "__main__":

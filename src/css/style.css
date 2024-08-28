@@ -120,6 +120,18 @@ section{
             border-bottom: 1px solid var(--c-black-white);
         }
     }
+    & #notes{
+        & .header {
+            & .buttons{
+                gap: 20px;
+            }
+        }
+        & textarea{
+            resize: none;
+            padding: 5px;
+            height: calc(100% - 40px);
+        }
+    }
     & #chat{
         & #content-chat{
             overflow-x: hidden;
@@ -337,7 +349,7 @@ button{
         &.fa-xmark{font-size: 24px}
         &.fa-ban,&.fa-xmark{color: var(--c-red)}
         &.fa-user-xmark,&.fa-user-check{font-size: 17px}
-        &.fa-comment{color: var(--c-black-white)}
+        &.fa-note-sticky,&.fa-save,&.fa-comment{color: var(--c-black-white)}
         &.fa-gear,&.fa-copy,&.fa-walkie-talkie{color: var(--c-purple-dark)}
         &.fa-trash-can{color: var(--c-red)}
         &.fa-paper-plane{color: var(--c-green)}
