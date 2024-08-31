@@ -2,80 +2,101 @@ const chat = document.querySelector("#chat");
 const content_chat = chat.querySelector("#content-chat");
 const span_count_requests_chat = document.querySelector("#count-requests-chat");
 
-let old_messages = "";
-let count_requests_chat = 100;
-async function get_chat() {
-    if(!logged)return;
-    const response = await fetch(`/chat/${operator.value}/${password.value}`);
-    if(response.status != 200)return;
-    const text = await response.text();
-    count_requests_chat -= 1;
-    span_count_requests_chat.textContent = `Chat fechando em ${count_requests_chat}`;
-    if(count_requests_chat <= 0)close_chat();
-    if(old_messages == text)return;
-    count_requests_chat = 100;
-    old_messages = text;
-    content_chat.innerHTML = text;
-    content_chat.scrollTop = content_chat.scrollHeight;
-
-    content_chat.querySelectorAll("button.copy").forEach(
-        button => button.onclick = function() {
-            const pre = this.closest("div.message").querySelector("pre");
-            navigator.clipboard.writeText(pre.textContent.trim());
-            console.log("copiado");
-        }
-    );
-
-    content_chat.querySelectorAll("button.delete").forEach(
-        button => button.onclick = async function() {
-            const json = { row: parseInt(button.getAttribute("row")) };
-            const response = await fetch(
-                `/chat/${operator.value}/${password.value}`,
-                {
-                    method: "delete",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(json)
-                }
-            )
-            if(response.status != 200)return;
-            console.log(await response.text());
-            get_chat();
-        }
-    );
-    console.log("Atualizando conversas...");
-}
-
 let interval_chat = null;
-document.getElementById("open-chat").onclick = async function(_) {
-    if(section.querySelector(".container.open")
-    || form_login.classList.contains("open"))
-        return;
-    count_requests_chat = 101;
-    await get_chat()
-    chat.classList.add("open");
-    interval_chat = window.setInterval(get_chat, 1500);
-};
-function close_chat() {
-    window.clearInterval(interval_chat);
-    chat.classList.remove("open");
-}
-document.getElementById("close-chat").onclick = close_chat;
+let interval_new_messages = null;
 
-const textarea = document.querySelector("textarea#message");
-async function post_message() {
-    const response = await fetch(
-        `/chat/${operator.value}/${password.value}`,
-        {
-            method: "post",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: textarea.value })
-        }
-    );
-    console.log(response.status)
-    if(response.status != 200)return;
-    const text = await response.text()
-    console.log(text)
-    textarea.value = "";
-    get_chat()
+let html_content_old = "";
+let count_requests_chat_to_close = 100;
+
+function update_chat(html_content) {
+    html_content_old = html_content;
+    content_chat.innerHTML = html_content;
+    content_chat.scrollTop = content_chat.scrollHeight;
+    buttons_copy_message = content_chat.querySelectorAll("button.copy");
+    buttons_delete_message = content_chat.querySelectorAll("button.delete");
 }
-document.getElementById("send-message").onclick = post_message;
+
+let buttons_copy_message = null;
+let buttons_delete_message = null;
+
+async function get_chat() {
+    const html_content = await request("chat", "GET");
+    count_requests_chat_to_close -= 1;
+    span_count_requests_chat.textContent = count_requests_chat_to_close;
+    if (count_requests_chat_to_close <= 0) close_chat();
+    if (html_content == html_content_old) return;
+    update_chat(html_content);
+}
+
+function add_events_buttons() {
+    buttons_copy_message.forEach(button => button.onclick = function() {
+        const pre = this.closest("div.message").querySelector("pre");
+        navigator.clipboard.writeText(pre.textContent.trim());
+        console.log("copiado");
+    });
+    buttons_delete_message.forEach(button => button.onclick = async function() {
+        await request("chat", "DELETE", { row: parseInt(button.getAttribute("row")) });
+        await get_chat();
+    });
+}
+
+function remove_events_buttons() {
+    buttons_copy_message.forEach(button => button.onclick = null);
+    buttons_delete_message.forEach(button => button.onclick = null);
+}
+
+async function check_new_messages() {
+    const html_content = await request("chat", "GET");
+    if (html_content == html_content_old) return;
+    button_open_chat.classList.add("new-messages");
+}
+
+async function open_chat() {
+    if (document.querySelector(".container.open")||form_login.classList.contains("open"))
+        return;
+    if (button_open_chat.classList.contains("new-messages")) {
+        button_open_chat.classList.remove("new-messages");
+    }
+    await get_chat();
+    add_events_buttons();
+    chat.classList.add("open");
+    window.clearInterval(interval_new_messages);
+    interval_chat = window.setInterval(get_chat, 1500);
+}
+
+function close_chat() {
+    chat.classList.remove("open");
+    remove_events_buttons();
+    window.clearInterval(interval_chat);
+    count_requests_chat_to_close = 100;
+    interval_new_messages = window.setInterval(check_new_messages, 6000);
+}
+
+const textarea_message = chat.querySelector("textarea#message");
+
+async function send_message() {
+    const message = textarea_message.value.trim();    
+    if (message == "") return;
+    if (await request_chat("POST", { message })) {
+        textarea_message.value = "";
+        await get_chat();
+    }
+}
+
+get_chat();
+interval_new_messages = window.setInterval(check_new_messages, 6000);
+
+const button_open_chat = document.getElementById("open-chat");
+button_open_chat.onclick = open_chat;
+
+const button_close_chat = chat.querySelector("#close-chat");
+button_close_chat.onclick = close_chat;
+
+const button_send_message = chat.querySelector("#send-message");
+button_send_message.onclick = send_message;
+
+textarea_message.onkeydown = function(event) {
+    if (event.key == "Enter" && !event.shiftKey) {
+        send_message();
+    }
+}

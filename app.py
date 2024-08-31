@@ -98,9 +98,12 @@ def table(operator: str, password: str):
     if request.method.__eq__("GET"):
         now = dt.now() - td(hours=3)
         now_str = now.strftime("%d/%m/%Y")
-        rows = gsheet.get_rows(dates=[(now - td(days=i)).strftime("%d/%m/%Y")
-                                      for i in range(7)])
-        last_row = rows[-1][0] if rows else len(gsheet.get_rows(dates=[]))
+        dates = [(now - td(days=i)).strftime("%d/%m/%Y") for i in range(8)]
+        rows = gsheet.get_rows(dates=dates)
+        for row in rows:
+            print(row[2])
+        last_row = (rows[-1][0] if rows else len(gsheet.get_rows(dates=[])))+1
+        print(last_row)
         rows.append(
             [last_row, now_str, "", "", "", "", "", "", "", "", "", operator]
             )
@@ -108,7 +111,8 @@ def table(operator: str, password: str):
                                users=operators.get(),
                                columns=gsheet.columns,
                                letters=gsheet.letters,
-                               last_row=last_row, rows=rows)
+                               last_row=last_row,
+                               rows=rows)
 
     data = dict(request.get_json())
     row = data.pop("row", None)
@@ -130,7 +134,8 @@ def scripts(operator: str, password: str):
     logged = operators.check_password(operator, password)
     if not logged:
         return "Operador ou senha inválidos.", 400
-    scripts = ("/src/js/logged/table.js,"
+    scripts = ("/src/js/logged/requests.js,"
+               "/src/js/logged/table.js,"
                "/src/js/logged/chat.js,"
                "/src/js/logged/config.js,"
                "/src/js/logged/wpp.js,"

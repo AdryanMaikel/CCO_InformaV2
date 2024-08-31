@@ -65,5 +65,5 @@ operators = Operators()
 
 if __name__ == "__main__":
     op = Operators()
-    # op.insert(name="Adryan", password="123")
+    op.insert(name="David", password="123")
     print(op.get())

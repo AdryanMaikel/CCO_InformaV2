@@ -71,8 +71,8 @@ async function get_table() {
     );
     if(response.status != 200)return;
     const text = await response.text();
-    if(old_messages == text)return;
-    old_messages = text;
+    if(old_table == text)return;
+    old_table = text;
     div_table.innerHTML = text;
 
     table = div_table.querySelector("table");
