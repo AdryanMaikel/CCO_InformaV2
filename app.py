@@ -100,10 +100,7 @@ def table(operator: str, password: str):
         now_str = now.strftime("%d/%m/%Y")
         dates = [(now - td(days=i)).strftime("%d/%m/%Y") for i in range(8)]
         rows = gsheet.get_rows(dates=dates)
-        for row in rows:
-            print(row[2])
         last_row = (rows[-1][0] if rows else len(gsheet.get_rows(dates=[])))+1
-        print(last_row)
         rows.append(
             [last_row, now_str, "", "", "", "", "", "", "", "", "", operator]
             )
@@ -134,11 +131,10 @@ def scripts(operator: str, password: str):
     logged = operators.check_password(operator, password)
     if not logged:
         return "Operador ou senha inválidos.", 400
-    scripts = ("/src/js/logged/requests.js,"
+    scripts = ("/src/js/logged/wpp.js,"
                "/src/js/logged/table.js,"
                "/src/js/logged/chat.js,"
                "/src/js/logged/config.js,"
-               "/src/js/logged/wpp.js,"
                "/src/js/logged/notes.js")
     return scripts
 

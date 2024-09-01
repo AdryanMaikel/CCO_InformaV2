@@ -77,7 +77,7 @@ const textarea_message = chat.querySelector("textarea#message");
 async function send_message() {
     const message = textarea_message.value.trim();    
     if (message == "") return;
-    if (await request_chat("POST", { message })) {
+    if (await request("chat", "POST", { message })) {
         textarea_message.value = "";
         await get_chat();
     }

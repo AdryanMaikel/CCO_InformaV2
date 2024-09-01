@@ -13,6 +13,12 @@
     --c-disabled: #6f5a5a;
     --c-purple-dark: #200a45;
 }
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(1px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-1px, 0, 0); }
+    40%, 60% { transform: translate3d(1px, 0, 0); }
+}
 ::-webkit-scrollbar{width: 8px;display: block;height: 10px;}
 ::-webkit-scrollbar-thumb{position: fixed;border-radius: 4px;background-color: var(--c-black)}
 ::-webkit-scrollbar-track{background-color: transparent}
@@ -30,7 +36,6 @@ header{
     border-right: 1px solid var(--c-black-white);
     box-shadow: 0 0 6px 1px var(--c-black);
     background: var(--c-gray);
-    /* box-shadow: 0 0 5px 5px var(--c-white-dark), inset 0 0 2px 1px var(--c-white-dark); */
     & #logo-mob{width: 32px;height: 17px;margin: 10px 0;user-select: none;}
     & h1{display: none}
     & button{
@@ -40,6 +45,12 @@ header{
             height: 30px;
             padding: 2px;
             margin-left: 9px;
+        }
+        &.new-messages{
+            animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both infinite;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
         }
     }
     form#login{
