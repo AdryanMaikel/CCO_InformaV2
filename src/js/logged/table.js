@@ -41,20 +41,26 @@ function load_cookie_columns() {
 
 const width_columns = _cookie_columns?load_cookie_columns():create_cookie_columns();
 
-let table = null;
-function adjust_width_table(width) {
-    if(!table)return;
-    sum_columns(width_columns);
-    table.style.width = width <= width_columns.sum + 58 ? `100%` : `${width_columns.sum + 12}px`;
+let table = document.querySelector("table");
+
+function adjust_width_table() {
+    if (!table) {
+        console.log("Tabela não encontrada.");
+        return;
+    }
+    console.log("Ajustando largura da tabela.");
+    const { sum: totalWidth } = sum_columns(width_columns);
+    console.log(`Largura total das colunas: ${totalWidth}px`);
+    table.style.width = window.innerWidth <= totalWidth + 58 ? "100%" : `${totalWidth + 12}px`;
 }
 
-window.onresize = function({target}){adjust_width_table(target.innerWidth)}
+window.onresize = adjust_width_table;
 
 const div_table = document.getElementById("table");
-let editing_row = {element: null, values: {}, method: null};
+let editing_row = { element: null, values: {}, method: null };
 
 let div_actions_table = null;
-let button_cancel_edit =  HTMLElement | null;
+let button_cancel_edit = HTMLElement | null;
 let button_submit_edit = null;
 let button_delete_row = null;
 let button_add_row = null;
@@ -64,16 +70,13 @@ let overlay = document.querySelector("#overlay");
 
 let old_table = "";
 async function get_table() {
-    if(!logged||editing_row.element)return;
+    if (!logged || editing_row.element) return;
 
-    const response = await fetch(
-        `/table/${operator.value}/${password.value}`, { method: "get" }
-    );
-    if(response.status != 200)return;
-    const text = await response.text();
-    if(old_table == text)return;
-    old_table = text;
-    div_table.innerHTML = text;
+    console.log("Obtendo tabela...");
+    let _table = await request("table", "GET");
+    if (old_table == _table) return;
+    old_table = _table;
+    div_table.innerHTML = _table;
 
     table = div_table.querySelector("table");
 
@@ -92,35 +95,34 @@ async function get_table() {
     adjust_width_table(window.innerWidth);
 
     div_table.querySelectorAll("button.resize").forEach(
-        button=>button.addEventListener("mousedown", resizing_column)
+        button => button.addEventListener("mousedown", resizing_column)
     );
 
     const tbody = div_table.querySelector("tbody");
     tbody.scrollTop = tbody.scrollHeight;
     const rows = tbody.querySelectorAll("tr");
-    rows.forEach(tr=>{
-        if(tr.classList.contains("last-row")){
-            last_row = tr;
+    rows.forEach(row => {
+        if (row.classList.contains("last-row")) {
+            last_row = row;
             return
         };
-        tr.onclick = edit_row;
+        row.onclick = edit_row;
     });
     overlay.classList.add("w0");
 }
 
 function edit_row(event) {
-    if(editing_row.element)return;
+    if (editing_row.element) return;
     editing_row.element = event.target;
     console.log(`editando linha: ${editing_row.element.getAttribute("row")}`);
     editing_row.element.querySelectorAll("textarea").forEach(
-        textarea=>editing_row.values[textarea.getAttribute("cell")] = textarea.value
+        textarea => editing_row.values[textarea.getAttribute("cell")] = textarea.value
     );
     editing_row.element.classList.add("editing");
-    editing_row.method = "put";
+    editing_row.method = "PUT";
     button_add_row.disabled = true;
     button_submit_edit.disabled = false;
     div_actions_table.classList.add("open");
-    
     button_cancel_edit.onclick = cancel_edit_row;
     button_submit_edit.onclick = submit_edit_row;
     button_delete_row.onclick = remove_row;
@@ -129,47 +131,37 @@ function edit_row(event) {
 }
 
 async function submit_edit_row() {
-    if(!editing_row.element)return;
+    if (!editing_row.element) return;
     overlay.classList.remove("w0");
 
     let json = { row: parseInt(editing_row.element.getAttribute("row")) };
 
-    if(editing_row.method == "put"){
-        editing_row.element.querySelectorAll("textarea").forEach(
-            textarea=>{
-                const column = textarea.getAttribute("cell");
-                if(textarea.value != editing_row.values[column])
-                    json[column] = textarea.value;
-            }
-        );
-        if(Object.keys(json).length <= 1){
+    if(editing_row.method == "PUT"){
+        editing_row.element.querySelectorAll("textarea").forEach(textarea => {
+            const column = textarea.getAttribute("cell");
+            if(textarea.value != editing_row.values[column])
+                json[column] = textarea.value;
+        });
+        if (Object.keys(json).length <= 1) {
             console.log("Nada de diferente");
             cancel_edit_row();
             return;
         }
-        console.log(`Editando valores: ${JSON.stringify(json)}`)
+        console.log(`Editando valores: ${json}`)
     }
 
-    if(editing_row.method == "post"){
+    if(editing_row.method == "POST"){
         editing_row.element.querySelectorAll("textarea").forEach(
             textarea=>json[textarea.getAttribute("cell")[0]] = textarea.value
         );
-        console.log(`Inserindo valores: ${JSON.stringify(json)}`)
+        console.log(`Inserindo valores: ${json}`)
     }
 
-    const response = await fetch(
-        `/table/${operator.value}/${password.value}`,
-        {
-            method: editing_row.method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(json)
-        }
-    );
+    if (!await request("table", editing_row.method, json))
+        return;
 
-    if(await response.text() == "Sucesso!"){
-        cancel_edit_row();
-        get_table();
-    }
+    cancel_edit_row();
+    get_table();
 }
 
 
@@ -182,42 +174,40 @@ function cancel_edit_row() {
     button_add_row.disabled = false;
     button_delete_row.disabled = false;
 
-    if(editing_row.method != "put")
-        editing_row.element.querySelectorAll("textarea").forEach(textarea=>{
+    if(editing_row.method != "PUT")
+        editing_row.element.querySelectorAll("textarea").forEach(textarea => {
             const value = editing_row.values[textarea.getAttribute("cell")];
             if(textarea.value != value)textarea.value = value;
         });
     
     editing_row.element.classList.remove("editing", "delete");
-    editing_row = {element: null, values: {}, method: null};
-
+    editing_row = { element: null, values: {}, method: null };
     div_actions_table.classList.remove("open");
     last_row.classList.add("h0");
     input_number_row.classList.remove("open");
     button_add_row.parentElement.classList.remove("open");
-
     button_cancel_edit.onclick = null;
     button_submit_edit.onclick = null;
     button_delete_row.onclick = null;
 }
 
 async function remove_row() {
-    if(!editing_row.element)return;
+    if (!editing_row.element) return;
     editing_row.element.classList.add("delete");
-    editing_row.method = "delete"
+    editing_row.method = "DELETE";
     button_submit_edit.disabled = false;
 }
 
 async function add_row() {
-    if(!button_add_row||!input_number_row||editing_row.element||!table)return;
+    if (!button_add_row || !input_number_row || editing_row.element || !table) return;
     button_add_row.disabled = true;
     button_delete_row.disabled = true;
     button_submit_edit.disabled = false;
     editing_row.element = last_row;
     editing_row.element.classList.add("editing");
-    editing_row.method = "post";
+    editing_row.method = "POST";
     last_row.querySelectorAll("textarea").forEach(
-        textarea=>editing_row.values[textarea.getAttribute("cell")] = textarea.value
+        textarea => editing_row.values[textarea.getAttribute("cell")] = textarea.value
     );
     last_row.classList.remove("h0");
     button_add_row.parentElement.classList.add("open");
@@ -262,9 +252,9 @@ function confirm_resize() {
 }
 
 function remove_events() {
-    if(clicked){
+    if (clicked) {
         window.removeEventListener("mousemove", resize);
-        window.removeEventListener("mouseleave", remove_events)
+        window.removeEventListener("mouseleave", remove_events);
         window.removeEventListener("mouseup", remove_events);
     }
     clicked = false;
