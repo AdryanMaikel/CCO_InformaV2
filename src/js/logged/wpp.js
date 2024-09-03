@@ -742,38 +742,26 @@ function remove_cco_informa(event) {
     const element = event.target.closest(".cco-informa");
     const _id = element.getAttribute("information_id");
     element.remove();
-    if(_id) {
-        console.log(_id);
-    }
+    if(_id) console.log("removendo cco-informa: ", _id);
 }
 
 async function insert_to_table(event) {
-    await get_table();
+    await check_table();
     const element = event.target.closest(".cco-informa");
-    data = JSON.parse(decodeURIComponent(element.getAttribute("data")));
-    data.row = parseInt(last_row.getAttribute("row"));
-    data.A = get_full_date();
-    if(data.G == "BC"){
-        data.G = "1"
+    const _json = JSON.parse(decodeURIComponent(element.getAttribute("data")));
+    _json.row = parseInt(last_row.getAttribute("row"));
+    _json.A = get_full_date();
+    if(_json.G == "BC"){
+        _json.G = "1"
     }
-    if(data.G == "CB"){
-        data.G = "2"
+    if(_json.G == "CB"){
+        _json.G = "2"
     }
     overlay.classList.remove("w0");
-    const response = await fetch(
-        `/table/${operator.value}/${password.value}`,
-        {
-            method: "post",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        }
-    );
-    if(await response.text() == "Sucesso!"){
-        await get_table();
-        setTimeout(()=>overlay.classList.add("w0"), 500)
-        return;
-    }
-    window.location.reload();
+    const response = await request("table", "POST", _json);
+    if (!response) return;
+    await check_table();
+    // setTimeout(()=>overlay.classList.add("w0"), 500)
 }
 
 async function favorite_cco_informa(event) {
@@ -781,33 +769,19 @@ async function favorite_cco_informa(event) {
     const element = button.closest(".cco-informa");
     const i = button.querySelector("i");
     if(i.classList.contains("fa-regular")) {
-        const response = await fetch(
-            `/informations/${operator.value}/${password.value}`,
-            {
-                method: "post",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(
-                    {
-                        information: element.querySelector("textarea").value,
-                        data: decodeURIComponent(element.getAttribute("data"))
-                    }
-                )
-            }
-        );
-        if(response.status == 200) {
-            element.setAttribute("information_id", await response.text());
+        let json = {
+            information: element.querySelector("textarea").value,
+            data: decodeURIComponent(element.getAttribute("data"))
+        };
+        const response = await request("informations", "POST", json, true);
+        if (response) {
+            element.setAttribute("information_id", response);
             i.classList.replace("fa-regular", "fa-solid");
         }
     } else {
-        const response = await fetch(
-            `/informations/${operator.value}/${password.value}`,
-            {
-                method: "delete",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({id: element.getAttribute("information_id")})
-            }
-        );
-        if(response.status == 200) {
+        let json = { id: element.getAttribute("information_id") };
+        const response = await request("informations", "DELETE", json);
+        if (response) {
             element.setAttribute("information_id", "");
             i.classList.replace("fa-solid", "fa-regular");
         }

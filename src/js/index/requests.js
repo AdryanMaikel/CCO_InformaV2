@@ -7,10 +7,10 @@ function create_script(src){
     document.head.appendChild(script);
     script.onload = function(){console.log(src, " carregado.")}
 }
-async function request(route, method, json) {
+async function request(route, method, json, return_text = false) {
     if(method == "GET") {
         const response = await fetch(`/${route}/${operator.value}/${password.value}`);
-        if(response.status != 200)return;
+        if (response.status != 200) return;
         const response_text = await response.text();
         return response_text;
     }
@@ -22,7 +22,11 @@ async function request(route, method, json) {
             body: JSON.stringify(json)
         }
     );
-    return response.ok
+    if (!return_text)
+        return response.ok;
+    else if (response.ok)
+        return await response.text();
+    return;
 }
 async function load_containers(){
     const scripts = await request("scripts", "GET");
