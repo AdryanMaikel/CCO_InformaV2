@@ -1,4 +1,5 @@
 const div_config = document.getElementById("config");
+const toogle_border = document.getElementById("toogle-border");
 
 function load_config() {
     return update_config();
@@ -8,7 +9,7 @@ let with_border = true;
 
 function update_config() {
     let new_config = {
-        "border-tbody-rows": with_border ? "1px solid var(--c-black)" : "none",
+        "border-tbody-rows": with_border ? "1px solid var(--c-black)" : "1px solid transparent",
     }
     save_config(new_config);
 }
@@ -37,8 +38,14 @@ document.getElementById("open-config").onclick = function(_) {
         return;
     }
     div_config.classList.add("open");
+    toogle_border.onclick = function(_) {
+        with_border = !with_border;
+        toogle_border.classList.toggle("active");
+        update_config();
+    }
 }
 
 document.getElementById("close-config").onclick = function(_) {
     div_config.classList.remove("open");
+    toogle_border.onclick = null;
 }
