@@ -191,7 +191,7 @@ section{
         }
     }
 
-    & #table{
+    & #div_table{
         height: 100%;
         & .header{
             margin-left: 5px;

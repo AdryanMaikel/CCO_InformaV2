@@ -56,7 +56,7 @@ function adjust_width_table() {
 
 window.onresize = adjust_width_table;
 
-const div_table = document.getElementById("table");
+const div_table = document.getElementById("div_table");
 let editing_row = { element: null, values: {}, method: null };
 
 let div_actions_table = null;
