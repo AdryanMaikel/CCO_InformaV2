@@ -220,7 +220,7 @@ class DivEvents {
         };
 
         this.input.oninput = (event) => {
-            this.input.value = this.input.value.replace(/[^a-zA-Z]/, "");
+            this.input.value = this.input.value.replace(/[^a-zçãáéíóúâêôõA-ZÇÃÁÉÍÓÚÂÊÔÕ]/g, "");
             if(this.id_div == "directions")
                 this.input.value = this.input.value.toUpperCase();
 
