@@ -7,10 +7,14 @@ function create_script(src){
     document.head.appendChild(script);
     script.onload = function(){console.log(src, " carregado.")}
 }
-async function request(route, method, json, return_text = false) {
+async function request(route, method, json, return_text = false, return_json = false) {
     if(method == "GET") {
         const response = await fetch(`/${route}/${operator.value}/${password.value}`);
         if (response.status != 200) return;
+        if (return_json) {
+            const response_json = await response.json();
+            return response_json
+        }
         const response_text = await response.text();
         return response_text;
     }

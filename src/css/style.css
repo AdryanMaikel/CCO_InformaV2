@@ -190,7 +190,33 @@ section{
             }
         }
     }
-
+    & #config-users{
+        & .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            & #operator-form {
+                background: var(--c-ice);
+                border: 1px solid var(--c-black-white);
+                border-radius: 8px;
+                width: 253px;
+                padding: 5px 10px 13px 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                & .row.between {
+                    border-bottom: 1px solid var(--c-black-white);
+                }
+            }
+        }
+    }
     & #div_table{
         height: 100%;
         & .header{
@@ -225,9 +251,10 @@ section{
                         &.G{width: var(--G)}
                         &.H{width: var(--H)}
                         &.I{width: var(--I)}
-                        &.J{width: var(--J);& textarea{padding: 4px}}
-                        &.K{width: var(--K)}
-                        &.A, &.B, &.C, &.D, &.E, &.F, &.G, &.H, &.I, &.J, &.K{
+                        &.J{width: var(--J)}
+                        &.K{width: var(--K);& textarea{padding: 4px}}
+                        &.L{width: var(--L)}
+                        &.A, &.B, &.C, &.D, &.E, &.F, &.G, &.H, &.I, &.J, &.K, &.L{
                             & textarea{
                                 transition: box-shadow .5s cubic-bezier(1, 2.16, 0.71, 1.01), border-radius .5s ease-out;
                                 &:focus{
@@ -236,7 +263,7 @@ section{
                                 }
                             }
                         }
-                        &.A, &.C, &.B, &.E, &.D, &.G, &.F, &.I, &.H, &.K {
+                        &.A, &.C, &.B, &.E, &.D, &.G, &.F, &.I, &.H, &.I, &.J, &.L {
                             textarea{
                                 text-align: center;
                                 align-content: center;
@@ -255,7 +282,7 @@ section{
                 & .letters, & .columns{
                     position: relative;
                     background-color: var(--c-white-dark);
-                    & .A, & .B, & .C, & .D, & .E, & .F, & .G, & .H, & .I, & .J, & .K{
+                    & .A, & .B, & .C, & .D, & .E, & .F, & .G, & .H, & .I, & .J, & .K, & .L{
                         border-left: 1px solid var(--c-black);
                     }
                 }
@@ -357,11 +384,10 @@ button{
         &.fa-xmark{font-size: 24px}
         &.fa-ban,&.fa-xmark{color: var(--c-red)}
         &.fa-user-xmark,&.fa-user-check{font-size: 17px}
-        &.fa-note-sticky,&.fa-save,&.fa-comment{color: var(--c-black-white)}
-        &.fa-gear,&.fa-copy,&.fa-walkie-talkie{color: var(--c-purple-dark)}
         &.fa-trash-can{color: var(--c-red)}
-        &.fa-paper-plane{color: var(--c-green)}
-        &.fa-whatsapp{color: var(--c-green)}
+        &.fa-note-sticky,&.fa-save,&.fa-comment,&.fa-users,&.fa-user-plus,&.fa-user-pen{color: var(--c-black-white)}
+        &.fa-gear,&.fa-copy,&.fa-walkie-talkie,&.fa-users-gear,&.fa-rotate-left,&.fa-refresh{color: var(--c-purple-dark)}
+        &.fa-paper-plane,&.fa-whatsapp{color: var(--c-green)}
     }
 }
 
@@ -419,3 +445,5 @@ table tbody tr {
 
 #content-chat::-webkit-scrollbar-thumb{background-color: var(--c-purple-dark)}
 .delete td textarea::-webkit-scrollbar-thumb{background-color: var(--c-red)}
+
+.p5-10{padding: 5px 10px !important;}

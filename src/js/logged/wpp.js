@@ -102,9 +102,9 @@ function check_motive({ motive }) {
             check_event({div: label_event.div, event: "adiantada"});
             break;
         case "Atrasado":
-            label_event.input.value = "atrasada";
-            label_event.tresh.classList.add("active");
-            check_event({div: label_event.div, event: "atrasada"});
+            // label_event.input.value = "atrasada";
+            // label_event.tresh.classList.add("active");
+            // check_event({div: label_event.div, event: "atrasada"});
             break;
         case "Congestionamento":
             row_congestion.classList.remove("h0");
@@ -284,7 +284,7 @@ class DivEvents {
     }
 }
 
-let informed, toggle_informed, label_who_informed = null;
+let informed, toggle_informed, baldeacao, toggle_baldeacao, label_who_informed = null;
 
 let input_table, input_car, replace, car_substitute = null;
 
@@ -320,6 +320,9 @@ async function load_wpp(){
 
     informed = content_wpp.querySelector("#informed");
     toggle_informed = informed.querySelector(".toggle");
+
+    baldeacao = content_wpp.querySelector("#baldeacao");
+    toggle_baldeacao = baldeacao.querySelector(".toggle");
     label_who_informed = new DivEvents(content_wpp.querySelector("#label_who_informed"));
 
     input_table = content_wpp.querySelector("#table");
@@ -367,6 +370,8 @@ async function load_wpp(){
     radios_embreagem_caixa = row_embreagem_caixa.querySelectorAll("input");
 
     button_generate = content_wpp.querySelector("#generate-cco-informa");
+    button_clear_all = content_wpp.querySelector("#limpar-cco-informa");
+
     informations_generated = content_wpp.querySelector("#informations-generated");
 
     content_wpp.querySelectorAll("input.car").forEach(
@@ -424,13 +429,21 @@ async function load_wpp(){
 load_wpp();
 
 document.querySelector("#open-wpp").onclick = function() {
-    if(section.querySelector(".container.open")
-    || form_login.classList.contains("open"))
-        return;
+    section_opened = section.querySelector(".container.open");
+    if (section_opened) {
+        section_opened.classList.remove("open");
+    }
+    if (form_login.classList.contains("open")) {
+        form_login.classList.remove("open");
+    }
     div_wpp.classList.add("open");
     informed.onclick = function() {
         if(!toggle_informed)return;
         toggle_informed.classList.toggle("active");
+    };
+    baldeacao.onclick = function() {
+        if(!toggle_baldeacao)return;
+        toggle_baldeacao.classList.toggle("active");
     };
     label_who_informed.active_events();
     replace.onclick = function(){
@@ -448,11 +461,13 @@ document.querySelector("#open-wpp").onclick = function() {
     label_problem.active_events();
 
     button_generate.onclick = generate_cco_informa;
+    button_clear_all.onclick = clear_all;
 }
 
 document.querySelector("#close-wpp").onclick = function() {
     div_wpp.classList.remove("open");
     informed.onclick = null;
+    baldeacao.onclick = null;
     label_who_informed.remove_events();
     replace.onclick = null;
     directions.remove_events();
@@ -608,9 +623,9 @@ function process_motive(_event) {
                 case "Motor - Cigarra/Aquecimento":
                     _motive += `Carro ${input_car.value} ter super aquecido`;
                     break;
-                case "Motor - Cigarra/óleo motor":
-                    _motive += `Carro ${input_car.value} ter super aquecido`;
-                    break;
+                // case "Motor - Cigarra/óleo motor":
+                //     _motive += `Carro ${input_car.value} ter super aquecido`;
+                //     break;
                 case "Motor - Correias":
                     _motive += `Problemas nas correias do motor do carro ${input_car.value}`;
                     break;
@@ -705,11 +720,12 @@ ${get_who_informed()}
             _json.H = label_motive.input.value;
             _json.I = "";
         }
+        _json.J = toggle_baldeacao.classList.contains("active")? "Sim": "Não";
         if(label_event.input.value == "adiantada")
-            _json.J = `${_event}`;
+            _json.K = `${_event}`;
         else
-            _json.J = `${_event} devido a ${_motive.charAt(0).toLowerCase()}${_motive.slice(1)}`;
-        _json.K = operator.value;
+            _json.K = `${_event} devido a ${_motive.charAt(0).toLowerCase()}${_motive.slice(1)}`;
+        _json.L = operator.value;
     }
 
     console.log(`Gerou:\ncco informa:\n${cco_informa}\njson:\n${JSON.stringify(_json)}`);
@@ -727,7 +743,6 @@ ${get_who_informed()}
 ${informations_generated.innerHTML}
 `
 }
-
 
 function copy_cco_informa(event) {
     const text_to_copy = event.target.closest(".cco-informa").querySelector("textarea").value;
@@ -839,4 +854,28 @@ function autocomplete_direction() {
     else if(directions.input.value == "")
         return directions.input.focus();
     return label_event.input.focus();
+}
+
+function clear_all() {
+    input_car.value = ""
+    input_hour.value = ""
+    input_line.value = ""
+    input_table.value = ""
+    congestion.value = ""
+    car_substitute.value = ""
+    directions.input.value = ""
+    label_who_informed.input.value = ""
+    minutes.value = ""
+    label_event.input.value = ""
+    label_motive.input.value = ""
+    label_problem.input.value = ""
+    if (replace.classList.contains("active")) {
+        replace.click()
+    }
+    interrupted.value = ""
+    continued.value = ""
+    gps_hours.forEach(input=>input.value = "")
+    reset_events()
+    reset_motives()
+    reset_problems()
 }

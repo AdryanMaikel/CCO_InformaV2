@@ -33,9 +33,12 @@ let old_config = {};
 old_config = load_config();
 
 document.getElementById("open-config").onclick = function(_) {
-    if(section.querySelector(".container.open")
-    || form_login.classList.contains("open")) {
-        return;
+    section_opened = section.querySelector(".container.open");
+    if (section_opened) {
+        section_opened.classList.remove("open");
+    }
+    if (form_login.classList.contains("open")) {
+        form_login.classList.remove("open");
     }
     div_config.classList.add("open");
     toogle_border.onclick = function(_) {

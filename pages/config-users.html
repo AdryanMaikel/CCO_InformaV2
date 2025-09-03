@@ -1,0 +1,46 @@
+<!-- Lista de operadores -->
+<div class="operators-list">
+    {% for operator in operators -%}
+    <div class="row between p5-10 operator-row" data-operator-id="{{ operator.id }}" data-operator-name="{{ operator.name }}">
+        <div class="row gap5">
+            <i class="fa-solid fa-circle status-dot" 
+               style="color: {{ 'var(--c-green)' if operator.logged else 'var(--c-red)' }}; font-size: 8px;"
+               title="{{ 'Online' if operator.logged else 'Offline' }}"></i>
+            
+            <span class="operator-name">{{ operator.name }}</span>
+            
+            <span class="operator-id" style="font-size: 11px; color: var(--c-black-white); margin-left: 5px;">
+                #{{ operator.id }}
+            </span>
+
+            {% if operator.tentatives < 5 %}
+            <div class="tentatives-indicator" 
+                 style="background: {% if operator.tentatives >= 5 %}var(--c-green){% elif operator.tentatives >= 3 %}var(--c-orange){% else %}var(--c-red){% endif %}; 
+                        color: white; font-size: 12px; padding: 2px 6px; border-radius: 8px; font-weight: 600;">
+                Tentativas Restantes: {{ operator.tentatives }} / 5
+            </div>
+            {% endif %}
+
+            {% if operator.tentatives <= 0 %}
+            <i class="fa-solid fa-lock" style="color: var(--c-red); font-size: 12px;" title="Usuário bloqueado"></i>
+            {% endif %}
+        </div>
+
+        <div class="row gap5">
+            {% if operator.tentatives < 5 %}
+            <button onclick="resetTentatives('{{ operator.name }}')" title="Resetar Tentativas">
+                <i class="fa-solid fa-rotate-left"></i>
+            </button>
+            {% endif %}
+
+            <button onclick="editOperator('{{ operator.name }}')" title="Editar Operador">
+                <i class="fa-solid fa-user-pen"></i>
+            </button>
+            
+            <button onclick="deleteOperator('{{ operator.name }}')" title="Excluir Operador">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor -%}
+</div>

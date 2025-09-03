@@ -131,11 +131,14 @@ def scripts(operator: str, password: str):
     logged = operators.check_password(operator, password)
     if not logged:
         return "Operador ou senha inválidos.", 400
-    scripts = ("/src/js/logged/wpp.js,"
-               "/src/js/logged/table.js,"
-               "/src/js/logged/chat.js,"
-               "/src/js/logged/config.js,"
-               "/src/js/logged/notes.js")
+    scripts = ""
+    if operator in ("Leandro", "Adryan"):
+        scripts += "/src/js/logged/config-users.js,"
+    scripts += ("/src/js/logged/wpp.js,"
+                "/src/js/logged/table.js,"
+                "/src/js/logged/chat.js,"
+                "/src/js/logged/config.js,"
+                "/src/js/logged/notes.js")
     return scripts
 
 
@@ -236,6 +239,49 @@ def handle_notes(operator: str, password: str):
         if response:
             return "Nota atualizada com sucesso.", 200
         return "Erro ao atualizar nota.", 400
+
+
+@app.route("/operators/<operator>/<password>",
+           methods=["GET", "POST", "PUT", "DELETE"])
+def manage_operators(operator: str, password: str):
+    logged = operators.check_password(operator, password)
+    if not logged:
+        return "Operador ou senha inválidos.", 400
+
+    if request.method == "GET":
+        return render_template("config-users.html",
+                               operators=operators.get_all())
+
+    data = dict(request.get_json())
+    if not data:
+        return "JSON inválido.", 400
+
+    if request.method == "POST":
+        # Adicionar novo operador
+        name = data.get("name", "")
+        op_password = data.get("password", "")
+
+        if not name or not op_password:
+            return "Nome e senha são obrigatórios.", 400
+
+        return operators.insert(name, op_password)
+
+    elif request.method == "PUT":
+        name = data.get("name", "")
+        new_password = data.get("newPassword", "")
+        if not name:
+            return "Nome é obrigatório.", 400
+        if new_password:
+            return operators.change_password(name, new_password)
+        return operators.update_tentatives(name)
+
+    elif request.method == "DELETE":
+        # Deletar operador
+        name = data.get("name", "")
+        if not name:
+            return "Nome do operador é obrigatório.", 400
+
+        return operators.delete_by_name(name)
 
 
 if __name__ == "__main__":

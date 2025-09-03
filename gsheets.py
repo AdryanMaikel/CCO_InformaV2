@@ -13,17 +13,18 @@ class Sheet:
     def __init__(self, title: str):
         # sheet de testes
         # sheet_key = "101ykzDT_qWUN_CzQ4uVyR25hTe6KERvVVOkzSGtbDNk"
+        # sheet_key = "1HE-YSckUzAx1sxERFpBZLVRGIxWzeEfOeB61n-zM4dU"
 
         # sheet de produção
-        sheet_key = "1HE-YSckUzAx1sxERFpBZLVRGIxWzeEfOeB61n-zM4dU"
+        sheet_key = "1voKCp0MJOelI0-qv9s_m3VF5GUvkS4lbKyArA6NbmTs"
         self.ws = gsheets.open_by_key(sheet_key).worksheet(title)
-        self.letters: list[str] = "ABCDEFGHIJK"
+        self.letters: list[str] = "ABCDEFGHIJKL"
         self.columns: list[str] = self.ws.row_values(1)
         self.last_row = self.ws.row_count
 
     def get_rows(self, dates: list[str] = []) -> list:
         try:
-            values = self.ws.get_values("A2:K")
+            values = self.ws.get_values("A2:L")
         except Exception as error:
             print(error)
             return []
@@ -34,7 +35,7 @@ class Sheet:
 
     def add_row(self, row: int, values: dict[str, str] = {}) -> bool:
         values_to_insert = [values.get(letter, "")for letter in self.letters]
-        range_from, range_to = f"A{row+1}:K{row+1}", f"A{row}:K{row}"
+        range_from, range_to = f"A{row+1}:L{row+1}", f"A{row}:L{row}"
         try:
             self.ws.insert_row(values_to_insert, row)
             for type_paste in ["PASTE_DATA_VALIDATION", "PASTE_FORMAT"]:
@@ -64,8 +65,8 @@ class Sheet:
             return False
 
 
-gsheet = Sheet("Histórico de eventos")
+gsheet = Sheet("Histórico de eventos 2.0")
 
 if __name__ == "__main__":
-    rows = gsheet.get_rows(dates=["27/08/2024", "26/08/2024"])
+    rows = gsheet.get_rows(dates=["17/08/2025", "18/08/2025"])
     print(rows)

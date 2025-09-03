@@ -19,7 +19,13 @@ async function save_note() {
 }
 
 document.getElementById("open-notes").onclick = async function(_) {
-    if (section.querySelector(".container.open") || form_login.classList.contains("open")) return;
+    section_opened = section.querySelector(".container.open");
+    if (section_opened) {
+        section_opened.classList.remove("open");
+    }
+    if (form_login.classList.contains("open")) {
+        form_login.classList.remove("open");
+    }
     div_notes.classList.add("open");
     button_save_note.hidden = false;
     textarea_note.oninput = function(_) {

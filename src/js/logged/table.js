@@ -1,45 +1,41 @@
+const MODEL_COLUMNS = {
+  _: 35, A: 90, B: 80, C: 55, D: 55, E: 92, F: 55, G: 70, H: 325, I: 250, J: 90, K: 400, L: 80, sum: 0
+};
+
 function update_cookie_columns(new_width_columns){
-    const string_json = JSON.stringify(new_width_columns);
-    document.cookie=`columns=${string_json}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-    return new_width_columns;
+  const string_json = JSON.stringify(new_width_columns);
+  document.cookie=`columns=${encodeURIComponent(string_json)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+  return new_width_columns;
 }
 
 function sum_columns(columns_widths) {
-    const sum = Object.entries(columns_widths).reduce((accumulator, [column, width]) => {
-        document.documentElement.style.setProperty(`--${column}`, `${width}px`);
-        return column !== "sum" ? accumulator + width : accumulator;
-    }, 0);
-    document.documentElement.style.setProperty(`--sum`, `${sum}px`);
-    console.log(`Soma das colunas: ${sum}px.`);
-    return { ...columns_widths, sum };
+  const sum = Object.entries(columns_widths).reduce((acc, [col, w]) => {
+    document.documentElement.style.setProperty(`--${col}`, `${w}px`);
+    return col !== "sum" ? acc + Number(w||0) : acc;
+  }, 0);
+  document.documentElement.style.setProperty(`--sum`, `${sum}px`);
+  console.log(`Soma das colunas: ${sum}px.`);
+  return { ...columns_widths, sum };
 }
 
 function create_cookie_columns() {
-    return update_cookie_columns(
-        sum_columns({
-            _: 35,
-            A: 90,
-            B: 80,
-            C: 55,
-            D: 55,
-            E: 92,
-            F: 55,
-            G: 70,
-            H: 325,
-            I: 250,
-            J: 400,
-            K: 80,
-            sum: 0    
-        })
-    );
+  return update_cookie_columns(sum_columns({ ...MODEL_COLUMNS }));
 }
 
-let _cookie_columns = document.cookie.split(";").find(cookie=>cookie.trim().startsWith("columns="))
+let _cookie_columns = document.cookie.split(";").find(c=>c.trim().startsWith("columns="));
+
 function load_cookie_columns() {
-    return sum_columns(JSON.parse(decodeURIComponent(_cookie_columns.split("=")[1])));
+  try {
+    const parsed = JSON.parse(decodeURIComponent(_cookie_columns.split("=",2)[1]||""));
+    return Object.keys(parsed).length === Object.keys(MODEL_COLUMNS).length
+      ? sum_columns(parsed)
+      : create_cookie_columns();
+  } catch {
+    return create_cookie_columns();
+  }
 }
 
-const width_columns = _cookie_columns?load_cookie_columns():create_cookie_columns();
+const width_columns = _cookie_columns ? load_cookie_columns() : create_cookie_columns();
 
 let table = document.querySelector("table");
 
@@ -93,7 +89,7 @@ async function update_table(html_table) {
         div_table.innerHTML = html_table;
         table = div_table.querySelector("table");
         adjust_width_table();
-        
+
         div_actions_table = div_table.querySelector("#actions-table");
         button_cancel_edit = div_table.querySelector("#cancel-edit");
         button_submit_edit = div_table.querySelector("#submit-edit");
@@ -101,11 +97,11 @@ async function update_table(html_table) {
         button_add_row = div_table.querySelector("#button-add-row");
         button_add_row.onclick = add_row;
         input_number_row = div_table.querySelector("#number-row");
-        
+
         div_table.querySelectorAll("button.resize").forEach(
             button => button.addEventListener("mousedown", resizing_column)
         );
-        
+
         const tbody = div_table.querySelector("tbody");
         tbody.scrollTop = tbody.scrollHeight;
         const rows = tbody.querySelectorAll("tr");
@@ -136,7 +132,7 @@ function edit_row(event) {
     button_cancel_edit.onclick = cancel_edit_row;
     button_submit_edit.onclick = submit_edit_row;
     button_delete_row.onclick = remove_row;
-    
+
     console.log(editing_row.values);
 }
 
@@ -185,7 +181,7 @@ function cancel_edit_row() {
             const value = editing_row.values[textarea.getAttribute("cell")];
             if (textarea.value != value) textarea.value = value;
         });
-    
+
     editing_row.element.classList.remove("editing", "delete");
     editing_row = { element: null, values: {}, method: null };
     div_actions_table.classList.remove("open");

@@ -38,6 +38,9 @@
         <button id="open-chat"><i class="fa-solid fa-walkie-talkie"></i></button>
         <button id="toggle-login" class="col buttons toggle overflow hidden"><i class="fa-solid fa-user-xmark x"></i><i class="fa-solid fa-user-check y"></i></button>
         <button id="open-notes"><i class="fa-solid fa-note-sticky"></i></button>
+        {% if operator in ("Leandro", "Adryan") -%}
+        <button id="open-config-users"><i class="fa-solid fa-users-gear"></i></button>
+        {% endif -%}
     </header>
     <section class="overflow hidden">
         <h2 id="overlay">*CCO Informa*</h2>
@@ -82,7 +85,41 @@
             </div>
             <textarea name="note" id="note" class="w100"></textarea>
         </div>
+        <div id="config-users" class="container">
+            <div class="row between header">
+                <span>Gerenciar Usuários</span>
+                <div class="row buttons">
+                    <button onclick="addUser()"><i class="fa-solid fa-user-plus"></i></button>
+                    <button onclick="load_config_users()"><i class="fa-solid fa-refresh"></i></button>
+                    <button id="close-config-users"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            
+            <div class="content w100 scroll-y" style="height: calc(100% - 41px) !important;"></div>
+            
+            <div id="operator-modal" class="modal-overlay" style="display: none;">
+                <form id="operator-form">
+                    <div class="row between">
+                        <h5 id="modal-title">Adicionar Operador</h5>
+                        <div class="row buttons">
+                            <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+                            <button type="reset" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div class="row gap5">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="operator-name" autocomplete="off">
+                    </div>
+                    <div class="row gap5">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="text" id="operator-password" autocomplete="off">
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div id="div_table"></div>
+        
     </section>
     <footer class="row center">
         <address>&copy;Adryan Maikel</address>

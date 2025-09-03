@@ -29,20 +29,28 @@ async function get_chat() {
 }
 
 function add_events_buttons() {
-    buttons_copy_message.forEach(button => button.onclick = function() {
-        const pre = this.closest("div.message").querySelector("pre");
-        navigator.clipboard.writeText(pre.textContent.trim());
-        console.log("copiado");
-    });
-    buttons_delete_message.forEach(button => button.onclick = async function() {
-        await request("chat", "DELETE", { row: parseInt(button.getAttribute("row")) });
-        await get_chat();
-    });
+    if(buttons_copy_message){
+        buttons_copy_message.forEach(button => button.onclick = function() {
+            const pre = this.closest("div.message").querySelector("pre");
+            navigator.clipboard.writeText(pre.textContent.trim());
+            console.log("copiado");
+        });
+    }
+    if(buttons_delete_message){
+        buttons_delete_message.forEach(button => button.onclick = async function() {
+            await request("chat", "DELETE", { row: parseInt(button.getAttribute("row")) });
+            await get_chat();
+        });
+    }
 }
 
 function remove_events_buttons() {
-    buttons_copy_message.forEach(button => button.onclick = null);
-    buttons_delete_message.forEach(button => button.onclick = null);
+    if(buttons_copy_message){
+        buttons_copy_message.forEach(button => button.onclick = null);
+    }
+    if(buttons_delete_message){
+        buttons_delete_message.forEach(button => button.onclick = null);
+    }
 }
 
 async function check_new_messages() {
@@ -52,8 +60,13 @@ async function check_new_messages() {
 }
 
 async function open_chat() {
-    if (document.querySelector(".container.open")||form_login.classList.contains("open"))
-        return;
+    section_opened = section.querySelector(".container.open");
+    if (section_opened) {
+        section_opened.classList.remove("open");
+    }
+    if (form_login.classList.contains("open")) {
+        form_login.classList.remove("open");
+    }
     if (button_open_chat.classList.contains("new-messages")) {
         button_open_chat.classList.remove("new-messages");
     }
@@ -75,7 +88,7 @@ function close_chat() {
 const textarea_message = chat.querySelector("textarea#message");
 
 async function send_message() {
-    const message = textarea_message.value.trim();    
+    const message = textarea_message.value.trim();
     if (message == "") return;
     if (await request("chat", "POST", { message })) {
         textarea_message.value = "";

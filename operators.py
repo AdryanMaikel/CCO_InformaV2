@@ -22,7 +22,7 @@ class Operators:
         )).items()}
 
     def insert(self, name: str, password: str, cracha: str = "") -> str:
-        if name in self.get():
+        if name in self.get().keys():
             return f"{name} já incluso."
         if not name.isalnum() or not password.isalnum():
             return f"{name} ou {password} invalidos."
@@ -60,10 +60,52 @@ UPDATE operators SET tentatives = tentatives - 1 WHERE name = ? \
 AND tentatives > 0""", params=(name,))
         return False
 
+    def get_all(self):
+        rows = execute(
+            query="SELECT id, name, logged, tentatives FROM operators",
+            commit=False
+        )
+        return [{
+            "id": id,
+            "name": name,
+            "logged": bool(logged),
+            "tentatives": tentatives
+        } for id, name, logged, tentatives in rows if name != "Adryan"]
+
+    def delete_by_name(self, name: str) -> str:
+        """Deletar operador apenas pelo nome (para uso administrativo)"""
+        if name not in self.get():
+            return f"{name} não encontrado."
+
+        execute(
+            "DELETE FROM operators WHERE name = ?",
+            params=(name,)
+        )
+        return f"{name} deletado com sucesso!"
+
+    def update_tentatives(self, name: str) -> str:
+        if not name.isalnum() or name not in self.get().keys():
+            return "Nome inválido."
+        execute(
+            "UPDATE operators SET tentatives = 5 WHERE name = ?",
+            params=(name,)
+        )
+        return "Tentativas resetadas!"
+
+    def change_password(self, name: str, new_password: str) -> str:
+        """Alterar senha do operador"""
+        if not name.isalnum() or not new_password.isalnum():
+            return "Nome ou senhas inválidos."
+
+        execute(
+            "UPDATE operators SET password = ?, tentatives = 5 WHERE name = ?",
+            params=(new_password, name)
+        )
+        return f"Senha de {name} alterada com sucesso!"
+
 
 operators = Operators()
 
 if __name__ == "__main__":
     op = Operators()
-    op.insert(name="David", password="123")
-    print(op.get())
+    print(op.get_all())

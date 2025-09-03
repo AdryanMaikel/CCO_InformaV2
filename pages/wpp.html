@@ -43,7 +43,7 @@
         .x, &.active .y{scale: 0}
         .y, &.active .x{scale: 1}
     }
-    
+
     button{
         &.surge{
             scale: 0;
@@ -72,7 +72,7 @@
             }
         }
     }
-    
+
     & label{
         .list{
             position: absolute;
@@ -87,7 +87,7 @@
             overflow-y: auto;
             z-index: 99;
             background-color: var(--c-ice);
-    
+
             .item{
                 position: relative;
                 height: 0;
@@ -109,7 +109,7 @@
             min-width: 22px !important;
             transform: translateX(-6px) !important;
         }
-        
+
         i.fa-chevron-down{rotate: 0;transition: rotate .5s}
 
         &#label_event{
@@ -149,7 +149,7 @@
     #row_interrupted ~ #row_continuation ~ #row_congestion label pre{
         transform: translate(4px, -1px)
     }
-    
+
     #row_interrupted.h0 ~ #row_continuation.h0 ~ #row_congestion label pre,
     #row_interrupted.h0 ~ #row_continuation ~ #row_congestion label pre,
     #row_interrupted ~ #row_continuation.h0 ~ #row_congestion label pre,
@@ -222,7 +222,7 @@
         </label>
 
         <button id="replace" class="toggle">
-            <i class="fa-solid fa-arrows-rotate"></i>    
+            <i class="fa-solid fa-arrows-rotate"></i>
         </button>
 
         <label for="car_substitute" class="box surge">
@@ -435,16 +435,33 @@
             <i class="fa-solid fa-check"></i>
         </label>
     </div>
+
+    <div class="row">
+        <div id="baldeacao" class="box">
+            Baldeação?
+            <div class="toggle icons">
+                <i class="fa-solid fa-check x"></i>
+                <i class="fa-solid fa-xmark y"></i>
+            </div>
+        </div>
+    </div>
+
     <!-- Buttons -->
     <div class="row">
         <button id="generate-cco-informa">
             GERAR
             <i class="fa-solid fa-plus"></i>
         </button>
+        &nbsp;
+        <button id="limpar-cco-informa">
+            LIMPAR
+            <i class="fa-solid fa-trash"></i>
+        </button>
     </div>
 </div>
 
-<div id="informations-generated" class="col w100">{% for information in informations %}
+<div id="informations-generated" class="col w100">
+    {%- for information in informations %}
     <div class="row cco-informa" information_id="{{ information.id }}" data="{{ information.json }}">
         <textarea>{{ information.cco_informa }}</textarea>
         <div class="col center">
@@ -453,6 +470,7 @@
             <button class="remove" onclick="remove_cco_informa(event)"><i class="fa-solid fa-trash-can"></i></button>
             <button class="favorite" onclick="favorite_cco_informa(event)"><i class="fa-solid fa-star"></i></button>
         </div>
-    </div>{% endfor %}
+    </div>
+    {%- endfor %}
 </div>
 
