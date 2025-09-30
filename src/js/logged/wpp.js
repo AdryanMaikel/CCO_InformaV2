@@ -773,10 +773,12 @@ async function insert_to_table(event) {
         _json.G = "2"
     }
     overlay.classList.remove("w0");
-    const response = await request("table", "POST", _json);
-    if (!response) return;
+    const ok = await request("table", "POST", _json, /*return_text*/ false, /*return_json*/ false, /*alertOnError*/ true);
+    if (!ok) {
+        setTimeout(()=>overlay.classList.add("w0"), 500)
+        return;
+    }
     await check_table();
-    // setTimeout(()=>overlay.classList.add("w0"), 500)
 }
 
 async function favorite_cco_informa(event) {

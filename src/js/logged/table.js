@@ -162,10 +162,12 @@ async function submit_edit_row() {
         console.log(`Inserindo valores: `, json)
     }
 
-    if (await request("table", editing_row.method, json)) {
-        cancel_edit_row();
-        await check_table();
-    }
+    const ok = await request("table", editing_row.method, json, /*return_text*/ false, /*return_json*/ false, /*alertOnError*/ true);
+    if (!ok) return;
+
+    cancel_edit_row();
+    await check_table();
+
 }
 
 function cancel_edit_row() {

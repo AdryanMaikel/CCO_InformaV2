@@ -102,7 +102,7 @@ def table(operator: str, password: str):
         rows = gsheet.get_rows(dates=dates)
         last_row = (rows[-1][0] if rows else len(gsheet.get_rows(dates=[])))+1
         rows.append(
-            [last_row, now_str, "", "", "", "", "", "", "", "", "", operator]
+            [last_row, now_str, "", "", "", "", "", "", "", "", "", "", operator]
             )
         return render_template("cco-informa.html",
                                users=operators.get(),
@@ -120,7 +120,15 @@ def table(operator: str, password: str):
         case "DELETE":
             gsheet.delete_row(row)
         case "POST":
-            gsheet.add_row(row, data)
+            now_str = (data.get("A") or (dt.now() - td(hours=3)).strftime("%d/%m/%Y"))
+            if gsheet.has_duplicate_same_day(data,
+                                             now_str,
+                                             compare_cols=("A", "D", "F", "G"),
+                                             date_col="A"):
+                return "Registro duplicado para o mesmo dia (A, D, F e G iguais).", 400
+            ok = gsheet.add_row(int(row), data)
+            return ("Sucesso!" if ok else "Erro ao adicionar."), (200 if ok else 500)
+            # gsheet.add_row(row, data)
         case "PUT":
             gsheet.update_row(row, data)
     return "Sucesso!"
